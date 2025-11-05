@@ -13,9 +13,15 @@ import java.time.Period;
 
 @Service
 public class DataValidationService {
+    // valida i dati di un viaggiatore (età e password) usando i metodi specifici
+    public void validateTraveler(TravelerDTO dto, String rawPassword) {
+        validatePassword(rawPassword);
+        validateAdultAge(dto.getDateOfBirth());
+    }
+
     // valida che il viaggiatore sia maggiorenne (18 anni o più)
-    public void validateAdultAge(TravelerDTO dto) {
-        if (calculateAge(dto.getDateOfBirth()) < 18) {
+    public void validateAdultAge(LocalDate dateOfBirth) {
+        if (calculateAge(dateOfBirth) < 18) {
             throw new DataIntegrityException("Per registrarti devi essere maggiorenne");
         }
     }

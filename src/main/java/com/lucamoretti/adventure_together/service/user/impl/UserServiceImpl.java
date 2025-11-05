@@ -12,11 +12,9 @@ import com.lucamoretti.adventure_together.repository.user.PlannerRepository;
 import com.lucamoretti.adventure_together.repository.user.TravelerRepository;
 import com.lucamoretti.adventure_together.repository.user.UserRepository;
 import com.lucamoretti.adventure_together.service.user.UserService;
-import com.lucamoretti.adventure_together.util.exception.EmailAlreadyRegisteredException;
+import com.lucamoretti.adventure_together.service.validation.DataValidationService;
+import com.lucamoretti.adventure_together.util.exception.DuplicateResourceException;
 import com.lucamoretti.adventure_together.util.exception.ResourceNotFoundException;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.Pattern;
-import jakarta.validation.constraints.Size;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -44,7 +42,7 @@ public class UserServiceImpl implements UserService {
     private final PasswordResetTokenRepository passwordResetTokenRepository;
     private final PasswordEncoder passwordEncoder;
     private final EmailService emailService; // servizio per invio mail
-
+    private final DataValidationService dataValidationService; // servizio per la validazione dei dati
     private static final int EXPIRATION_HOURS = 24; // durata validità token reset password
 
     @Override
@@ -66,8 +64,12 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public TravelerDTO registerTraveler(TravelerDTO dto, String rawPassword) {
+        // valida i dati del viaggiatore (età e password) usando il metodo presente in DataValidationService
+        dataValidationService.validateTraveler(dto, rawPassword);
+
+        // controlla se l'email è già registrata
         if (userRepository.existsByEmail(dto.getEmail()))
-            throw new EmailAlreadyRegisteredException("Email già presente");
+            throw new DuplicateResourceException("Email già presente");
 
         Traveler traveler = new Traveler();
         traveler.setFirstName(dto.getFirstName());
@@ -88,7 +90,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public PlannerDTO registerPlanner(PlannerDTO dto, String rawPassword) {
         if (userRepository.existsByEmail(dto.getEmail()))
-            throw new EmailAlreadyRegisteredException("Email già presente");
+            throw new DuplicateResourceException("Email già presente");
 
         Planner planner = new Planner();
         planner.setFirstName(dto.getFirstName());
@@ -108,7 +110,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public AdminDTO registerAdmin(AdminDTO dto, String rawPassword) {
         if (userRepository.existsByEmail(dto.getEmail()))
-            throw new EmailAlreadyRegisteredException("Email già presente");
+            throw new DuplicateResourceException("Email già presente");
 
         Admin admin = new Admin();
         admin.setFirstName(dto.getFirstName());

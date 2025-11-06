@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.lucamoretti</groupId>
-	<artifactId>adventure-together</artifactId>
+	<artifactId>adventure_together</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>adventure-together</name>
 	<description>Java Sping Boot Project</description>

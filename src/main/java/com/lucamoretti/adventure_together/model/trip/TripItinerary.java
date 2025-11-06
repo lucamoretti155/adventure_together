@@ -3,6 +3,7 @@ package com.lucamoretti.adventure_together.model.trip;
 import com.lucamoretti.adventure_together.model.details.Category;
 import com.lucamoretti.adventure_together.model.details.Country;
 import com.lucamoretti.adventure_together.model.details.DepartureAirport;
+import com.lucamoretti.adventure_together.model.user.Planner;
 import jakarta.persistence.*;
 import lombok.*;
 import java.util.LinkedHashSet;
@@ -62,19 +63,12 @@ public class TripItinerary {
      TripItinerary è il proprietario della relazione OneToMany con TripItineraryDay
      Le varie tuple vengono ordinate per numero del giorno
      cascade ALL e orphanRemoval true per gestire correttamente la persistenza dei giorni insieme all'itinerario
-     cascade ALL permette di propagare tutte le operazioni (persist, merge, remove, refresh, detach) ai giorni associati
-     orphanRemoval true assicura che i giorni rimossi dall'itinerario vengano eliminati dal database
      Uso di LinkedHashSet per mantenere l'ordine di inserimento
      L'annotazione @OrderBy assicura che i giorni siano sempre ordinati per dayNumber in modo ascendente
      */
     @OneToMany(mappedBy = "tripItinerary", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("dayNumber ASC")
     private Set<TripItineraryDay> days = new LinkedHashSet<>();
-
-    // Relazioni molti a molti con Country, DepartureAirport e Category
-    // Questa è la classe proprietaria delle relazioni molti a molti
-    // Non inserisco ManyToMany inversi nelle altre classi per evitare complessità inutili
-
 
     // relazione molti a molti con Country
     @ManyToMany
@@ -96,4 +90,11 @@ public class TripItinerary {
             joinColumns = @JoinColumn(name = "itinerary_id"),
             inverseJoinColumns = @JoinColumn(name = "category_id"))
     private Set<Category> categories = new LinkedHashSet<>();
+
+    // Il planner (utente con ruolo planner o admin) che ha creato e gestisce l'itinerario
+    // Il proprietario della relazione è TripItinerary
+    // non è necessario mantenere una lista di Trip nel Planner
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JoinColumn(name = "planner_id", nullable = false)
+    private Planner planner;
 }

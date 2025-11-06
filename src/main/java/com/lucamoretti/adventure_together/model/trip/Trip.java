@@ -63,6 +63,7 @@ public class Trip {
 
     // Un planner (utente con ruolo planner o admin) gestisce il Trip
     // Il proprietario della relazione è Trip
+    // non è necessario mantenere una lista di Trip nel Planner
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JoinColumn(name = "planner_id", nullable = false)
     private Planner planner;

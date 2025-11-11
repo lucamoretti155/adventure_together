@@ -4,6 +4,7 @@ import com.lucamoretti.adventure_together.service.mail.EmailService;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -48,5 +49,17 @@ public class EmailServiceImpl implements EmailService {
             throw new RuntimeException("Failed to send email", e);
         }
     }
+
+    // Metodo di test per inviare una semplice email di prova
+    @Override
+    public void sendTestMail(String emailTo) {
+        SimpleMailMessage message = new SimpleMailMessage();
+        message.setTo(emailTo);
+        message.setSubject("Test Mail from Spring Boot");
+        message.setText("Funziona! 😊");
+        mailSender.send(message);
+    }
+
+
 }
 

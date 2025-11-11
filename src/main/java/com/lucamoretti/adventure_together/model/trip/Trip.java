@@ -111,9 +111,17 @@ public class Trip {
     // Ritorna il numero totale dei partecipanti attualmente prenotati per il viaggio
     // Somma i partecipanti di tutte le Booking associate al Trip
     public int getCurrentParticipantsCount() {
-        return bookings != null
-                ? bookings.stream().mapToInt(Booking::getNumParticipants).sum()
-                : 0;
+        if (bookings == null || bookings.isEmpty()) return 0;
+        int total = 0;
+        for (Booking booking : bookings) {
+            if (booking == null) continue;
+            try {
+                total += booking.getNumParticipants();
+            } catch (Exception ignored) {
+                // ingnoro booking malformate
+            }
+        }
+        return total;
     }
 
 

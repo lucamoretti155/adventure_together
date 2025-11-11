@@ -1,6 +1,9 @@
 package com.lucamoretti.adventure_together.dto.trip;
 
 import com.lucamoretti.adventure_together.model.trip.TripItineraryDay;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 /* DTO per trasferire i dati di TripItineraryDay tra i vari strati dell'applicazione
@@ -14,9 +17,17 @@ import lombok.*;
 @Builder
 public class TripItineraryDayDTO {
     private Long id;
+
+    @Min(value = 1, message = "Il numero del giorno deve essere maggiore o uguale a 1")
     private int dayNumber;
+
+    @NotBlank(message = "Il titolo del giorno non può essere vuoto")
     private String title;
+
+    @NotBlank(message = "La descrizione del giorno non può essere vuota")
     private String description;
+
+    @NotNull(message = "L'ID dell'itinerario di viaggio non può essere nullo")
     private Long tripItineraryId;   // riferimento al TripItinerary
 
     // Metodo statico per convertire un'entità TripItineraryDay in un DTO

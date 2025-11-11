@@ -9,10 +9,9 @@ import lombok.NoArgsConstructor;
 // Se cancellato, rimane Cancelled
 
 @Entity @DiscriminatorValue("CANCELLED")
-@NoArgsConstructor
 public class Cancelled extends TripState {
 
-    public Cancelled(String templateMailPath) { this.templateMailPath = templateMailPath; }
+    public Cancelled() { this.templateMailPath = "/mail/cancelled"; }
 
     @Override
     public void handle() {

@@ -10,31 +10,47 @@ import java.time.LocalDate;
 // Se scaduta la data di chiusura iscrizioni, passa a ExpiredClosed (service schedulato)
 // Se cancellato, passa a Cancelled (facoltà solo dell'admin)
 
-@Entity @DiscriminatorValue("TO_BE_CONFIRMED")
-@NoArgsConstructor
+@Entity
+@DiscriminatorValue("TO_BE_CONFIRMED")
 public class ToBeConfirmed extends TripState {
 
-    public ToBeConfirmed(String templateMailPath) { this.templateMailPath = templateMailPath; }
-
+    public ToBeConfirmed() {
+        this.templateMailPath = "/mail/to-be-confirmed";
+    }
     @Override
     public void handle() {
-        //se raggiunto min participants -> passa a ConfirmedOpen
-        if (trip != null && trip.getCurrentParticipantsCount() >= trip.getTripItinerary().getMinParticipants()) {
-            trip.setState(new ConfirmedOpen("/mail/confirmed-open"));
-        }
-        //controllare data di chiusura iscrizioni e passare a ExpiredClosed se scaduta
-        //questo controllo verrà affidato ad un service schedulato
+        int participants = trip.getCurrentParticipantsCount();
         LocalDate today = LocalDate.now();
-        if (trip != null &&(trip.getDateEndBookings().isBefore(today))) { //se la data di fine iscrizioni è passata
-            trip.setState(new ExpiredClosed("/mail/expired-closed"));
+
+        if (participants >= trip.getTripItinerary().getMinParticipants() &&
+                today.isBefore(trip.getDateEndBookings())) {
+
+            TripState confirmed = new ConfirmedOpen();
+            confirmed.attachTo(trip);
+            trip.setState(confirmed);
+            trip.setTemplateMailPath(confirmed.getTemplateMailPath());
+            // notifica i partecipanti dell'avvenuta conferma del viaggio
+            trip.notifyAllListeners(confirmed.getTemplateMailPath());
+        } else if (today.isAfter(trip.getDateEndBookings()) &&
+                participants < trip.getTripItinerary().getMinParticipants()) {
+
+            TripState expired = new ExpiredClosed();
+            expired.attachTo(trip);
+            trip.setState(expired);
+            trip.setTemplateMailPath(expired.getTemplateMailPath());
+            // notifica i partecipanti dell'avvenuta chiusura del viaggio per mancato raggiungimento del numero minimo
+            trip.notifyAllListeners(expired.getTemplateMailPath());
         }
     }
 
     @Override
     public void cancel() {
-        if (trip != null) {
-            trip.setState(new Cancelled("/mail/cancelled"));
-        }
+        TripState cancelled = new Cancelled();
+        cancelled.attachTo(trip);
+        trip.setState(cancelled);
+        trip.setTemplateMailPath(cancelled.getTemplateMailPath());
+        // notifica i partecipanti dell'avvenuta cancellazione del viaggio
+        trip.notifyAllListeners(cancelled.getTemplateMailPath());
     }
 }
 

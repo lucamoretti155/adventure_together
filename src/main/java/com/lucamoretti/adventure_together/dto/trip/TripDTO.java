@@ -1,7 +1,11 @@
 package com.lucamoretti.adventure_together.dto.trip;
 
 import com.lucamoretti.adventure_together.model.trip.Trip;
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import lombok.*;
+import org.springframework.web.bind.annotation.RequestParam;
 
 
 import java.time.LocalDate;
@@ -21,20 +25,37 @@ public class TripDTO {
 
     private Long id;
 
+    @NotNull(message = "La data di inizio prenotazioni non può essere nulla")
     private LocalDate dateStartBookings;
+    @NotNull(message = "La data di fine prenotazioni non può essere nulla")
     private LocalDate dateEndBookings;
+    @NotNull(message = "La data di partenza non può essere nulla")
     private LocalDate dateDeparture;
+    @NotNull(message = "La data di ritorno non può essere nulla")
     private LocalDate dateReturn;
-
+    @Positive(message = "Il costo individuale del viaggio deve essere positivo")
     private double tripIndividualCost;
 
     private String state;                  // nome semplice della classe di stato
-    private int currentParticipantsCount;  // calcolato da bookings.size()
+    private int currentParticipantsCount;  // calcolato da bookings
     private String templateMailPath;
 
     // Relazioni come ID
+    @NotNull(message = "L'itinerario di viaggio associato non può essere nullo")
     private Long tripItineraryId;
+    @NotNull(message = "Il planner associato non può essere nullo")
     private Long plannerId;
+
+    @AssertTrue(message = "La data di fine prenotazioni deve essere prima della data di partenza")
+    public boolean isBookingPeriodValid() {
+        return dateStartBookings != null && dateEndBookings != null && dateDeparture != null
+                && dateEndBookings.isBefore(dateDeparture);
+    }
+
+    @AssertTrue(message = "La data di ritorno deve essere dopo la data di partenza")
+    public boolean isReturnAfterDeparture() {
+        return dateReturn != null && dateDeparture != null && dateReturn.isAfter(dateDeparture);
+    }
 
     public static TripDTO fromEntity(Trip entity) {
         return TripDTO.builder()
@@ -47,9 +68,7 @@ public class TripDTO {
                 // Stato come nome semplice della classe
                 .state(entity.getState() != null ? entity.getState().getClass().getSimpleName() : null)
                 // Conteggio attuale dei partecipanti dalle bookings
-                .currentParticipantsCount(
-                        entity.getBookings() != null ? entity.getBookings().size() : 0
-                )
+                .currentParticipantsCount(entity.getCurrentParticipantsCount())
                 .templateMailPath(entity.getTemplateMailPath())
                 // Relazioni come ID
                 .tripItineraryId(entity.getTripItinerary() != null ? entity.getTripItinerary().getId() : null)

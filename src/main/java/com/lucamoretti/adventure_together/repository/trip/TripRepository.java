@@ -26,6 +26,17 @@ public interface TripRepository extends JpaRepository<Trip, Long> {
     // Trova tutti i viaggi con data di partenza compresa tra due date specificate.
     List<Trip> findByDateDepartureBetween(LocalDate from, LocalDate to);
 
+    // Trova tutti i viaggi con data di partenza compresa tra due date specificate non cancellati.
+    @Query("""
+           select t from Trip t
+           where type(t.state) not in (
+                         com.lucamoretti.adventure_together.model.trip.state.Cancelled
+                     )
+           and t.dateDeparture > :today
+           order by t.dateDeparture asc
+           """)
+    List<Trip> findByDateDepartureBetweenNotCancelled(LocalDate from, LocalDate to);
+
     // Trova tutti i viaggi futuri (dopo oggi)
     @Query("""
            select t from Trip t
@@ -34,13 +45,16 @@ public interface TripRepository extends JpaRepository<Trip, Long> {
            """)
     List<Trip> findFutureTrips(LocalDate today);
 
-    // Trova tutti i viaggi che sono ancora aperti per le prenotazioni (data di fine prenotazioni >= oggi)
+    // Trova tutti i viaggi che sono ancora aperti per le prenotazioni (stati ToBeConfirmed e ConfirmedOpen)
     @Query("""
            select t from Trip t
-           where t.dateEndBookings >= :today
+           where type(t.state) in (
+                         com.lucamoretti.adventure_together.model.trip.state.ToBeConfirmed,
+                         com.lucamoretti.adventure_together.model.trip.state.ConfirmedOpen
+                     )
            order by t.dateDeparture asc
            """)
-    List<Trip> findOpenForBooking(LocalDate today);
+    List<Trip> findOpenForBooking();
 
     // Trova tutti i viaggi il cui stato è ConfirmedOpen
     @Query("select t from Trip t where type(t.state) = com.lucamoretti.adventure_together.model.trip.state.ConfirmedOpen")
@@ -54,15 +68,18 @@ public interface TripRepository extends JpaRepository<Trip, Long> {
            """)
     List<Trip> findByState(Class<?> stateClass);
 
-    // Trova tutti i viaggi ancora prenotabili che hanno la partenza entro 30 giorni da oggi
+    // Trova tutti i viaggi ancora prenotabili (stato ToBeConfirmed e ConfirmedOpen) che hanno la partenza entro 30 giorni da oggi
     // Per homepage: viaggi prenotabili con partenza a breve (< 30 giorni)
     @Query("""
            select t from Trip t
-           where t.dateEndBookings >= :today
+           where type(t.state) in (
+                         com.lucamoretti.adventure_together.model.trip.state.ToBeConfirmed,
+                         com.lucamoretti.adventure_together.model.trip.state.ConfirmedOpen
+                     )
            and t.dateDeparture between :today and :todayPlus30
            order by t.dateDeparture asc
            """)
-    List<Trip> findUpcomingBookableTrips(LocalDate today, LocalDate todayPlus30);
+    List<Trip> findUpcomingBookableTrips(LocalDate todayPlus30);
 
     // Trova un viaggio per id e applica un lock pessimista di scrittura
     // Utile per operazioni che modificano lo stato del viaggio in modo concorrente
@@ -70,8 +87,5 @@ public interface TripRepository extends JpaRepository<Trip, Long> {
     @Query("select t from Trip t where t.id = :tripId")
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     Optional<Trip> findByIdForUpdate(Long tripId);
-
-
-
 }
 

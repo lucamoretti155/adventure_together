@@ -4,29 +4,38 @@ import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
+
 // Stato del viaggio Confirmed Open
 // Se la capacità massima è raggiunta, passa a Confirmed Closed
 // Se cancellato, passa a Cancelled (facoltà solo dell'admin)
 
 @Entity @DiscriminatorValue("CONFIRMED_OPEN")
-@NoArgsConstructor
 public class ConfirmedOpen extends TripState {
 
-    public ConfirmedOpen(String templateMailPath) { this.templateMailPath = templateMailPath; }
+    public ConfirmedOpen() {
+        this.templateMailPath = "/mail/confirmed-open";
+    }
 
     @Override
     public void handle() {
-        if (trip == null) return;
-        boolean capacityFull = trip.getCurrentParticipantsCount() >= trip.getTripItinerary().getMaxParticipants();
-        if (capacityFull) {
-            trip.setState(new ConfirmedClosed("/mail/confirmed-closed"));
+        int participants = trip.getCurrentParticipantsCount();
+        LocalDate today = LocalDate.now();
+
+        if (participants >= trip.getTripItinerary().getMaxParticipants() ||
+                today.isAfter(trip.getDateEndBookings())) {
+
+            TripState closed = new ConfirmedClosed();
+            closed.attachTo(trip);
+            trip.setState(closed);
+            trip.setTemplateMailPath(closed.getTemplateMailPath());
+            // notifica i partecipanti dell'avvenuta chiusura delle iscrizioni del viaggio e che il viaggio è confermato
+            trip.notifyAllListeners(closed.getTemplateMailPath());
         }
     }
 
     @Override
     public void cancel() {
-        if (trip != null) {
-            trip.setState(new Cancelled("/mail/cancelled"));
-        }
+        // Trip già confermato, non si può più cancellare
     }
 }

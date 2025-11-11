@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 // Stato finale, nessuna azione ulteriore possibile se non la cancellazione
 // Se cancellato, passa a Cancelled (facoltà solo dell'admin)
 
-@Entity @DiscriminatorValue("EXPIRED_CLOSED")
-@NoArgsConstructor
+@Entity
+@DiscriminatorValue("EXPIRED_CLOSED")
 public class ExpiredClosed extends TripState {
 
-    public ExpiredClosed(String templateMailPath) { this.templateMailPath = templateMailPath; }
+    public ExpiredClosed() { this.templateMailPath = "mail/expired-closed"; }
 
     @Override
     public void handle() {
@@ -22,8 +22,6 @@ public class ExpiredClosed extends TripState {
 
     @Override
     public void cancel() {
-        if (trip != null) {
-            trip.setState(new Cancelled("/mail/cancelled"));
-        }
+        //Trip ormai scaduto e chiuso, non si può più cancellare
     }
 }

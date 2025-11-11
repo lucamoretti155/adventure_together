@@ -1,6 +1,9 @@
 package com.lucamoretti.adventure_together.dto.trip;
 
 import com.lucamoretti.adventure_together.model.trip.TripItinerary;
+import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import java.util.List;
 import java.util.Set;
@@ -20,17 +23,28 @@ public class TripItineraryDTO {
 
     private Long id;
 
+    @NotBlank(message = "Il titolo non può essere vuoto")
     private String title;
 
+    @NotBlank(message = "La descrizione non può essere vuota")
     private String description;
 
+    @NotBlank(message = "Il percorso dell'immagine non può essere vuoto")
     private String picturePath;
 
+    @Min(value = 1, message = "La durata deve essere di almeno 1 giorno")
     private int durationInDays;
 
+    @Min(value = 1, message = "Il numero minimo di partecipanti deve essere almeno 1")
     private int minParticipants;
 
+    @Min(value = 1, message = "Il numero massimo di partecipanti deve essere almeno 1")
     private int maxParticipants;
+
+    @AssertTrue(message = "Minimo partecipanti non può essere maggiore del massimo partecipanti")
+    public boolean isValidParticipantsRange() {
+        return minParticipants <= maxParticipants;
+    }
 
     // Relazioni semplificate con ID
     private Set<Long> countryIds;

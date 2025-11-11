@@ -79,6 +79,14 @@ public class Trip {
     @OneToMany(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Booking> bookings = new LinkedHashSet<>();
 
+    // Notifica tutti i listener (Booking) associati a questo Trip
+    // Viene chiamato ad ogni cambio di stato per notificare le prenotazioni
+    public void notifyAllListeners(String mailTemplatePath) {
+        for (Booking booking : bookings) {
+            booking.update(mailTemplatePath);
+        }
+    }
+
     // Metodo per settare inizialmente lo stato del Trip
     // Si occupa di collegare lo stato al Trip e aggiornare il templateMailPath
     // Usato internamente quando si crea un nuovo Trip
@@ -86,7 +94,7 @@ public class Trip {
         if (this.state != null) {
             throw new IllegalStateException("Trip è già stato aperto con uno stato iniziale.");
         }
-        TripState newState = new ToBeConfirmed("/mail/to-be-confirmed");
+        TripState newState = new ToBeConfirmed();
         newState.attachTo(this);
         this.state = newState;
         this.templateMailPath = newState.getTemplateMailPath();
@@ -100,9 +108,16 @@ public class Trip {
         if (state != null) state.cancel();
     }
 
-    // Ritorna il numero corrente di partecipanti prenotati per il viaggio
+    // Ritorna il numero totale dei partecipanti attualmente prenotati per il viaggio
+    // Somma i partecipanti di tutte le Booking associate al Trip
     public int getCurrentParticipantsCount() {
-        return bookings.size();
+        return bookings != null
+                ? bookings.stream().mapToInt(Booking::getNumParticipants).sum()
+                : 0;
     }
+
+
+
+
 
 }

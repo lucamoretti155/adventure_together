@@ -5,10 +5,12 @@ import com.lucamoretti.adventure_together.model.participant.Participant;
 import com.lucamoretti.adventure_together.model.details.DepartureAirport;
 import com.lucamoretti.adventure_together.model.trip.Trip;
 import com.lucamoretti.adventure_together.model.user.Traveler;
+import com.lucamoretti.adventure_together.service.mail.EmailService;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 /*
@@ -23,7 +25,7 @@ import java.util.Set;
 
 @Data @NoArgsConstructor @AllArgsConstructor
 @Entity @Table(name = "bookings")
-public class Booking implements IBooking {
+public class Booking implements IBooking, BookingListener {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,10 +33,6 @@ public class Booking implements IBooking {
     // Data di prenotazione, impostata automaticamente alla data corrente
     @Column(nullable=false)
     private LocalDate bookingDate = LocalDate.now();
-
-    // Numero di partecipanti inclusi nella prenotazione (minimo 1, il viaggiatore stesso che prenota)
-    @Column(nullable=false)
-    private int numParticipants;
 
     //Relazioni con altre entità
 
@@ -52,6 +50,18 @@ public class Booking implements IBooking {
     @JoinColumn(name = "traveler_id", nullable = false)
     private Traveler traveler;
 
+    // Transient perché non persistiamo il service nel DB
+    @Transient
+    private static EmailService emailService;
+
+    /*
+      Metodo statico usato per "iniettare" l'EmailService all'avvio dell'applicazione.
+      Viene configurato da una classe @Configuration (vedi sotto).
+     */
+    public static void setEmailService(EmailService service) {
+        emailService = service;
+    }
+
     //Associazione ManyToOne con DepartureAirport
     // Una prenotazione specifica un solo aeroporto di partenza, ma un aeroporto può essere usato in molte prenotazioni
     // Il proprietario della relazione è Booking che contiene la foreign key
@@ -65,6 +75,12 @@ public class Booking implements IBooking {
     // il numero di partecipanti inserito in input viene usato per creare gli slot vuoti da compilare successivamente
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Participant> participants = new LinkedHashSet<>();
+
+    // Ritorna il numero totale dei partecipanti inclusi nella prenotazione
+    // (comprende il Traveler stesso, che viene inserito anche come Participant)
+    public int getNumParticipants() {
+        return participants != null ? participants.size() : 0;
+    }
 
     //Associazione OneToOne con Payment
     // Una prenotazione ha un solo pagamento associato
@@ -82,7 +98,7 @@ public class Booking implements IBooking {
             throw new IllegalStateException("Booking.trip non inizializzato per il calcolo del costo.");
         }
         // se trip non è null calcolo il costo del viaggio
-        return trip.getTripIndividualCost() * Math.max(1, numParticipants);
+        return trip.getTripIndividualCost() * Math.max(1, getNumParticipants());
     }
     // Costo dell'assicurazione base calcolato fisso come il 10% del costo del viaggio di base
     // Tuttavia può essere modificato tramite il pattern Decorator per aggiungere costi extra
@@ -93,4 +109,27 @@ public class Booking implements IBooking {
     public double getTotalCost() {
         return getTripCost() + getInsuranceCost();
     }
-}
+    // Implementazione del metodo update dell'interfaccia BookingListener
+
+
+    /*
+     * Metodo invocato automaticamente quando il Trip cambia stato.
+     * Invia una notifica email al traveler usando il template associato al nuovo stato del viaggio.
+     */
+    @Override
+    public void update(String mailTemplatePath) {
+        if (emailService == null) {
+            System.err.println("[WARN] EmailService non configurato per Booking.update()");
+            return;
+        }
+
+        emailService.sendHtmlMessage(
+                traveler.getEmail(),
+                "Aggiornamento sul tuo viaggio " + trip.getTripItinerary().getTitle(),
+                mailTemplatePath,
+                Map.of("traveler", traveler, "trip", trip)
+        );
+    }
+
+    }
+

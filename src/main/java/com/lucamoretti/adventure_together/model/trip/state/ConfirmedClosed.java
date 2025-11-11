@@ -9,10 +9,9 @@ import lombok.NoArgsConstructor;
 // Se cancellato, passa a Cancelled (facoltà solo dell'admin)
 
 @Entity @DiscriminatorValue("CONFIRMED_CLOSED")
-@NoArgsConstructor
 public class ConfirmedClosed extends TripState {
 
-    public ConfirmedClosed(String templateMailPath) { this.templateMailPath = templateMailPath; }
+    public ConfirmedClosed() { this.templateMailPath = "/mail/confirmed-closed"; }
 
     @Override
     public void handle() {
@@ -21,8 +20,6 @@ public class ConfirmedClosed extends TripState {
 
     @Override
     public void cancel() {
-        if (trip != null) {
-            trip.setState(new Cancelled("/mail/cancelled"));
-        }
+        //Trip ormai confermato e chiuso, non si può più cancellare
     }
 }

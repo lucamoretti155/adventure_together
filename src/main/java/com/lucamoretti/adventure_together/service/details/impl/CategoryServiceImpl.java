@@ -9,7 +9,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
- // Implementazione del servizio per la gestione delle categorie.
+import java.util.List;
+
+// Implementazione del servizio per la gestione delle categorie.
 
 @Service
 @RequiredArgsConstructor
@@ -17,6 +19,7 @@ public class CategoryServiceImpl implements CategoryService {
 
     private final CategoryRepository categoryRepository;
 
+    // Crea una nuova categoria se non esiste già.
     @Override
     @Transactional
     public CategoryDTO createCategory(CategoryDTO dto) {
@@ -30,4 +33,14 @@ public class CategoryServiceImpl implements CategoryService {
         Category saved = categoryRepository.save(category);
         return CategoryDTO.fromEntity(saved);
     }
+
+    // Recupera tutte le categorie esistenti.
+    @Override
+    public List<CategoryDTO> getAllCategories() {
+        List<Category> categories = categoryRepository.findAll();
+        return categories.stream()
+                .map(CategoryDTO::fromEntity)
+                .toList();
+    }
 }
+

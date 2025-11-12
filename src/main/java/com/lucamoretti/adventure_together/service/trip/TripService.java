@@ -31,6 +31,9 @@ public interface TripService {
     // Recupera tutti i trip ancora prenotabili (ToBeConfirmed + ConfirmedOpen)
     List<TripDTO> getBookableTrips();
 
+    // Recupera tutti i trip ancora prenotabili (ToBeConfirmed + ConfirmedOpen) per un TripItinerary specifico
+    List<TripDTO> getBookableTripsByItinerary(Long itineraryId);
+
     // Recupera tutti i trip prenotabili con partenza entro 30 giorni (per homepage)
     List<TripDTO> getUpcomingBookableTrips();
 

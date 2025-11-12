@@ -25,11 +25,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
-// Implementazione del Service per la gestione degli User
-// Fornisce metodi per la registrazione, ricerca e disattivazione degli utenti
-// Fornisce anche funzionalità per il reset della password
-// Utilizza DTO per il trasferimento dei dati degli utenti
-// Interagisce con i repository per la persistenza dei dati
+/*
+  Implementazione del Service per la gestione degli User
+  Fornisce metodi per la registrazione(Traveler, Planner e Admin), ricerca e disattivazione degli utenti
+  Fornisce anche funzionalità per il reset della password
+*/
 
 @Service
 @RequiredArgsConstructor
@@ -45,23 +45,35 @@ public class UserServiceImpl implements UserService {
     private final DataValidationService dataValidationService; // servizio per la validazione dei dati
     private static final int EXPIRATION_HOURS = 24; // durata validità token reset password
 
+    // restituisce tutti gli user come lista di UserDTO
     @Override
-    public List<UserDTO> findAllUsers() {
+    public List<UserDTO> getAllUsers() {
         return userRepository.findAll().stream()
                 .map(UserDTO::fromEntity)
                 .toList();
     }
 
+    // restituisce tutti i planner come lista di PlannerDTO
     @Override
-    public Optional<UserDTO> findById(Long id) {
+    public List<PlannerDTO> getAllPlanners() {
+        return plannerRepository.findAll().stream()
+                .map(PlannerDTO::fromEntity)
+                .toList();
+    }
+
+    // restituisce tutti i traveler come lista di TravelerDTO
+    @Override
+    public Optional<UserDTO> getById(Long id) {
         return userRepository.findById(id).map(UserDTO::fromEntity);
     }
 
+    // restituisce uno User dato l'email
     @Override
-    public Optional<UserDTO> findByEmail(String email) {
+    public Optional<UserDTO> getByEmail(String email) {
         return userRepository.findByEmail(email).map(UserDTO::fromEntity);
     }
 
+    // questo metodo registra un viaggiatore nel sistema
     @Override
     public TravelerDTO registerTraveler(TravelerDTO dto, String rawPassword) {
         // valida i dati del viaggiatore (età e password) usando il metodo presente in DataValidationService
@@ -180,7 +192,7 @@ public class UserServiceImpl implements UserService {
         passwordResetTokenRepository.delete(resetToken);
     }
 
-
+    // metodo per disattivare un utente dato il suo id
     @Override
     public void deactivateUser(Long id) {
         userRepository.findById(id).ifPresent(user -> {

@@ -12,7 +12,10 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-    // Implementazione del servizio per la gestione delle country.
+import java.util.List;
+import java.util.Set;
+
+// Implementazione del servizio per la gestione delle country.
 
 @Service
 @RequiredArgsConstructor
@@ -21,6 +24,7 @@ public class CountryServiceImpl implements CountryService {
     private final CountryRepository countryRepository;
     private final GeoAreaRepository geoAreaRepository;
 
+    // Creazione di una nuova country con controllo dei duplicati e associazione alla geoArea.
     @Transactional
     @Override
     public CountryDTO createCountry(CountryDTO dto) {
@@ -40,4 +44,38 @@ public class CountryServiceImpl implements CountryService {
         return CountryDTO.fromEntity(saved);
     }
 
+    // Recupero di tutte le country o di quelle appartenenti a una specifica geoArea.
+
+    @Override
+    public List<CountryDTO> getAllCountries() {
+        List<Country> countries = countryRepository.findAll();
+        return countries.stream()
+                .map(CountryDTO::fromEntity)
+                .toList();
+    }
+
+    @Override
+    public List<CountryDTO> getAllCountriesByGeoAreaId(Long geoAreaId) {
+        List<Country> countries = countryRepository.findAllByGeoAreaId(geoAreaId);
+        return countries.stream()
+                .map(CountryDTO::fromEntity)
+                .toList();
+    }
+
+    // Recuper del dettagli di una country tramite ID o un insieme di ID.
+
+    @Override
+    public CountryDTO getCountryById(Long id) {
+        Country country = countryRepository.findById(id)
+                .orElseThrow(() -> new ResourceNotFoundException("Country","id", id));
+        return CountryDTO.fromEntity(country);
+    }
+
+    @Override
+    public List<CountryDTO> getCountryBySetOfId(Set<Long> ids) {
+        List<Country> countries = countryRepository.findAllByIdIn(ids);
+        return countries.stream()
+                .map(CountryDTO::fromEntity)
+                .toList();
+    }
 }

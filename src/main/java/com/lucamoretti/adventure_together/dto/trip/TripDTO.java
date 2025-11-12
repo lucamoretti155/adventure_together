@@ -43,8 +43,13 @@ public class TripDTO {
     // Relazioni come ID
     @NotNull(message = "L'itinerario di viaggio associato non può essere nullo")
     private Long tripItineraryId;
+
     @NotNull(message = "Il planner associato non può essere nullo")
     private Long plannerId;
+
+    // Aggiunta per facilitare la visualizzazione
+    @NotNull(message = "L'itinerario di viaggio associato non può essere nullo")
+    private String tripItineraryTitle;
 
     @AssertTrue(message = "La data di fine prenotazioni deve essere prima della data di partenza")
     public boolean isBookingPeriodValid() {
@@ -73,6 +78,8 @@ public class TripDTO {
                 // Relazioni come ID
                 .tripItineraryId(entity.getTripItinerary() != null ? entity.getTripItinerary().getId() : null)
                 .plannerId(entity.getPlanner() != null ? entity.getPlanner().getId() : null)
+                //aggiunta per facilitare la visualizzazione
+                .tripItineraryTitle(entity.getTripItinerary() != null ? entity.getTripItinerary().getTitle() : null)
                 .build();
     }
 

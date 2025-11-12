@@ -130,6 +130,16 @@ public class TripServiceImpl implements TripService {
                 .map(TripDTO::fromEntity)
                 .toList();
     }
+
+    // Recupera tutti i trip ancora prenotabili (ToBeConfirmed + ConfirmedOpen) per un TripItinerary specifico
+    @Override
+    public List<TripDTO> getBookableTripsByItinerary(Long itineraryId) {
+        return tripRepository.findOpenForBookingByItinerary(itineraryId).stream()
+                .filter(t -> t.getDateEndBookings().isAfter(LocalDate.now())) // sicurezza extra lato logico
+                .map(TripDTO::fromEntity)
+                .toList();
+    }
+
     // Recupera tutti i trip prenotabili con partenza entro 30 giorni (per homepage)
     @Override
     public List<TripDTO> getUpcomingBookableTrips() {

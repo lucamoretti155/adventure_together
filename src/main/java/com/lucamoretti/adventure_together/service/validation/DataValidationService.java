@@ -6,9 +6,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.Period;
 
-/**
- * Servizio per la validazione dei dati relativi a viaggiatori e viaggi.
- * Fornisce metodi per validare età, password, date dei viaggi e numero di partecipanti.
+/*
+  Servizio per la validazione dei dati relativi a viaggiatori e viaggi.
+  Fornisce metodi per validare età, password, date dei viaggi e numero di partecipanti.
  */
 
 @Service

@@ -14,4 +14,6 @@ public interface ReviewService {
     List<ReviewDTO> getTripReviews(Long tripId);
     List<ReviewDTO> getPendingReviews(Long travelerId);
     void sendReviewReminderEmails();
+    List<ReviewDTO> getAllReviewsByTripItineraryId(Long tripItineraryId);
+    Float getAverageScoreForTripItinerary(Long tripItineraryId);
 }

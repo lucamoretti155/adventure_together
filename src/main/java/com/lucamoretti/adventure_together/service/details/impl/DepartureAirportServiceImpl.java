@@ -9,6 +9,9 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Set;
+
 // Implementazione del servizio per la gestione degli aeroporti di partenza
 
 @Service
@@ -17,6 +20,7 @@ public class DepartureAirportServiceImpl implements DepartureAirportService {
 
     private final DepartureAirportRepository departureAirportRepository;
 
+    // Creazione di un nuovo aeroporto di partenza
     @Override
     @Transactional
     public DepartureAirportDTO createDepartureAirport(DepartureAirportDTO dto) {
@@ -31,5 +35,23 @@ public class DepartureAirportServiceImpl implements DepartureAirportService {
 
         DepartureAirport saved = departureAirportRepository.save(airport);
         return DepartureAirportDTO.fromEntity(saved);
+    }
+
+    // Recupero di tutti gli aeroporti di partenza
+    @Override
+    public List<DepartureAirportDTO> getAllDepartureAirports() {
+        List<DepartureAirport> airports = departureAirportRepository.findAll();
+        return airports.stream()
+                .map(DepartureAirportDTO::fromEntity)
+                .toList();
+    }
+
+    // Recupero di aeroporti di partenza in base a un insieme di ID
+    @Override
+    public List<DepartureAirportDTO> getDepartureAirportsBySetOfIds(Set<Long> ids) {
+        List<DepartureAirport> airports = departureAirportRepository.findAllByIdIn(ids);
+        return airports.stream()
+                .map(DepartureAirportDTO::fromEntity)
+                .toList();
     }
 }

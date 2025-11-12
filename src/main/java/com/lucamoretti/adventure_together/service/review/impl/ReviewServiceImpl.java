@@ -16,7 +16,12 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
-
+/*
+    Implementazione del servizio per la gestione delle recensioni
+    Consente di creare recensioni, recuperare recensioni di traveler e viaggi,
+    ottenere viaggi completati ma non recensiti, inviare email di promemoria
+    e calcolare il punteggio medio delle recensioni per un itinerario specifico.
+ */
 
 
 @Service
@@ -29,6 +34,7 @@ public class ReviewServiceImpl implements ReviewService {
     private final TravelerRepository travelerRepository;
     private final EmailService emailService;
 
+    // Crea una nuova recensione per un viaggio da parte di un traveler
     @Override
     public ReviewDTO createReview(Long tripId, Long travelerId, String textReview, int score) {
 
@@ -133,5 +139,30 @@ public class ReviewServiceImpl implements ReviewService {
             }
         }
     }
-}
+    // Recupera tutte le recensioni associate ai viaggi di un itinerario specifico
+    @Override
+    public List<ReviewDTO> getAllReviewsByTripItineraryId(Long tripItineraryId) {
+        // Recupera tutte le recensioni associate ai viaggi di un itinerario specifico
+        return reviewRepository.findAllByTripItinerary_Id(tripItineraryId)
+                .stream()
+                .map(ReviewDTO::fromEntity)
+                .toList();
+    }
 
+    // Calcola il punteggio medio delle recensioni per un itinerario specifico
+    @Override
+    public Float getAverageScoreForTripItinerary(Long tripItineraryId) {
+        List<Review> reviews = reviewRepository.findAllByTripItinerary_Id(tripItineraryId);
+        if (reviews.isEmpty()) {
+            return null; // Nessuna recensione disponibile
+
+        } else {
+            // Calcola la somma dei punteggi
+            int totalScore = reviews.stream()
+                    .mapToInt(Review::getScore)
+                    .sum();
+            // Calcola e ritorna la media
+            return (float) totalScore / reviews.size();
+        }
+    }
+}

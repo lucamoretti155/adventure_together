@@ -21,7 +21,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-/**
+/*
   Implementazione del servizio per la gestione degli itinerari di viaggio.
   Fornisce metodi per creare, aggiornare, eliminare e recuperare itinerari di viaggio,
   nonché per cercare itinerari in base a criteri specifici come paese, area geografica e categorie.
@@ -143,7 +143,7 @@ public class TripItineraryServiceImpl implements TripItineraryService {
     // metodo per cercare itinerari di viaggio in base al paese
     @Override
     @Transactional(readOnly = true)
-    public List<TripItineraryDTO> findByCountry(Long countryId) {
+    public List<TripItineraryDTO> getAllByCountryId(Long countryId) {
         return itineraryRepository.findByCountry(countryId).stream()
                 .map(TripItineraryDTO::fromEntity)
                 .toList();
@@ -151,7 +151,7 @@ public class TripItineraryServiceImpl implements TripItineraryService {
     // metodo per cercare itinerari di viaggio in base all'area geografica
     @Override
     @Transactional(readOnly = true)
-    public List<TripItineraryDTO> findByGeoArea(Long geoAreaId) {
+    public List<TripItineraryDTO> getAllByGeoAreaId(Long geoAreaId) {
         return itineraryRepository.findByGeoArea(geoAreaId).stream()
                 .map(TripItineraryDTO::fromEntity)
                 .toList();
@@ -159,7 +159,7 @@ public class TripItineraryServiceImpl implements TripItineraryService {
     // metodo per cercare itinerari di viaggio in base alla categoria
     @Override
     @Transactional(readOnly = true)
-    public List<TripItineraryDTO> findByCategory(Long categoryId) {
+    public List<TripItineraryDTO> getAllByCategoryId(Long categoryId) {
         return itineraryRepository.findByCategory(categoryId).stream()
                 .map(TripItineraryDTO::fromEntity)
                 .toList();
@@ -167,7 +167,7 @@ public class TripItineraryServiceImpl implements TripItineraryService {
     // metodo per cercare itinerari di viaggio in base a più categorie
     @Override
     @Transactional(readOnly = true)
-    public List<TripItineraryDTO> findByCategories(List<Long> categoryIds) {
+    public List<TripItineraryDTO> getAllByCategoryIds(List<Long> categoryIds) {
         return itineraryRepository.findByCategories(categoryIds).stream()
                 .map(TripItineraryDTO::fromEntity)
                 .toList();

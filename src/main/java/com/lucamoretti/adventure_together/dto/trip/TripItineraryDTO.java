@@ -46,7 +46,7 @@ public class TripItineraryDTO {
         return minParticipants <= maxParticipants;
     }
 
-    // Relazioni semplificate con ID
+    // Relazioni
     private Set<Long> countryIds;
     private Set<Long> categoryIds;
     private Set<Long> departureAirportIds;
@@ -75,6 +75,7 @@ public class TripItineraryDTO {
                         .map(cat -> cat.getId())
                         .collect(Collectors.toSet())
                         : Set.of())
+                // Set degli ID degli aeroporti di partenza (come sopra)
                 .departureAirportIds(entity.getDepartureAirports() != null
                         ? entity.getDepartureAirports().stream()
                         .map(da -> da.getId())

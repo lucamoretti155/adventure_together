@@ -14,9 +14,10 @@ import java.util.Optional;
 // Implementato da UserServiceImpl
 
 public interface UserService {
-    List<UserDTO> findAllUsers();
-    Optional<UserDTO> findById(Long id);
-    Optional<UserDTO> findByEmail(String email);
+    List<UserDTO> getAllUsers();
+    List<PlannerDTO> getAllPlanners();
+    Optional<UserDTO> getById(Long id);
+    Optional<UserDTO> getByEmail(String email);
 
     TravelerDTO registerTraveler(TravelerDTO travelerDTO, String rawPassword);
     PlannerDTO registerPlanner(PlannerDTO plannerDTO, String rawPassword);
@@ -26,5 +27,7 @@ public interface UserService {
     void resetPassword(String token, String newPassword);
 
     void deactivateUser(Long id);
+
+
 }
 

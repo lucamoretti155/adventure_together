@@ -87,7 +87,7 @@ public class SecurityConfig {
 
                         // 4. REGOLA PUBBLICA: Accesso per chiunque
                         // PAGINE PUBBLICHE
-                        .requestMatchers("/", "/home", "/auth/**", "/public", "/trip/**").permitAll()
+                        .requestMatchers("/", "/home/**", "/auth/**", "/public").permitAll()
 
                         // STATICI
                         .requestMatchers("/js/**", "/css/**", "/images/**").permitAll()

@@ -38,4 +38,10 @@ public class ConfirmedOpen extends TripState {
     public void cancel() {
         // Trip già confermato, non si può più cancellare
     }
+
+    // In questo stato è permesso accettare nuove prenotazioni
+    @Override
+    public boolean canAcceptBooking() {
+        return true;
+    }
 }

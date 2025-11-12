@@ -25,6 +25,7 @@ public class DepartureAirport {
     @Column(nullable=false)
     private String city;
 
+
     // non aggiungo relazioni many to many con Trip
     // perchè gestito direttamente da Trip con una tabella di join
 

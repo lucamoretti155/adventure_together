@@ -52,5 +52,11 @@ public class ToBeConfirmed extends TripState {
         // notifica i partecipanti dell'avvenuta cancellazione del viaggio
         trip.notifyAllListeners(cancelled.getTemplateMailPath());
     }
+
+    // In ToBeConfirmed è permesso accettare prenotazioni
+    @Override
+    public boolean canAcceptBooking() {
+        return true;
+    }
 }
 

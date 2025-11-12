@@ -26,6 +26,12 @@ public interface TripRepository extends JpaRepository<Trip, Long> {
     // Trova tutti i viaggi con data di partenza compresa tra due date specificate.
     List<Trip> findByDateDepartureBetween(LocalDate from, LocalDate to);
 
+    // Trova tutti i viaggi con data di ritorno uguale a una data specificata.
+    List<Trip> findByDateReturnEquals(LocalDate date);
+
+    // Trova tutti i viaggi con data di partenza uguale a una data specificata.
+    List<Trip> findByDateDepartureEquals(LocalDate date);
+
     // Trova tutti i viaggi con data di partenza compresa tra due date specificate non cancellati.
     @Query("""
            select t from Trip t

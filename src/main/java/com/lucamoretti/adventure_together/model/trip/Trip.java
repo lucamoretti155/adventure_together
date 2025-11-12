@@ -123,6 +123,12 @@ public class Trip {
         }
         return total;
     }
+    // Verifica se ci sono posti disponibili per un numero richiesto di partecipanti (usato in fase di prenotazione)
+    public boolean hasAvailableSpots(int requestedParticipants) {
+        int max = tripItinerary.getMaxParticipants();
+        int current = getCurrentParticipantsCount();
+        return requestedParticipants <= (max - current);
+    }
 
 
 

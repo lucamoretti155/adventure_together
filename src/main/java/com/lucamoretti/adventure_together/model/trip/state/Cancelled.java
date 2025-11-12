@@ -22,4 +22,10 @@ public class Cancelled extends TripState {
     public void cancel() {
         // Nessuna azione, già cancellato
     }
+
+    // In questo stato non è permesso accettare nuove prenotazioni
+    @Override
+    public boolean canAcceptBooking() {
+        return false;
+    }
 }

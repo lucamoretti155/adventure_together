@@ -50,4 +50,11 @@ public abstract class TripState {
     public void attachTo(Trip trip) {
         this.trip = trip;
     }
+
+
+    //Indica se in questo stato è permesso accettare nuove prenotazioni.
+    // Default: false (gli stati concreti devono esplicitamente consentirlo)
+    public boolean canAcceptBooking() {
+        return false;
+    }
 }

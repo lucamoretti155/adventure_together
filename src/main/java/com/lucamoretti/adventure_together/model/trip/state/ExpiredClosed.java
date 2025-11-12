@@ -24,4 +24,10 @@ public class ExpiredClosed extends TripState {
     public void cancel() {
         //Trip ormai scaduto e chiuso, non si può più cancellare
     }
+
+    // In questo stato non è permesso accettare nuove prenotazioni
+    @Override
+    public boolean canAcceptBooking() {
+        return false;
+    }
 }

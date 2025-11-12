@@ -24,6 +24,21 @@ public class Payment {
     @Column(nullable=false)
     private LocalDate paymentDate = LocalDate.now();
 
+    @Column(length = 100)
+    private String paymentIntentId;
+
+    @Column(length = 255)
+    private String clientSecret;
+
+    @Column(length = 50)
+    private String status;
+
+    @Column(length = 50)
+    private String paymentMethod;
+
+    @Column(length = 10)
+    private String currency;
+
     // L'importo totale pagato per la prenotazione
     @Column(nullable=false)
     private double amountPaid;

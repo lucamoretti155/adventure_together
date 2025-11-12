@@ -1,9 +1,6 @@
 package com.lucamoretti.adventure_together.service.booking;
 
 import com.lucamoretti.adventure_together.dto.booking.BookingDTO;
-import com.lucamoretti.adventure_together.dto.participant.ParticipantDTO;
-import com.lucamoretti.adventure_together.model.booking.Booking;
-
 import java.util.List;
 
 /*
@@ -13,11 +10,8 @@ import java.util.List;
 
 public interface BookingService {
 
-    Booking createBooking(
-            Long tripId,
-            Long travelerId,
-            Long departureAirportId,
-            List<ParticipantDTO> participants,
+    BookingDTO createBooking(
+            BookingDTO req,
             String insuranceType // es. "basic", "cancellation", "baggage"
     );
 

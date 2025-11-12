@@ -10,4 +10,5 @@ import java.util.Optional;
 
 public interface GeoAreaRepository extends JpaRepository<GeoArea, Long> {
     Optional<GeoArea> findByGeoArea(String geoArea);
+    boolean existsByGeoAreaIgnoreCase(String name);
 }

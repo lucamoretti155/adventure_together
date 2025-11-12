@@ -16,7 +16,7 @@ public class DepartureAirport {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable=false, length=8)
+    @Column(nullable=false, length=8, unique=true)
     private String code; // es. "MXP"
 
     @Column(nullable=false)

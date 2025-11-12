@@ -31,15 +31,6 @@ public class ParticipantDTO {
     @Past(message = "La data di nascita deve essere nel passato")
     private LocalDate dateOfBirth;
 
-    public static Participant fromDTO(ParticipantDTO dto) {
-        Participant p = new Participant();
-        p.setId(dto.getId()); // può essere null in create
-        p.setFirstName(dto.getFirstName());
-        p.setLastName(dto.getLastName());
-        p.setDateOfBirth(dto.getDateOfBirth());
-        return p;
-    }
-
     public static ParticipantDTO fromEntity(Participant entity) {
         return ParticipantDTO.builder()
                 .id(entity.getId())
@@ -47,5 +38,14 @@ public class ParticipantDTO {
                 .lastName(entity.getLastName())
                 .dateOfBirth(entity.getDateOfBirth())
                 .build();
+    }
+
+    public static Participant toEntity(ParticipantDTO dto) {
+        Participant p = new Participant();
+        p.setId(dto.getId()); // può essere null in create
+        p.setFirstName(dto.getFirstName());
+        p.setLastName(dto.getLastName());
+        p.setDateOfBirth(dto.getDateOfBirth());
+        return p;
     }
 }

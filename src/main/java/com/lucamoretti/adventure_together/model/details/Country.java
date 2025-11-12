@@ -21,12 +21,11 @@ public class Country {
     // Associazione ManyToOne con GeoArea
     // FetchType.LAZY per caricare la geoArea solo quando necessario
     // optional = false indica che una country deve sempre avere una geoArea associata
-    // non uso JoinColumn perché il nome della colonna sarà generato automaticamente come "geo_area_id"
     // il proprietario della relazione è Country
     @ManyToOne(optional = false, fetch = FetchType.LAZY) // Una country appartiene a una sola geoArea
     @JoinColumn(name = "geo_area_id", nullable = false)
     private GeoArea geoArea; // Associazione ManyToOne con GeoArea
 
-    // non aggiungo relazioni many to many con Trip
-    // perchè gestito direttamente da Trip con una tabella di join
+    // non aggiungo relazioni many to many con TripItinerary
+    // perchè gestito direttamente da TripItinerary con una tabella di join
 }

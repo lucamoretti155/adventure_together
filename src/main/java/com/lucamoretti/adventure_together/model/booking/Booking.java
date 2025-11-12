@@ -9,9 +9,7 @@ import com.lucamoretti.adventure_together.service.mail.EmailService;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
-import java.util.LinkedHashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /*
  Rappresenta una prenotazione per un viaggio.
@@ -74,7 +72,7 @@ public class Booking implements IBooking, BookingListener {
     // minimo uno (il viaggiatore stesso) che viene reinserito anche come participant alla creazione del booking
     // il numero di partecipanti inserito in input viene usato per creare gli slot vuoti da compilare successivamente
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Participant> participants = new LinkedHashSet<>();
+    private List<Participant> participants = new ArrayList<>();
 
     // Ritorna il numero totale dei partecipanti inclusi nella prenotazione
     // (comprende il Traveler stesso, che viene inserito anche come Participant)
@@ -102,7 +100,8 @@ public class Booking implements IBooking, BookingListener {
     }
     // Costo dell'assicurazione base calcolato fisso come il 10% del costo del viaggio di base
     // Tuttavia può essere modificato tramite il pattern Decorator per aggiungere costi extra
-    @Override public double getInsuranceCost() { return this.getTripCost() * 0.10; }
+    @Override
+    public double getInsuranceCost() { return this.getTripCost() * 0.10; }
 
     // Calcolo del costo totale della prenotazione sommando costo del viaggio + costo dell'assicurazione (eventualemente modificato dai decorator)
     @Override

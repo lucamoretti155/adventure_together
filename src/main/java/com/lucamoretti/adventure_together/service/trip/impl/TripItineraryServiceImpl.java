@@ -1,6 +1,7 @@
 package com.lucamoretti.adventure_together.service.trip.impl;
 
 import com.lucamoretti.adventure_together.dto.trip.TripItineraryDTO;
+import com.lucamoretti.adventure_together.dto.trip.TripItineraryDayDTO;
 import com.lucamoretti.adventure_together.model.details.Category;
 import com.lucamoretti.adventure_together.model.details.Country;
 import com.lucamoretti.adventure_together.model.details.DepartureAirport;
@@ -73,6 +74,16 @@ public class TripItineraryServiceImpl implements TripItineraryService {
         entity.setCategories(resolveCategories(dto.getCategoryIds()));
         entity.setDepartureAirports(resolveAirports(dto.getDepartureAirportIds()));
 
+        // Set dei giorni dell'itinerario
+        // Se sono forniti nel DTO, vengono convertiti in entità e associati all'itinerario
+        if (dto.getDays() != null && !dto.getDays().isEmpty()) {
+            var dayEntities = dto.getDays().stream()
+                    .map(TripItineraryDayDTO::toEntity)
+                    .peek(d -> d.setTripItinerary(entity)) // back reference
+                    .collect(Collectors.toSet());
+            entity.setDays(dayEntities);
+        }
+
         // Salvataggio dell'entità e ritorno del DTO corrispondente
         TripItinerary saved = itineraryRepository.save(entity);
         return TripItineraryDTO.fromEntity(saved);
@@ -112,6 +123,20 @@ public class TripItineraryServiceImpl implements TripItineraryService {
             itinerary.setCategories(resolveCategories(dto.getCategoryIds()));
         if (dto.getDepartureAirportIds() != null)
             itinerary.setDepartureAirports(resolveAirports(dto.getDepartureAirportIds()));
+
+        // Aggiornamento giorni
+        // Se i giorni sono forniti nel DTO, sostituisci quelli esistenti
+        if (dto.getDays() != null) {
+            // 1. Svuota i giorni attuali (grazie a orphanRemoval = true verranno eliminati)
+            itinerary.getDays().clear();
+
+            // 2. Ricrea i giorni dal DTO e ristabilisci la relazione inversa
+            dto.getDays().forEach(dayDto -> {
+                var dayEntity = dayDto.toEntity();
+                dayEntity.setTripItinerary(itinerary);
+                itinerary.getDays().add(dayEntity);
+            });
+        }
 
         return TripItineraryDTO.fromEntity(itineraryRepository.save(itinerary));
     }

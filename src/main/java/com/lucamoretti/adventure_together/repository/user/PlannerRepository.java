@@ -13,5 +13,4 @@ import java.util.Optional;
 @Repository
 public interface PlannerRepository extends JpaRepository<Planner, Long> {
     Optional<Planner> findByEmail(String email);
-    List<Planner> findAllPlannersActive();
 }

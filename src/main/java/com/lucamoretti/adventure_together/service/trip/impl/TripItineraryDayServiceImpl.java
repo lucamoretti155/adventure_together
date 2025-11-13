@@ -27,10 +27,14 @@ public class TripItineraryDayServiceImpl implements TripItineraryDayService {
     private final TripItineraryDayRepository dayRepository;
     private final TripItineraryRepository itineraryRepository;
 
-    // Metodo per creare un nuovo giorno nell'itinerario
-    // Effettua il controllo per evitare duplicati basati sul numero del giorno
-    // Se l'itinerario non esiste, lancia una ResourceNotFoundException
-    // Se il giorno esiste già, lancia un'IllegalArgumentException
+    /*
+     Metodo per creare un nuovo giorno nell'itinerario
+     Effettua il controllo per evitare duplicati basati sul numero del giorno
+     Se l'itinerario non esiste, lancia una ResourceNotFoundException
+     --> Metodo usato per aggiungere un nuovo giorno a un itinerario già esistente.
+     --> NON viene usato durante la creazione iniziale dell'itinerario,
+     perché quella viene gestita nel TripItineraryServiceImpl.createItinerary() con salvataggio in cascata.
+    */
     @Override
     public TripItineraryDayDTO createDay(Long itineraryId, TripItineraryDayDTO dto) {
         TripItinerary itinerary = itineraryRepository.findById(itineraryId)

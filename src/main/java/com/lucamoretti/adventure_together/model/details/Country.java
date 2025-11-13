@@ -19,10 +19,9 @@ public class Country {
     private String country;
 
     // Associazione ManyToOne con GeoArea
-    // FetchType.LAZY per caricare la geoArea solo quando necessario
     // optional = false indica che una country deve sempre avere una geoArea associata
     // il proprietario della relazione è Country
-    @ManyToOne(optional = false, fetch = FetchType.LAZY) // Una country appartiene a una sola geoArea
+    @ManyToOne(optional = false, fetch = FetchType.EAGER) // Una country appartiene a una sola geoArea
     @JoinColumn(name = "geo_area_id", nullable = false)
     private GeoArea geoArea; // Associazione ManyToOne con GeoArea
 

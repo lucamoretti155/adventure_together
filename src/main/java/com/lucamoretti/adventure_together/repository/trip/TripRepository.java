@@ -5,6 +5,7 @@ import jakarta.persistence.LockModeType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.List;
@@ -97,7 +98,7 @@ public interface TripRepository extends JpaRepository<Trip, Long> {
            and t.dateDeparture between :today and :todayPlus30
            order by t.dateDeparture asc
            """)
-    List<Trip> findUpcomingBookableTrips(LocalDate todayPlus30);
+    List<Trip> findUpcomingBookableTrips(@Param("today") LocalDate today, @Param("todayPlus30") LocalDate todayPlus30);
 
     // Trova un viaggio per id e applica un lock pessimista di scrittura
     // Utile per operazioni che modificano lo stato del viaggio in modo concorrente

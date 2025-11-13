@@ -1,10 +1,87 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Tutti i Viaggi</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
 </head>
 <body>
 
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<div class="container my-5">
+
+    <h1 class="mb-4 fw-bold">Esplora tutti i nostri viaggi</h1>
+
+    <div class="row">
+
+        <!-- FILTRI -->
+        <div class="col-md-4">
+            <div class="border rounded p-3 bg-light">
+
+                <!-- CATEGORIE -->
+                <h5 class="fw-bold">Categorie</h5>
+                <form th:action="@{/trips/categories}" method="get">
+                    <div th:each="cat : ${categories}">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox"
+                                   name="categoryIds"
+                                   th:value="${cat.id}">
+                            <label class="form-check-label"
+                                   th:text="${cat.name}"></label>
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary btn-sm mt-3">Filtra</button>
+                </form>
+
+
+                <!-- GEO AREE -->
+                <h5 class="fw-bold mt-4">Aree Geografiche</h5>
+                <ul class="list-unstyled">
+                    <li th:each="geo : ${geoAreas}">
+                        <a th:href="@{'/trips/geo-area/' + ${geo.id}}"
+                           class="text-decoration-none">
+                            <span th:text="${geo.geoArea}"></span>
+                        </a>
+                    </li>
+                </ul>
+
+                <!-- COUNTRIES -->
+                <h5 class="fw-bold mt-4">Paesi</h5>
+                <ul class="list-unstyled">
+                    <li th:each="c : ${countries}">
+                        <a th:href="@{'/trips/country/' + ${c.id}}"
+                           class="text-decoration-none">
+                            <span th:text="${c.country}"></span>
+                        </a>
+                    </li>
+                </ul>
+
+            </div>
+        </div>
+
+        <!-- DESCRIZIONE A DESTRA -->
+        <div class="col-md-8 d-flex align-items-center">
+            <div class="p-4">
+                <h4 class="fw-bold">Come usare i filtri</h4>
+                <p class="text-muted">
+                    Seleziona una o più categorie, oppure scegli una specifica area geografica
+                    o un paese.
+                    Verrai reindirizzato alla pagina con tutti gli itinerari che soddisfano
+                    il criterio selezionato.
+                </p>
+
+                <p class="text-muted">
+                    La dashboard principale non mostra automaticamente tutti i viaggi,
+                    per mantenere la navigazione più pulita e intuitiva.
+                </p>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
 </body>
 </html>
+

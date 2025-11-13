@@ -58,4 +58,13 @@ public class HomeController {
         return "home/index";
     }
 
+    // ricerca itinerario per titolo e redirect alla pagina di dettaglio (per la barra di ricerca globale)
+    @GetMapping("/search")
+    public String search(@RequestParam String title) {
+
+        TripItineraryDTO iti = tripItineraryService.getByTitle(title);
+
+        return "redirect:/trips/trip-itinerary/" + iti.getId();
+    }
+
 }

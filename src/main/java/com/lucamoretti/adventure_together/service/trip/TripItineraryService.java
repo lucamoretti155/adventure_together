@@ -16,6 +16,7 @@ public interface TripItineraryService {
     void deleteItinerary(Long id);
 
     TripItineraryDTO getById(Long id);
+    TripItineraryDTO getByTitle(String title);
     List<TripItineraryDTO> getAll();
 
     List<TripItineraryDTO> getAllByCountryId(Long countryId);

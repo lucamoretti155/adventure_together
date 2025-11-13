@@ -4,6 +4,7 @@ import com.lucamoretti.adventure_together.model.booking.Booking;
 import com.lucamoretti.adventure_together.model.trip.state.ToBeConfirmed;
 import com.lucamoretti.adventure_together.model.trip.state.TripState;
 import com.lucamoretti.adventure_together.model.user.Planner;
+import com.lucamoretti.adventure_together.model.user.User;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDate;
@@ -25,6 +26,7 @@ import java.util.Set;
 
 @Data @NoArgsConstructor @AllArgsConstructor
 @Entity @Table(name = "trips")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Trip {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

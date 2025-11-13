@@ -23,6 +23,7 @@ import java.util.*;
 
 @Data @NoArgsConstructor @AllArgsConstructor
 @Entity @Table(name = "bookings")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Booking implements IBooking, BookingListener {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)

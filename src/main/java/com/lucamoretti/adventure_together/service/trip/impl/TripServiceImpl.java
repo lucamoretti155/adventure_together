@@ -145,7 +145,7 @@ public class TripServiceImpl implements TripService {
     public List<TripDTO> getUpcomingBookableTrips() {
         LocalDate today = LocalDate.now();
         LocalDate todayPlus30 = today.plusDays(30);
-        return tripRepository.findUpcomingBookableTrips(todayPlus30).stream()
+        return tripRepository.findUpcomingBookableTrips(today, todayPlus30).stream()
                 .map(TripDTO::fromEntity)
                 .toList();
     }

@@ -2,6 +2,7 @@ package com.lucamoretti.adventure_together.dto.trip;
 
 import com.lucamoretti.adventure_together.model.trip.Trip;
 import jakarta.validation.constraints.AssertTrue;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import lombok.*;
@@ -50,6 +51,8 @@ public class TripDTO {
     // Aggiunta per facilitare la visualizzazione
     @NotNull(message = "L'itinerario di viaggio associato non può essere nullo")
     private String tripItineraryTitle;
+    @NotBlank(message = "Il percorso dell'immagine non può essere vuoto")
+    private String tripItineraryPicturePath;
 
     @AssertTrue(message = "La data di fine prenotazioni deve essere prima della data di partenza")
     public boolean isBookingPeriodValid() {
@@ -80,6 +83,7 @@ public class TripDTO {
                 .plannerId(entity.getPlanner() != null ? entity.getPlanner().getId() : null)
                 //aggiunta per facilitare la visualizzazione
                 .tripItineraryTitle(entity.getTripItinerary() != null ? entity.getTripItinerary().getTitle() : null)
+                .tripItineraryPicturePath(entity.getTripItinerary() != null ? entity.getTripItinerary().getPicturePath() : null)
                 .build();
     }
 

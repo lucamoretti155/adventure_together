@@ -1,10 +1,30 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Itinerari per Categoria</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
 </head>
-<body>
 
+<body>
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<div class="container my-5">
+    <h2 class="fw-bold mb-4">Itinerari per categoria</h2>
+
+    <div class="row g-4">
+        <div class="col-md-4" th:each="itin : ${tripItineraries}">
+            <div class="card shadow-sm border-0">
+                <img th:src="@{${itin.picturePath}}" class="card-img-top">
+
+                <div class="card-body">
+                    <h5 th:text="${itin.title}"></h5>
+                    <a th:href="@{'/trips/trip-itinerary/' + ${itin.id}}"
+                       class="btn btn-primary btn-sm">Dettagli</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
 </body>
 </html>

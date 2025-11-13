@@ -11,10 +11,10 @@ import lombok.*;
 */
 
 @Data @NoArgsConstructor @AllArgsConstructor
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Entity @Table(name = "trip_itinerary_days",
         uniqueConstraints = @UniqueConstraint(columnNames = {"trip_itinerary_id","day_number"}))
 // vincolo di unicità, evita duplicati del numero del giorno per lo stesso itinerario
-
 public class TripItineraryDay {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

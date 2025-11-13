@@ -4,9 +4,13 @@ import com.lucamoretti.adventure_together.model.details.Category;
 import com.lucamoretti.adventure_together.model.details.Country;
 import com.lucamoretti.adventure_together.model.details.DepartureAirport;
 import com.lucamoretti.adventure_together.model.user.Planner;
+import com.lucamoretti.adventure_together.model.user.User;
 import jakarta.persistence.*;
 import lombok.*;
+
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 /*
@@ -22,6 +26,7 @@ a TripItinerary per definire quali sono le date e i prezzi associati.
 
 @Data @NoArgsConstructor @AllArgsConstructor
 @Entity @Table(name = "trip_itineraries")
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class TripItinerary {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -63,12 +68,11 @@ public class TripItinerary {
      TripItinerary è il proprietario della relazione OneToMany con TripItineraryDay
      Le varie tuple vengono ordinate per numero del giorno
      cascade ALL e orphanRemoval true per gestire correttamente la persistenza dei giorni insieme all'itinerario
-     Uso di LinkedHashSet per mantenere l'ordine di inserimento
      L'annotazione @OrderBy assicura che i giorni siano sempre ordinati per dayNumber in modo ascendente
      */
     @OneToMany(mappedBy = "tripItinerary", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("dayNumber ASC")
-    private Set<TripItineraryDay> days = new LinkedHashSet<>();
+    private List<TripItineraryDay> days = new ArrayList<>();
 
     // relazione molti a molti con Country
     @ManyToMany

@@ -80,7 +80,7 @@ public class TripItineraryServiceImpl implements TripItineraryService {
             var dayEntities = dto.getDays().stream()
                     .map(TripItineraryDayDTO::toEntity)
                     .peek(d -> d.setTripItinerary(entity)) // back reference
-                    .collect(Collectors.toSet());
+                    .collect(Collectors.toList());
             entity.setDays(dayEntities);
         }
 
@@ -157,6 +157,16 @@ public class TripItineraryServiceImpl implements TripItineraryService {
                 .map(TripItineraryDTO::fromEntity)
                 .orElseThrow(() -> new ResourceNotFoundException("TripItinerary", "id", id));
     }
+
+    // metodo per recuperare un itinerario di viaggio tramite titolo
+    @Override
+    @Transactional(readOnly = true)
+    public TripItineraryDTO getByTitle(String title) {
+        return itineraryRepository.findByTitle(title)
+                .map(TripItineraryDTO::fromEntity)
+                .orElseThrow(() -> new ResourceNotFoundException("TripItinerary", "title", title));
+    }
+
     // metodo per recuperare tutti gli itinerari di viaggio
     @Override
     @Transactional(readOnly = true)

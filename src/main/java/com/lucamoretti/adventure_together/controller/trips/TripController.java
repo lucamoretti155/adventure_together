@@ -43,17 +43,9 @@ public class TripController {
     private final TripItineraryDayService tripItineraryDayService;
     private final ReviewService reviewService;
 
-    // --- metodo helper comune ---
-    private void addCommonAttributes(Model model) {
-        // Lista di tutti gli itinerari per la barra di ricerca basata sul titolo dell'itinerario
-        // lista completa viene comunque caricata per permettere la ricerca globale
-        // sempre presente nel banner in alto
-        model.addAttribute("itineraries", tripItineraryService.getAll());
-    }
     // dashboard principale con filtri di ricerca
     @GetMapping("/dashboard")
     public String dashboard(Model model) {
-        addCommonAttributes(model);
         // Liste di categorie, geoAree e countries per i filtri di ricerca
         model.addAttribute("categories", categoryService.getAllCategories());
         model.addAttribute("geoAreas", geoAreaService.getAllGeoAreas());
@@ -65,8 +57,6 @@ public class TripController {
     public String itinerariesByCategories(
             @RequestParam(required = false) List<Long> categoryIds,
             Model model) {
-
-        addCommonAttributes(model);
 
         if (categoryIds == null || categoryIds.isEmpty()) {
             model.addAttribute("tripItineraries", tripItineraryService.getAll());
@@ -82,7 +72,6 @@ public class TripController {
     //pagina con itinerari filtrati per geoArea
     @GetMapping("/geo-area/{id}")
     public String dashboardGeoArea(@PathVariable Long id, Model model) {
-        addCommonAttributes(model);
 
         //dettagli geoArea per titolo pagina
         GeoAreaDTO geoArea = geoAreaService.getGeoAreaById(id);
@@ -102,7 +91,6 @@ public class TripController {
     //pagina con itinerari filtrati per country
     @GetMapping("/country/{id}")
     public String dashboardCountry(@PathVariable Long id, Model model) {
-        addCommonAttributes(model);
 
         //dettagli country per titolo pagina
         CountryDTO country = countryService.getCountryById(id);
@@ -120,7 +108,6 @@ public class TripController {
     //pagina di dettaglio itinerario di viaggio
     @GetMapping("/trip-itinerary/{id}")
     public String dashboardTripItinerary(@PathVariable Long id, Model model) {
-        addCommonAttributes(model);
 
         //dettagli itinerario per titolo pagina
         TripItineraryDTO tripItinerary = tripItineraryService.getById(id);

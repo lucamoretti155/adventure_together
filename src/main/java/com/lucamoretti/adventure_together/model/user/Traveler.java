@@ -5,13 +5,15 @@ import lombok.*;
 import java.time.LocalDate;
 
 // Sottoclasse Traveler che estende User
-// Mappata nella tabella "travelers" con discriminatore "TRAVELER"
+// Mappata discriminatore "TRAVELER"
 // Contiene attributi specifici per i viaggiatori
 // Sono gli enduser dell'applicazione che prenotano i viaggi organizzati dai planner
 
-@Data @NoArgsConstructor @EqualsAndHashCode(callSuper = true)
-@Entity @DiscriminatorValue("TRAVELER")
-@Table(name = "travelers")
+@Data
+@NoArgsConstructor
+@EqualsAndHashCode(callSuper = true)
+@Entity
+@DiscriminatorValue("TRAVELER")
 public class Traveler extends User {
     //è stato scelto di usare LocalDate per facilitare la gestione delle date senza orario
     private LocalDate dateOfBirth;

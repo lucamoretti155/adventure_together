@@ -1,10 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Adventure Together - Home</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
 </head>
 <body>
+
+<!-- NAVBAR -->
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<!-- HERO -->
+<div class="container-fluid bg-light py-5 border-bottom">
+    <div class="container text-center">
+        <h1 class="display-5 fw-bold">Esplora il mondo con noi</h1>
+        <p class="lead">Trova il tuo prossimo viaggio d’avventura</p>
+    </div>
+</div>
+
+<!-- VIAGGI IN EVIDENZA -->
+<div class="container my-5" th:if="${hasTrips}">
+    <h2 class="mb-4">Viaggi in partenza entro 30 giorni</h2>
+
+    <div class="row g-4">
+        <div class="col-md-4" th:each="trip : ${trips}">
+            <div class="card shadow-sm border-0">
+
+                <img th:src="@{${trip.tripItineraryPicturePath}}"
+                     class="card-img-top" alt="Immagine itinerario">
+
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${trip.tripItineraryTitle}"></h5>
+                    <p class="card-text small text-muted">
+                        Partenza: <span th:text="${trip.dateDeparture}"></span>
+                    </p>
+
+                    <a th:href="@{'/trips/trip-itinerary/' + ${trip.tripItineraryId}}"
+                       class="btn btn-primary btn-sm">Dettagli</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>

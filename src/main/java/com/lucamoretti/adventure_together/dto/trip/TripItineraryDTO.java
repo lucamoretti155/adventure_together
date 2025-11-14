@@ -32,6 +32,10 @@ public class TripItineraryDTO {
     @NotBlank(message = "Il percorso dell'immagine non può essere vuoto")
     private String picturePath;
 
+    // solo per upload, non obbligatorio
+    // se non viene fornita, viene assegnata una immagine di default
+    private MultipartFile pictureFile; 
+
     @Min(value = 1, message = "La durata deve essere di almeno 1 giorno")
     private int durationInDays;
 

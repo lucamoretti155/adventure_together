@@ -39,6 +39,13 @@ public class TripItineraryServiceImpl implements TripItineraryService {
     private final CategoryRepository categoryRepository;
     private final DepartureAirportRepository airportRepository;
 
+    // Path per l'upload delle immagini (value definito in application.properties)
+    @Value("${app.upload.dir}")
+    private String uploadDir;
+    @Value("${app.default.image}")
+    private String defaultImagePath
+
+
     // metodo per creare un itinerario di viaggio
     @Override
     public TripItineraryDTO createItinerary(TripItineraryDTO dto) {
@@ -137,6 +144,27 @@ public class TripItineraryServiceImpl implements TripItineraryService {
                 itinerary.getDays().add(dayEntity);
             });
         }
+
+        /*
+        // Gestione immagine 
+        // cambiare per gestire le estensioni e fare check siano immagini
+        // aggiornare anche updateTripItinerary
+        
+        try {
+            Files.createDirectories(Paths.get(uploadDir));
+            if (dto.getPictureFile() != null && !dto.getPictureFile().isEmpty()) {
+                String fileName = dto.getTitle().replaceAll("\\s+", "_") + "_" + UUID.randomUUID() + ".jpg";
+                Path path = Paths.get(uploadDir + fileName);
+                Files.write(path, dto.getPictureFile().getBytes());
+                entity.setPicturePath(path.toString());
+            } else {
+                entity.setPicturePath(defaultImagePath);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException("Errore durante il salvataggio dell'immagine", e);
+        }
+        */
+      
 
         return TripItineraryDTO.fromEntity(itineraryRepository.save(itinerary));
     }

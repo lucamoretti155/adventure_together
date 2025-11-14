@@ -49,9 +49,7 @@ public class TripDTO {
     private Long plannerId;
 
     // Aggiunta per facilitare la visualizzazione
-    @NotNull(message = "L'itinerario di viaggio associato non può essere nullo")
     private String tripItineraryTitle;
-    @NotBlank(message = "Il percorso dell'immagine non può essere vuoto")
     private String tripItineraryPicturePath;
 
     @AssertTrue(message = "La data di fine prenotazioni deve essere prima della data di partenza")

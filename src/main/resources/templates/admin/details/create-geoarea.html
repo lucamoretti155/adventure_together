@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Crea GeoArea</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+
+<body class="bg-light">
+
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+
+                    <h2 class="text-center mb-4">Crea una nuova GeoArea</h2>
+
+                    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+                    <form th:action="@{/admin/details/create-geoarea}"
+                          th:object="${geoAreaDTO}"
+                          method="post">
+
+                        <div class="mb-3">
+                            <label class="form-label">Nome area geografica</label>
+                            <input type="text" th:field="*{geoArea}" class="form-control">
+
+                            <div class="text-danger small"
+                                 th:if="${#fields.hasErrors('geoArea')}"
+                                 th:errors="*{geoArea}">
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary w-100">Crea GeoArea</button>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

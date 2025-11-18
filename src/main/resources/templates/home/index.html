@@ -13,7 +13,7 @@
 <div class="container-fluid bg-light py-5 border-bottom">
     <div class="container text-center">
         <h1 class="display-5 fw-bold">Esplora il mondo con noi</h1>
-        <p class="lead">Trova il tuo prossimo viaggio d’avventura</p>
+        <p class="lead">Trova la tua prossima avventura</p>
     </div>
 </div>
 
@@ -41,6 +41,11 @@
             </div>
         </div>
     </div>
+</div>
+<br>
+<div class="container text-center" th:if="${!hasTrips}">
+    <h5 class="mb-4 align-content-center">Non ci sono partenze nei prossimi 30 giorni</h5>
+    <h5 class="mb-4 align-content-center">Esplora tutti i nostri itinerari <a href="trips/dashboard">✈️</a></h5>
 </div>
 
 </body>

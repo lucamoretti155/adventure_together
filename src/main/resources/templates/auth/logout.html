@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Logout - Adventure Together</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body class="bg-light">
+
+<!-- NAVBAR -->
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body text-center py-5">
+
+                    <p class="lead text-muted" th:text="${logoutMessage}">
+                        Hai effettuato il logout con successo.
+                    </p>
+
+                    <a th:href="@{/auth/login}" class="btn btn-primary mt-3">
+                        Accedi nuovamente
+                    </a>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

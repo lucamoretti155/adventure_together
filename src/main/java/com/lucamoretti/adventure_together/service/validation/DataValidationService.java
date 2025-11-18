@@ -26,6 +26,7 @@ public class DataValidationService {
         }
     }
     // valida la forza della password secondo i criteri specificati
+    // e.g. "Password1!"
     public void validatePassword(String password) {
         if (!isPasswordStrong(password)) {
             throw new DataIntegrityException("La password deve includere almeno una maiuscola, una minuscola, un numero, un simbolo e deve essere lunga almeno 8 caratteri");

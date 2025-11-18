@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dettagli — Liste</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+
+<body class="bg-light">
+
+<!-- NAVBAR -->
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<div class="container mt-5">
+
+    <h2 class="fw-bold mb-4">Gestione Details</h2>
+
+    <!-- MESSAGGI FLASH -->
+    <div th:if="${successMessage}"
+         class="alert alert-success"
+         th:text="${successMessage}">
+    </div>
+
+    <div th:if="${errorMessage}"
+         class="alert alert-danger"
+         th:text="${errorMessage}">
+    </div>
+
+    <!-- ===========================
+         GEOAREA + COUNTRY ANNIDATE
+         =========================== -->
+    <h4 class="fw-semibold mb-3" id="geoareas">Aree Geografiche</h4>
+
+    <div class="card shadow-sm mb-4 border-0">
+        <div class="card-body">
+
+            <div th:each="area : ${geoAreas}" class="mb-4 pb-3 border-bottom">
+
+                <!-- Titolo GeoArea -->
+                <h5 class="fw-bold" th:text="${area.geoArea}"></h5>
+
+                <!-- Pulsante Crea Country -->
+                <a class="btn btn-sm btn-primary mb-3"
+                   th:href="@{/admin/details/create-country}">
+                    + Aggiungi Paese
+                </a>
+
+                <!-- Tabella Country -->
+                <table class="table table-sm table-striped">
+                    <thead class="table-light">
+                    <tr>
+                        <th>ID</th>
+                        <th>Paese</th>
+                    </tr>
+                    </thead>
+
+                    <tbody>
+
+                    <!-- VARIABILE: contatore Paesi trovati -->
+                    <tr th:with="found=0"></tr>
+
+                    <!-- FILTRA country associate a questa area -->
+                    <tr th:each="c, iter : ${countries}"
+                        th:if="${c.geoAreaId == area.id}"
+                        th:with="found=${iter.index + 1}">
+                        <td th:text="${c.id}"></td>
+                        <td th:text="${c.country}"></td>
+                    </tr>
+
+                    <!-- Nessun Paese -->
+                    <tr th:if="${found == 0}">
+                        <td colspan="2" class="text-muted">Nessun Paese associato</td>
+                    </tr>
+
+                    </tbody>
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- ===========================
+         CATEGORIES
+         =========================== -->
+    <h4 class="fw-semibold mb-3" id="categories">Categorie</h4>
+
+    <div class="d-flex justify-content-end mb-2">
+        <a class="btn btn-sm btn-primary"
+           th:href="@{/admin/details/create-category}">
+            + Aggiungi Categoria
+        </a>
+    </div>
+
+    <div class="card shadow-sm mb-4 border-0">
+        <div class="card-body p-0">
+
+            <table class="table table-striped mb-0">
+                <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Nome Categoria</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="cat : ${categories}">
+                    <td th:text="${cat.id}"></td>
+                    <td th:text="${cat.name}"></td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(categories)}">
+                    <td colspan="2" class="text-muted">Nessuna categoria disponibile</td>
+                </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+
+    <!-- ===========================
+         AEROPORTI DI PARTENZA
+         =========================== -->
+    <h4 class="fw-semibold mb-3" id="airports">Aeroporti di Partenza</h4>
+
+    <div class="d-flex justify-content-end mb-2">
+        <a class="btn btn-sm btn-primary"
+           th:href="@{/admin/details/create-departure-airport}">
+            + Aggiungi Aeroporto
+        </a>
+    </div>
+
+    <div class="card shadow-sm mb-5 border-0">
+        <div class="card-body p-0">
+
+            <table class="table table-striped mb-0">
+                <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Codice IATA</th>
+                    <th>Città</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="a : ${airports}">
+                    <td th:text="${a.id}"></td>
+                    <td th:text="${a.name}"></td>
+                    <td th:text="${a.code}"></td>
+                    <td th:text="${a.city}"></td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(airports)}">
+                    <td colspan="4" class="text-muted">Nessun aeroporto registrato</td>
+                </tr>
+                </tbody>
+
+            </table>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>
+

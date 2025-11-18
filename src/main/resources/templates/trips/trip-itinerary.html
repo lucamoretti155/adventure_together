@@ -70,8 +70,19 @@
         <div class="col-md-4" th:each="trip : ${trips}">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
-                    <p><strong>Partenza:</strong> <span th:text="${trip.dateDeparture}"></span></p>
-                    <p><strong>Posti prenotati:</strong> <span th:text="${trip.currentParticipantsCount}"></span></p>
+                    <p><strong>Partenza:</strong>
+                        <span th:text="${#temporals.format(trip.dateDeparture, 'dd MMMM yyyy')}"></span>
+                    </p>
+                    <p><strong>Ritorno:</strong>
+                        <span th:text="${#temporals.format(trip.dateReturn, 'dd MMMM yyyy')}"></span>
+                    </p>
+                    <p><strong>Prenotabile entro il:</strong>
+                        <span th:text="${#temporals.format(trip.dateEndBookings, 'dd MMMM yyyy')}"></span>
+                    </p>
+                    <p><strong>Posti disponibili:</strong> <span th:text="${tripItinerary.maxParticipants - trip.currentParticipantsCount}"></span></p>
+                    <p><strong>Costo a persona:</strong>
+                        <span th:text="${#numbers.formatDecimal(trip.tripIndividualCost, 1, 'POINT', 2, 'COMMA')}"></span> €
+                    </p>
                     <p><strong>Stato:</strong> <span th:text="${trip.state}"></span></p>
 
                     <a th:href="@{'/traveler/book/' + ${trip.id}}"

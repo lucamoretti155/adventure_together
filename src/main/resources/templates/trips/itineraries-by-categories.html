@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
 <head>
     <title>Itinerari per Categoria</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
@@ -14,7 +15,8 @@
     <div class="row g-4">
         <div class="col-md-4" th:each="itin : ${tripItineraries}">
             <div class="card shadow-sm border-0">
-                <img th:src="@{${itin.picturePath}}" class="card-img-top">
+                <img th:src="@{${itin.picturePath}}" class="card-img-top card-img-fixed">
+
 
                 <div class="card-body">
                     <h5 th:text="${itin.title}"></h5>
@@ -26,5 +28,7 @@
     </div>
 
 </div>
+
 </body>
+
 </html>

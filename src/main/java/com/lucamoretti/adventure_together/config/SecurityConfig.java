@@ -60,6 +60,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                         http
+
                         // Disabilita CSRF solo per gli endpoint REST API
                         .csrf(csrf -> csrf
                                 .ignoringRequestMatchers("/api/**")) // disabilita solo per endpoint REST
@@ -102,9 +103,6 @@ public class SecurityConfig {
                 )
                 // Collega il servizio per il recupero utente
                 .userDetailsService(userDetailsService)
-
-                // Abilita l'autenticazione HTTP Basic
-                .httpBasic(Customizer.withDefaults())
 
                 // Configurazione del form di login
                 .formLogin(form -> form.loginPage("/auth/login") // L'URL per mostrare il form

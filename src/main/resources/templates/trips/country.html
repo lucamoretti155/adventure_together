@@ -3,6 +3,7 @@
 <head>
     <title th:text="'Paese - ' + ${country.country}"></title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
@@ -19,7 +20,7 @@
     <div class="row g-4">
         <div class="col-md-4" th:each="itin : ${itinerariesByCountry}">
             <div class="card shadow-sm border-0">
-                <img th:src="@{${itin.picturePath}}" class="card-img-top">
+                <img th:src="@{${itin.picturePath}}" class="card-img-top card-img-fixed">
                 <div class="card-body">
                     <h5 th:text="${itin.title}"></h5>
                     <a th:href="@{'/trips/trip-itinerary/' + ${itin.id}}"

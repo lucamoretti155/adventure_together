@@ -17,7 +17,7 @@ import java.time.LocalDate;
 @AllArgsConstructor
 public class AdminDTO extends UserDTO {
     @NotBlank(message = "Employee ID non può essere vuoto")
-    private Long employeeId;
+    private String employeeId;
 
     // Costruttore con builder personalizzato per AdminDTO
     // UserDTO ha già un builder, quindi qui ne definiamo uno specifico per TravelerDTO
@@ -25,7 +25,7 @@ public class AdminDTO extends UserDTO {
     @Builder(builderMethodName = "adminBuilder")
     public AdminDTO(Long id, String email, String firstName, String lastName,
                       boolean active, String role,
-                      Long employeeId) {
+                      String employeeId) {
         super(id, email, firstName, lastName, active, role);
         this.employeeId = employeeId;
     }

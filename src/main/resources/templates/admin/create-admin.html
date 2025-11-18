@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Crea Admin</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+
+<body class="bg-light">
+
+<!-- NAVBAR -->
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<div class="container mt-5">
+
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+
+                    <h2 class="text-center mb-4">Crea un nuovo Admin</h2>
+
+                    <!-- SUCCESSO -->
+                    <div th:if="${successMessage}"
+                         class="alert alert-success"
+                         th:text="${successMessage}">
+                    </div>
+
+                    <!-- ERRORE GENERALE -->
+                    <div th:if="${errorMessage}"
+                         class="alert alert-danger"
+                         th:text="${errorMessage}">
+                    </div>
+
+                    <!-- FORM CREAZIONE ADMIN -->
+                    <form th:action="@{/admin/create-admin}"
+                          th:object="${adminDTO}"
+                          method="post">
+
+                        <div class="mb-3">
+                            <label class="form-label">Nome</label>
+                            <input type="text" th:field="*{firstName}"
+                                   class="form-control" required>
+                            <div class="text-danger small"
+                                 th:if="${#fields.hasErrors('firstName')}"
+                                 th:errors="*{firstName}">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Cognome</label>
+                            <input type="text" th:field="*{lastName}"
+                                   class="form-control" required>
+                            <div class="text-danger small"
+                                 th:if="${#fields.hasErrors('lastName')}"
+                                 th:errors="*{lastName}">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input type="email" th:field="*{email}"
+                                   class="form-control" required>
+
+                            <div class="text-danger small"
+                                 th:if="${#fields.hasErrors('email')}"
+                                 th:errors="*{email}">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Employee ID</label>
+                            <input type="number" th:field="*{employeeId}"
+                                   class="form-control" required>
+
+                            <div class="text-danger small"
+                                 th:if="${#fields.hasErrors('employeeId')}"
+                                 th:errors="*{employeeId}">
+                            </div>
+                        </div>
+
+                        <button type="submit"
+                                class="btn btn-primary w-100">
+                            Crea Admin
+                        </button>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

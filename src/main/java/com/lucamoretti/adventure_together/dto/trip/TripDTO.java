@@ -74,7 +74,9 @@ public class TripDTO {
                 // Stato come nome semplice della classe
                 .state(entity.getState() != null ? entity.getState().getClass().getSimpleName() : null)
                 // Conteggio attuale dei partecipanti dalle bookings
-                .currentParticipantsCount(entity.getCurrentParticipantsCount())
+                .currentParticipantsCount(
+                        entity.getBookings() != null ? entity.getCurrentParticipantsCount() : 0
+                )
                 .templateMailPath(entity.getTemplateMailPath())
                 // Relazioni come ID
                 .tripItineraryId(entity.getTripItinerary() != null ? entity.getTripItinerary().getId() : null)

@@ -49,7 +49,7 @@
 
                 <!-- 🔗 LINK PUBBLICO -->
                 <li class="nav-item">
-                    <a class="nav-link" th:href="@{/trips/dashboard}">
+                    <a class="nav-link fw-bold" th:href="@{/trips/dashboard}">
                         Tutte le destinazioni
                     </a>
                 </li>
@@ -66,7 +66,7 @@
                 <li class="nav-item"
                     th:if="${#authorization.expression('hasRole(''TRAVELER'')')}">
                     <a class="nav-link" th:href="@{/traveler/dashboard}">
-                        Area Viaggiatore
+                        Dashboard Traveler
                     </a>
                 </li>
 
@@ -74,23 +74,23 @@
                 <li class="nav-item"
                     th:if="${#authorization.expression('hasAnyRole(''PLANNER'', ''ADMIN'')')}">
                     <a class="nav-link" th:href="@{/planner/dashboard}">
-                        Area Planner
+                        Dashboard Planner
                     </a>
                 </li>
 
                 <!-- 🛠 ADMIN -->
                 <li class="nav-item"
                     th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
-                    <a class="nav-link text-danger fw-semibold"
+                    <a class="nav-link"
                        th:href="@{/admin/dashboard}">
-                        Admin
+                        Dashboard Admin
                     </a>
                 </li>
 
                 <!-- 🚪 LOGOUT (solo autenticati) -->
                 <li class="nav-item"
                     th:if="${#authorization.expression('isAuthenticated()')}">
-                    <a class="nav-link text-danger" th:href="@{/auth/logout}">
+                    <a class="nav-link bg-light" th:href="@{/auth/logout}">
                         Logout
                     </a>
                 </li>

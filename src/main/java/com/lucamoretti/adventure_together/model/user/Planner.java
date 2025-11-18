@@ -18,9 +18,9 @@ public class Planner extends User {
     //ipotizzo sia il codice assegnato dall'azienda al dipendente
     //nessuna logica particolare, solo un identificativo univoco
     @Column(nullable = false, unique = true)
-    private Long employeeId;
+    private String employeeId;
 
-    public Planner(String email, String password, String firstName, String lastName, boolean active, Long employeeId) {
+    public Planner(String email, String password, String firstName, String lastName, boolean active, String employeeId) {
         super(null, email, password, firstName, lastName, active, null);
         this.employeeId = employeeId;
     }

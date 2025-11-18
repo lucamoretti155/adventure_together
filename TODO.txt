@@ -1,0 +1,45 @@
+-->controller planner
+
+creazione TripItinerary
+    get e post form
+
+creazione Trip
+    get e post form
+
+lista TripItineary creati con relativi dettagli e filtro data da/a
+    get e post su stessa pagina
+
+-->controller admin
+
+disattivazione user
+    get
+
+cancella Trip
+    get
+
+-->controller traveler
+
+creazione booking (controllo se già effettuato per quel trip) e gestione pagamento e scelta assicurazione
+    get e post form
+
+lista booking con relativi dettagli e filtro data da/a e aggiunta link per creazione review se non ancora esistente (altri visualizza la review)
+    get e post su stessa pagina
+
+creazione review
+    get e post form
+
+
+__________________________________________________________
+
+iniziare con testing Junit
+
+__________________________________________________________
+
+inizira documentazione
+
+
+
+
+
+
+

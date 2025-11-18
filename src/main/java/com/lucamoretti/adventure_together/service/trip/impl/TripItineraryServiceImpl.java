@@ -14,13 +14,23 @@ import com.lucamoretti.adventure_together.repository.user.PlannerRepository;
 import com.lucamoretti.adventure_together.service.trip.TripItineraryService;
 import com.lucamoretti.adventure_together.util.exception.DataIntegrityException;
 import com.lucamoretti.adventure_together.util.exception.DuplicateResourceException;
+import com.lucamoretti.adventure_together.util.exception.FileStorageException;
 import com.lucamoretti.adventure_together.util.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 import java.util.stream.Collectors;
 /*
   Implementazione del servizio per la gestione degli itinerari di viaggio.
@@ -43,7 +53,7 @@ public class TripItineraryServiceImpl implements TripItineraryService {
     @Value("${app.upload.dir}")
     private String uploadDir;
     @Value("${app.default.image}")
-    private String defaultImagePath
+    private String defaultImagePath;
 
 
     // metodo per creare un itinerario di viaggio
@@ -91,10 +101,71 @@ public class TripItineraryServiceImpl implements TripItineraryService {
             entity.setDays(dayEntities);
         }
 
+        // Upload immagine se presente
+        if (dto.getPictureFile() != null && !dto.getPictureFile().isEmpty()) {
+
+            MultipartFile image = dto.getPictureFile();
+
+            // 1. Validazione dimensione (max 10MB)
+            if (image.getSize() > 10 * 1024 * 1024) {
+                throw new DataIntegrityException("L'immagine non può superare i 10MB");
+            }
+
+            // 2. Validazione tipo MIME
+            String contentType = image.getContentType();
+            if (contentType == null ||
+                    !(contentType.equals("image/jpeg") || contentType.equals("image/png") || contentType.equals("image/webp"))) {
+                throw new DataIntegrityException("Formato immagine non valido. Formati supportati: JPEG, PNG, WEBP");
+            }
+
+            // 3. Determinazione estensione effettiva
+            String extension = switch (contentType) {
+                case "image/jpeg" -> ".jpg";
+                case "image/png" -> ".png";
+                default -> ".webp";
+            };
+
+            // 4. Normalizzazione del nome del file (dal titolo)
+            String baseName = dto.getTitle()
+                    .toLowerCase()
+                    .replaceAll("[^a-z0-9]+", "-") // sostituisce caratteri non validi
+                    .replaceAll("^-|-$", ""); // rimuove eventuali '-' iniziali/finali
+
+            // 5. Generazione nome unico
+            String fileName = baseName + "_" + UUID.randomUUID() + extension; //e.g. "iceland-ab12cd34-ef56-7890-ab12-cd34ef567890.jpg"
+
+            try {
+                // 6. Creazione directory se non esiste
+                Path uploadPath = Paths.get(uploadDir);
+                if (Files.notExists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+
+                // 7. Path completo del file
+                Path filePath = uploadPath.resolve(fileName);
+
+                // 8. Salvataggio fisico del file
+                Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+                // 9. Set del percorso nell'entità
+                entity.setPicturePath("/uploads/itineraries/" + fileName);
+
+            } catch (IOException e) {
+                throw new FileStorageException("Errore durante il salvataggio dell'immagine dell'itinerario");
+            }
+
+        } else {
+            // se non è stata caricata alcuna immagine → foto di default
+            entity.setPicturePath(defaultImagePath);
+        }
+
+
         // Salvataggio dell'entità e ritorno del DTO corrispondente
         TripItinerary saved = itineraryRepository.save(entity);
         return TripItineraryDTO.fromEntity(saved);
     }
+
+
     // metodo per aggiornare un itinerario di viaggio
     @Override
     public TripItineraryDTO updateItinerary(Long id, TripItineraryDTO dto) {
@@ -145,27 +216,62 @@ public class TripItineraryServiceImpl implements TripItineraryService {
             });
         }
 
-        /*
-        // Gestione immagine 
-        // cambiare per gestire le estensioni e fare check siano immagini
-        // aggiornare anche updateTripItinerary
-        
-        try {
-            Files.createDirectories(Paths.get(uploadDir));
-            if (dto.getPictureFile() != null && !dto.getPictureFile().isEmpty()) {
-                String fileName = dto.getTitle().replaceAll("\\s+", "_") + "_" + UUID.randomUUID() + ".jpg";
-                Path path = Paths.get(uploadDir + fileName);
-                Files.write(path, dto.getPictureFile().getBytes());
-                entity.setPicturePath(path.toString());
-            } else {
-                entity.setPicturePath(defaultImagePath);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Errore durante il salvataggio dell'immagine", e);
-        }
-        */
-      
+        // Upload nuova immagine, se fornita nel DTO
+        if (dto.getPictureFile() != null && !dto.getPictureFile().isEmpty()) {
 
+            MultipartFile image = dto.getPictureFile();
+
+            // 1. Validazione dimensione max 10MB
+            if (image.getSize() > 10 * 1024 * 1024) {
+                throw new DataIntegrityException("L'immagine non può superare i 10MB");
+            }
+
+            // 2. Validazione MIME type
+            String contentType = image.getContentType();
+            if (contentType == null ||
+                    !(contentType.equals("image/jpeg")
+                            || contentType.equals("image/png")
+                            || contentType.equals("image/webp"))) {
+                throw new DataIntegrityException("Formato immagine non valido. Sono supportati: JPEG, PNG, WEBP");
+            }
+
+            // 3. Determinazione estensione
+            String extension = switch (contentType) {
+                case "image/jpeg" -> ".jpg";
+                case "image/png" -> ".png";
+                default -> ".webp";
+            };
+
+            // 4. Normalizzazione nome del file
+            String baseName = dto.getTitle()
+                    .toLowerCase()
+                    .replaceAll("[^a-z0-9]+", "-")
+                    .replaceAll("^-|-$", "");
+
+            String fileName = baseName + "_" + UUID.randomUUID() + extension;
+
+            try {
+                // 5. Creazione directory se non esiste
+                Path uploadPath = Paths.get(uploadDir);
+                if (Files.notExists(uploadPath)) {
+                    Files.createDirectories(uploadPath);
+                }
+
+                // 6. Path completo
+                Path filePath = uploadPath.resolve(fileName);
+
+                // 7. Salvataggio del file
+                Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+
+                // 8. Aggiorna picturePath dell’itinerario
+                itinerary.setPicturePath("/uploads/itineraries/" + fileName);
+
+            } catch (IOException e) {
+                throw new FileStorageException("Errore durante il salvataggio della nuova immagine");
+            }
+        }
+
+        // Salvataggio dell'entità aggiornata e ritorno del DTO corrispondente
         return TripItineraryDTO.fromEntity(itineraryRepository.save(itinerary));
     }
 

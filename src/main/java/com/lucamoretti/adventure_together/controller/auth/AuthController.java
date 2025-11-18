@@ -2,12 +2,16 @@ package com.lucamoretti.adventure_together.controller.auth;
 
 import com.lucamoretti.adventure_together.dto.user.TravelerDTO;
 import com.lucamoretti.adventure_together.service.user.UserService;
+import com.lucamoretti.adventure_together.util.exception.DataIntegrityException;
+import com.lucamoretti.adventure_together.util.exception.DuplicateResourceException;
+import com.lucamoretti.adventure_together.util.exception.ResourceNotFoundException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /*
     Controller per la gestione dell'autenticazione di tutti gli utenti e registrazione degli utenti Traveler
@@ -18,9 +22,10 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class AuthController {
 
-    private UserService userService;
+    private final UserService userService;
 
     // LOGIN PAGE
+
     // la gestione effettiva del login viene fatta da Spring Security
     // nel form HTML l'endpoint POST è /auth/authenticate (vedi SecurityConfig)
     @GetMapping("/login")
@@ -38,7 +43,8 @@ public class AuthController {
 
     // Mostra la pagina di registrazione per i viaggiatori.
     @GetMapping("/register")
-    public String showRegisterForm(Model model) {
+    public String showRegisterForm(@ModelAttribute("travelerDTO") TravelerDTO dto,
+                                   Model model)  {
         if (!model.containsAttribute("travelerDTO")) { // Per mantenere i dati in caso di errori di validazione
             model.addAttribute("travelerDTO", new TravelerDTO());
         }
@@ -47,19 +53,103 @@ public class AuthController {
     // Gestisce la registrazione di un nuovo viaggiatore.
     @PostMapping("/register")
     public String registerTraveler(@RequestParam String password,
-                                   @Valid @ModelAttribute TravelerDTO dto,
+                                   @Valid @ModelAttribute("travelerDTO") TravelerDTO dto,
                                    BindingResult result,
-                                   Model model) {
+                                   RedirectAttributes redirectAttributes) {
+
+        // Errori di validazione dei campi
         if (result.hasErrors()) {
-            return "auth/register";
+            redirectAttributes.addFlashAttribute("travelerDTO", dto);
+            redirectAttributes.addFlashAttribute(
+                    "org.springframework.validation.BindingResult.travelerDTO", result);
+            return "redirect:/auth/register";
         }
 
         try {
             userService.registerTraveler(dto, password);
-            return "redirect:/auth/login?registered";
-        } catch (IllegalArgumentException e) {
-            model.addAttribute("error", e.getMessage());
-            return "auth/register";
+
+            redirectAttributes.addFlashAttribute(
+                    "registered", "Registrazione completata, effettua il login");
+            return "redirect:/auth/login";
+
+        } catch (DataIntegrityException | DuplicateResourceException e) {  // per password o età non valida o email già esistente
+
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            redirectAttributes.addFlashAttribute("travelerDTO", dto);
+            return "redirect:/auth/register";
         }
     }
+
+    // LOGOUT
+
+    @GetMapping("/logout")
+    public String logoutSuccess(Model model) {
+        model.addAttribute("logoutMessage", "Hai effettuato il logout con successo.");
+        return "auth/logout";
+    }
+
+    // RESET PASSWORD
+
+    // Form per richiesta reset password
+    @GetMapping("/forgot-password")
+    public String showForgotPasswordForm(Model model) {
+        model.addAttribute("email", "");
+        return "auth/forgot-password"; // template Thymeleaf
+    }
+
+    // Invio email per reset password
+    @PostMapping("/forgot-password")
+    public String processForgotPassword(
+            @RequestParam("email") String email,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            userService.generatePasswordResetToken(email);
+            redirectAttributes.addFlashAttribute("message", "Email inviata! Controlla la tua casella di posta.");
+        } catch (ResourceNotFoundException e) {
+            redirectAttributes.addFlashAttribute("error", "Nessun account trovato con questa email.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("error", "Si è verificato un errore inatteso.");
+        }
+        return "redirect:/auth/forgot-password";
+    }
+    // Form per il reset della password
+    @GetMapping("/reset-password")
+    public String showResetPasswordForm(
+            @RequestParam("token") String token,
+            Model model) {
+
+        model.addAttribute("token", token);
+        return "auth/reset-password";  // template Thymeleaf
+    }
+
+    // Gestione del reset della password
+    @PostMapping("/reset-password")
+    public String processResetPassword(
+            @RequestParam("token") String token,
+            @RequestParam("newPassword") String newPassword,
+            RedirectAttributes redirectAttributes) {
+
+        try {
+            userService.resetPassword(token, newPassword);
+            redirectAttributes.addFlashAttribute("message", "Password aggiornata! Ora puoi effettuare il login.");
+            return "redirect:/auth/login";
+
+        } catch (IllegalArgumentException e) {
+            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            return "redirect:/auth/reset-password?token=" + token;
+        }
+    }
+
+
+
+
+
+
+
+
+
+
+
+
 }

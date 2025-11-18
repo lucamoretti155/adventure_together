@@ -16,6 +16,7 @@ import java.util.Optional;
 public interface UserService {
     List<UserDTO> getAllUsers();
     List<PlannerDTO> getAllPlanners();
+    List<AdminDTO> getAllAdmins();
     Optional<UserDTO> getById(Long id);
     Optional<UserDTO> getByEmail(String email);
 

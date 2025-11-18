@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Benvenuto in AdventureTogether!</title>
+</head>
+
+<body style="font-family: Arial, sans-serif; color: #333;">
+
+<p>Ciao <span th:text="${name}">Utente</span>,</p>
+
+<p>Il tuo account è stato creato con successo nel sistema <strong>AdventureTogether</strong>.</p>
+
+<p>Per accedere alla piattaforma devi impostare la tua password personale.
+    Puoi farlo direttamente dalla pagina dedicata:</p>
+
+<p>
+    <a th:href="${resetPassword}" style="color: #1a73e8;">
+        Imposta la tua password
+    </a>
+</p>
+
+<p>Una volta impostata la password potrai accedere al portale e iniziare a utilizzare AdventureTogether.</p>
+
+<p>A presto,<br>
+    Il Team di AdventureTogether</p>
+
+</body>
+</html>
+

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Crea Aeroporto di Partenza</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+
+<body class="bg-light">
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <div class="card shadow-sm border-0">
+                <div class="card-body">
+
+                    <h2 class="text-center mb-4">Crea Aeroporto di Partenza</h2>
+
+                    <div th:if="${errorMessage}"
+                         class="alert alert-danger"
+                         th:text="${errorMessage}">
+                    </div>
+
+                    <form th:action="@{/admin/details/create-departure-airport}"
+                          th:object="${departureAirportDTO}"
+                          method="post">
+
+                        <div class="mb-3">
+                            <label class="form-label">Nome aeroporto</label>
+                            <input type="text" th:field="*{name}" class="form-control">
+                            <div class="text-danger small"
+                                 th:if="${#fields.hasErrors('name')}"
+                                 th:errors="*{name}">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Codice IATA</label>
+                            <input type="text" th:field="*{code}" class="form-control text-uppercase">
+                            <div class="text-danger small"
+                                 th:if="${#fields.hasErrors('code')}"
+                                 th:errors="*{code}">
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Città</label>
+                            <input type="text" th:field="*{city}" class="form-control">
+                            <div class="text-danger small"
+                                 th:if="${#fields.hasErrors('city')}"
+                                 th:errors="*{city}">
+                            </div>
+                        </div>
+
+                        <button class="btn btn-primary w-100">Crea Aeroporto</button>
+
+                    </form>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

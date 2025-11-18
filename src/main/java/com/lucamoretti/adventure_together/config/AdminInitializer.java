@@ -31,7 +31,7 @@ public class AdminInitializer implements CommandLineRunner {
             admin.setPassword(passwordEncoder.encode("admin123"));
             admin.setActive(true);
             admin.setRole(Role.ADMIN.name());
-            admin.setEmployeeId((long)241414);
+            admin.setEmployeeId("241414");
 
             adminRepository.save(admin);
             System.out.println("***   Default Admin created: demo.mail.app.java.project@gmail.com / admin123   ***" );

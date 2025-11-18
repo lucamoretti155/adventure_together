@@ -1,10 +1,78 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Registrati - Adventure Together</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
 </head>
-<body>
-// Registration page content goes here
+<body class="bg-light">
+
+<!-- NAVBAR -->
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+
+                    <h3 class="text-center mb-4">Crea un account Viaggiatore</h3>
+
+                    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+
+                    <form th:action="@{/auth/register}" th:object="${travelerDTO}" method="post">
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label>Nome</label>
+                                <input th:field="*{firstName}" class="form-control">
+                                <small class="text-danger" th:errors="*{firstName}"></small>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label>Cognome</label>
+                                <input th:field="*{lastName}" class="form-control">
+                                <small class="text-danger" th:errors="*{lastName}"></small>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Email</label>
+                            <input th:field="*{email}" class="form-control">
+                            <small class="text-danger" th:errors="*{email}"></small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Telefono</label>
+                            <input th:field="*{telephone}" class="form-control">
+                            <small class="text-danger" th:errors="*{telephone}"></small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Data di nascita</label>
+                            <input type="date" th:field="*{dateOfBirth}" class="form-control">
+                            <small class="text-danger" th:errors="*{dateOfBirth}"></small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Password</label>
+                            <input type="password" name="password" class="form-control">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100 mt-3">Crea Account</button>
+
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <a th:href="@{/auth/login}">Hai già un account? Accedi</a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

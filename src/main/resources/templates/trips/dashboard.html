@@ -31,31 +31,52 @@
                         </div>
                     </div>
 
-                    <button class="btn btn-primary btn-sm mt-3">Filtra</button>
+                    <button class="btn btn-primary btn-sm mt-3">Filtra per categoria</button>
                 </form>
 
 
-                <!-- GEO AREE -->
+                <!-- GEO AREE + PAESI ANNIDATI -->
                 <h5 class="fw-bold mt-4">Aree Geografiche</h5>
+
                 <ul class="list-unstyled">
-                    <li th:each="geo : ${geoAreas}">
-                        <a th:href="@{'/trips/geo-area/' + ${geo.id}}"
-                           class="text-decoration-none">
-                            <span th:text="${geo.geoArea}"></span>
+
+                    <li th:each="area : ${geoAreas}" class="mb-2">
+
+                        <!-- Nome GeoArea -->
+                        <a th:href="@{'/trips/geo-area/' + ${area.id}}"
+                           class="text-decoration-none text-muted fw-bold d-block mb-1">
+                            <span th:text="${area.geoArea}"></span>
                         </a>
+
+                        <!-- Lista Paesi associati -->
+                        <ul class="list-unstyled ms-3">
+
+                            <!-- contatore -->
+                            <li th:with="found=0"></li>
+
+                            <!-- mostra countries della geoarea -->
+                            <li th:each="c, iter : ${countries}"
+                                th:if="${c.geoAreaId == area.id}"
+                                th:with="found=${iter.index + 1}">
+
+                                <a th:href="@{'/trips/country/' + ${c.id}}"
+                                   class="text-decoration-none text-muted">
+                                    <span th:text="${c.country}"></span>
+                                </a>
+
+                            </li>
+
+                            <!-- Nessun paese -->
+                            <li th:if="${found == 0}" class="text-muted small fst-italic">
+                                Nessun paese disponibile
+                            </li>
+
+                        </ul>
+
                     </li>
+
                 </ul>
 
-                <!-- COUNTRIES -->
-                <h5 class="fw-bold mt-4">Paesi</h5>
-                <ul class="list-unstyled">
-                    <li th:each="c : ${countries}">
-                        <a th:href="@{'/trips/country/' + ${c.id}}"
-                           class="text-decoration-none">
-                            <span th:text="${c.country}"></span>
-                        </a>
-                    </li>
-                </ul>
 
             </div>
         </div>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lista Admin</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+
+<body class="bg-light">
+
+<!-- NAVBAR -->
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<div class="container mt-5">
+
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2 class="fw-bold">Gestione Planner</h2>
+
+        <a th:href="@{/admin/create-planner}" class="btn btn-primary">
+            + Crea Nuovo Planner
+        </a>
+    </div>
+
+    <!-- MESSAGGI FLASH -->
+    <div th:if="${successMessage}"
+         class="alert alert-success"
+         th:text="${successMessage}">
+    </div>
+
+    <div th:if="${errorMessage}"
+         class="alert alert-danger"
+         th:text="${errorMessage}">
+    </div>
+
+    <!-- TABELLA -->
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+
+            <table class="table table-striped table-hover mb-0">
+                <thead class="table-light">
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Employee ID</th>
+                    <th>Attivo</th>
+                    <th class="text-end">Azioni</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="planner : ${planners}">
+                    <td th:text="${planner.id}"></td>
+
+                    <td>
+                        <span th:text="${planner.firstName}"></span>
+                        <span th:text="${planner.lastName}"></span>
+                    </td>
+
+                    <td th:text="${planner.email}"></td>
+
+                    <td th:text="${planner.employeeId}"></td>
+
+                    <td>
+                        <span th:if="${planner.active}" class="badge bg-success">Attivo</span>
+                        <span th:if="${!planner.active}" class="badge bg-secondary">Inattivo</span>
+                    </td>
+
+                    <td class="text-end">
+
+                        <!--  pulsante disattiva -->
+                        <a th:href="@{'/admin/deactivate-user' + ${planner.id}}"
+                           class="btn btn-sm btn-danger ms-1">
+                            Disattiva
+                        </a>
+
+                    </td>
+                </tr>
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -13,9 +13,11 @@ import com.lucamoretti.adventure_together.repository.user.TravelerRepository;
 import com.lucamoretti.adventure_together.repository.user.UserRepository;
 import com.lucamoretti.adventure_together.service.user.UserService;
 import com.lucamoretti.adventure_together.service.validation.DataValidationService;
+import com.lucamoretti.adventure_together.util.exception.DataIntegrityException;
 import com.lucamoretti.adventure_together.util.exception.DuplicateResourceException;
 import com.lucamoretti.adventure_together.util.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.lucamoretti.adventure_together.service.mail.EmailService;
@@ -45,6 +47,10 @@ public class UserServiceImpl implements UserService {
     private final DataValidationService dataValidationService; // servizio per la validazione dei dati
     private static final int EXPIRATION_HOURS = 24; // durata validità token reset password
 
+    @Value("${app.base-url}")
+    private String baseUrl;
+
+
     // restituisce tutti gli user come lista di UserDTO
     @Override
     public List<UserDTO> getAllUsers() {
@@ -56,8 +62,16 @@ public class UserServiceImpl implements UserService {
     // restituisce tutti i planner come lista di PlannerDTO
     @Override
     public List<PlannerDTO> getAllPlanners() {
-        return plannerRepository.findAll().stream()
+        return plannerRepository.findAllPlannersNoAdmin().stream()
                 .map(PlannerDTO::fromEntity)
+                .toList();
+    }
+
+    // restituisce tutti gli admin come lista di AdminDTO
+    @Override
+    public List<AdminDTO> getAllAdmins() {
+        return adminRepository.findAll().stream()
+                .map(AdminDTO::fromEntity)
                 .toList();
     }
 
@@ -93,6 +107,15 @@ public class UserServiceImpl implements UserService {
         traveler.setDateOfBirth(dto.getDateOfBirth());
         traveler.setTelephone(dto.getTelephone());
         traveler = travelerRepository.save(traveler);
+
+        // manda infine una email di benvenuto al nuovo viaggiatore
+        emailService.sendHtmlMessage(
+                dto.getEmail(),  // destinatario
+                "Benvenuto in AdventureTogether!",  // oggetto
+                "mail/welcome-traveler", // path al template Thymeleaf
+                Map.of("name", traveler.getFirstName(), "homepage", baseUrl+"/home")  // variabili per il template inserite in una Map
+        );
+
         return TravelerDTO.fromEntity(traveler);
     }
 
@@ -113,6 +136,17 @@ public class UserServiceImpl implements UserService {
         planner.setRole(Role.PLANNER.name());
         planner.setEmployeeId(dto.getEmployeeId());
         planner = plannerRepository.save(planner);
+
+        // manda infine una email di benvenuto al nuovo planner
+        emailService.sendHtmlMessage(
+                dto.getEmail(),  // destinatario
+                "Benvenuto in AdventureTogether!",  // oggetto
+                "mail/welcome-planner", // path al template Thymeleaf
+                Map.of("name", planner.getFirstName(),
+                        "resetPassword", baseUrl+ "/auth/forgot-password", "homepage", baseUrl+"/home")  // variabili per il template inserite in una Map
+        );
+
+
         return PlannerDTO.fromEntity(planner);
     }
 
@@ -129,10 +163,21 @@ public class UserServiceImpl implements UserService {
         admin.setLastName(dto.getLastName());
         admin.setEmail(dto.getEmail());
         admin.setPassword(passwordEncoder.encode(rawPassword));
-        admin.setActive(true);
+        admin.setActive(false);
         admin.setRole(Role.ADMIN.name());
         admin.setEmployeeId(dto.getEmployeeId());
         admin = adminRepository.save(admin);
+
+        // manda infine una email di benvenuto al nuovo admin
+
+        emailService.sendHtmlMessage(
+                dto.getEmail(),  // destinatario
+                "Benvenuto in AdventureTogether!",  // oggetto
+                "mail/welcome-planner", // path al template Thymeleaf
+                Map.of("name", admin.getFirstName(),
+                        "resetPassword", baseUrl+ "/auth/forgot-password", "homepage", baseUrl+"/home")  // variabili per il template inserite in una Map
+        );
+
         return AdminDTO.fromEntity(admin);
     }
 
@@ -156,8 +201,8 @@ public class UserServiceImpl implements UserService {
 
         passwordResetTokenRepository.save(resetToken); // salva il token nel repository
 
-        // Genera link (personalizzabile)
-        String resetLink = "http://localhost:8080/auth/reset-password?token=" + token;
+        // Genera link con il token
+        String resetLink = baseUrl + "auth/reset-password?token=" + token;
 
         // Invia email tramite il emailService
         emailService.sendHtmlMessage(
@@ -182,6 +227,8 @@ public class UserServiceImpl implements UserService {
             passwordResetTokenRepository.delete(resetToken);  // elimina il token scaduto
             throw new IllegalArgumentException("Reset token expired");  // lancia eccezione
         }
+
+        dataValidationService.validatePassword(newPassword); // valida la nuova password altrimenti lancia eccezione
 
         User user = resetToken.getUser(); // ottiene l'utente associato al token
         user.setPassword(passwordEncoder.encode(newPassword));      // aggiorna la password con quella nuova dell'utente

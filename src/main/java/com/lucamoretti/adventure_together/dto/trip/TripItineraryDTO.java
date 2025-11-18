@@ -5,6 +5,8 @@ import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
+
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -34,7 +36,7 @@ public class TripItineraryDTO {
 
     // solo per upload, non obbligatorio
     // se non viene fornita, viene assegnata una immagine di default
-    private MultipartFile pictureFile; 
+    private MultipartFile pictureFile;
 
     @Min(value = 1, message = "La durata deve essere di almeno 1 giorno")
     private int durationInDays;
@@ -67,6 +69,8 @@ public class TripItineraryDTO {
                 .description(entity.getDescription())
                 .picturePath(entity.getPicturePath())
                 .durationInDays(entity.getDurationInDays())
+                .minParticipants(entity.getMinParticipants())
+                .maxParticipants(entity.getMaxParticipants())
                 // Set degli ID delle nazioni
                 .countryIds(entity.getCountries() != null // controllo null per evitare NPE
                         ? entity.getCountries().stream() // creo uno stream delle Country

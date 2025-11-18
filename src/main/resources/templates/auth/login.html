@@ -1,10 +1,56 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-//login page content goes here
+    <title>Login - Adventure Together</title>
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+<body class="bg-light">
+
+<!-- NAVBAR -->
+ <div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-4">
+
+            <div class="card shadow-sm">
+                <div class="card-body">
+
+                    <h3 class="text-center mb-4">Accedi</h3>
+
+                    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+                    <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
+                    <div th:if="${logout}" class="alert alert-info" th:text="${logout}"></div>
+                    <div th:if="${registered}" class="alert alert-success" th:text="${registered}"></div>
+
+                    <form th:action="@{/auth/authenticate}" method="post">
+
+                        <div class="mb-3">
+                            <label>Email</label>
+                            <input type="email" name="username" class="form-control" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label>Password</label>
+                            <input type="password" name="password" class="form-control" required>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Accedi</button>
+
+                    </form>
+
+                    <div class="text-center mt-3">
+                        <a th:href="@{/auth/register}">Non hai un account? Registrati</a>
+                    </div>
+                    <div class="text-center mt-2">
+                        <a th:href="@{/auth/forgot-password}">Hai dimenticato la password?</a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
 </body>
 </html>

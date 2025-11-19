@@ -77,8 +77,8 @@ public class UserServiceImpl implements UserService {
 
     // restituisce tutti i traveler come lista di TravelerDTO
     @Override
-    public Optional<UserDTO> getById(Long id) {
-        return userRepository.findById(id).map(UserDTO::fromEntity);
+    public Optional<TravelerDTO> getTravelerById(Long id) {
+        return travelerRepository.findById(id).map(TravelerDTO::fromEntity);
     }
 
     // restituisce uno User dato l'email
@@ -120,8 +120,9 @@ public class UserServiceImpl implements UserService {
     }
 
     // questo metodo registra un planner nel sistema
-    // sarà accedibile solo agli admin
-    // non uso @PreAuthorize qui perchè la sicurezza è gestita a livello di controller
+    // sarà accedibile solo agli adminù
+    // la password viene creata automaticamente dal servizio passorwordGeneratorService e passata via controller
+    // l'utente riceverà una email che lo inviterà a resettare la password al primo accesso
     @Override
     public PlannerDTO registerPlanner(PlannerDTO dto, String rawPassword) {
         if (userRepository.existsByEmail(dto.getEmail()))
@@ -132,7 +133,7 @@ public class UserServiceImpl implements UserService {
         planner.setLastName(dto.getLastName());
         planner.setEmail(dto.getEmail());
         planner.setPassword(passwordEncoder.encode(rawPassword));
-        planner.setActive(false); // verrà attivato al primo reset della password
+        planner.setActive(true);
         planner.setRole(Role.PLANNER.name());
         planner.setEmployeeId(dto.getEmployeeId());
         planner = plannerRepository.save(planner);
@@ -152,7 +153,8 @@ public class UserServiceImpl implements UserService {
 
     // questo metodo registra un admin nel sistema
     // sarà accedibile solo ad altri admin
-    // non uso @PreAuthorize qui perchè la sicurezza è gestita a livello di controller
+    // la password viene creata automaticamente dal servizio passorwordGeneratorService e passata via controller
+    // l'utente riceverà una email che lo inviterà a resettare la password al primo accesso
     @Override
     public AdminDTO registerAdmin(AdminDTO dto, String rawPassword) {
         if (userRepository.existsByEmail(dto.getEmail()))
@@ -163,7 +165,7 @@ public class UserServiceImpl implements UserService {
         admin.setLastName(dto.getLastName());
         admin.setEmail(dto.getEmail());
         admin.setPassword(passwordEncoder.encode(rawPassword));
-        admin.setActive(false);
+        admin.setActive(true);
         admin.setRole(Role.ADMIN.name());
         admin.setEmployeeId(dto.getEmployeeId());
         admin = adminRepository.save(admin);
@@ -232,7 +234,6 @@ public class UserServiceImpl implements UserService {
 
         User user = resetToken.getUser(); // ottiene l'utente associato al token
         user.setPassword(passwordEncoder.encode(newPassword));      // aggiorna la password con quella nuova dell'utente
-        user.setActive(true); // attiva l'account, rilevante solo per Planner/Admin creati e non ancora attivi
         userRepository.save(user);
 
         // elimina il token dopo l'uso
@@ -244,6 +245,15 @@ public class UserServiceImpl implements UserService {
     public void deactivateUser(Long id) {
         userRepository.findById(id).ifPresent(user -> {
             user.setActive(false);
+            userRepository.save(user);
+        });
+    }
+
+    // metodo per riattivare un utente dato il suo id
+    @Override
+    public void activateUser(Long id) {
+        userRepository.findById(id).ifPresent(user -> {
+            user.setActive(true);
             userRepository.save(user);
         });
     }

@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Richiesta non valida - Adventure Together</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+
+<body class="bg-light">
+
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+
+            <div class="card shadow-sm p-4 text-center">
+                <h1 class="text-warning">400</h1>
+                <h3>Richiesta non valida</h3>
+
+                <p th:text="${message}">Si è verificato un errore nei dati inviati.</p>
+
+                <a th:href="@{/}" class="btn btn-primary mt-3">Torna alla Home</a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

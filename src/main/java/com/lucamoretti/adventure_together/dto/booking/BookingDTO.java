@@ -1,6 +1,7 @@
 package com.lucamoretti.adventure_together.dto.booking;
 
 import com.lucamoretti.adventure_together.dto.participant.ParticipantDTO;
+import com.lucamoretti.adventure_together.dto.payment.PaymentDTO;
 import com.lucamoretti.adventure_together.model.booking.Booking;
 import com.lucamoretti.adventure_together.model.details.DepartureAirport;
 import com.lucamoretti.adventure_together.model.participant.Participant;
@@ -47,6 +48,13 @@ public class BookingDTO {
     @NotNull(message = "L'aeroporto di partenza è obbligatorio")
     private Long departureAirportId;
 
+    private String insuranceType; // solo per DTO in input - puo essere null, luggage, cancellation, full
+
+    // il pagamento passa per 2 fasi: prima la creazione della booking (senza pagamento)
+    // poi il pagamento vero e proprio (collegato successivamente alla booking)
+    // quindi questo campo non può essere valorizzato in fase di creazione della booking
+    private PaymentDTO payment;
+
     // campo calcolato (costo totale della prenotazione)
     @Positive(message = "Il costo totale deve essere positivo")
     private Double totalCost;
@@ -59,8 +67,9 @@ public class BookingDTO {
        - eventuali accompagnatori aggiunti dal form
      */
     @Valid
-    @Size(max = 20, message = "Puoi prenotare per un massimo di 20 persone")
-    private List<ParticipantDTO> participants;
+    @Size(min=1, message = "Il numero di partecipanti deve essere almeno 1")
+    @Builder.Default // evita null pointer exception in fase di build
+    private List<ParticipantDTO> participants = new ArrayList<>();
 
     public static BookingDTO fromEntity(Booking booking) {
         return BookingDTO.builder()
@@ -70,12 +79,15 @@ public class BookingDTO {
                 .tripId(booking.getTrip().getId())
                 .travelerId(booking.getTraveler().getId())
                 .departureAirportId(booking.getDepartureAirport().getId())
-                .totalCost(booking.getTotalCost())
+                .totalCost(booking.getPayment().getAmountPaid())
                 .participants(
                         booking.getParticipants().stream()
                                 .map(ParticipantDTO::fromEntity)
                                 .toList()
                 )
+                .payment(booking.getPayment() != null
+                        ? PaymentDTO.fromEntity(booking.getPayment())
+                        : null)
                 .build();
     }
 
@@ -92,19 +104,10 @@ public class BookingDTO {
                 this.bookingDate != null ? this.bookingDate : LocalDate.now()
         );
 
-
         // Creo una lista finale di partecipanti che include il traveler
         List<Participant> finalParticipants = new ArrayList<>();
 
-        // Primo participant = traveler (inserito automaticamente)
-        Participant self = new Participant();
-        self.setFirstName(traveler.getFirstName());
-        self.setLastName(traveler.getLastName());
-        self.setDateOfBirth(traveler.getDateOfBirth());
-        self.setBooking(booking);
-        finalParticipants.add(self);
-
-        // Aggiungo gli altri partecipanti passati dal form (se esistono)
+        // Aggiungo i partecipanti passati dal form (se esistono)
         if (participants != null && !participants.isEmpty()) {
             for (Participant p : participants) {
                 p.setBooking(booking); // collega bidirezionalmente
@@ -118,8 +121,6 @@ public class BookingDTO {
 
         return booking;
     }
-
-
 }
 
 

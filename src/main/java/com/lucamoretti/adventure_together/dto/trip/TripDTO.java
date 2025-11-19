@@ -51,6 +51,7 @@ public class TripDTO {
     // Aggiunta per facilitare la visualizzazione
     private String tripItineraryTitle;
     private String tripItineraryPicturePath;
+    private int maxParticipants;
 
     @AssertTrue(message = "La data di fine prenotazioni deve essere prima della data di partenza")
     public boolean isBookingPeriodValid() {
@@ -84,6 +85,7 @@ public class TripDTO {
                 //aggiunta per facilitare la visualizzazione
                 .tripItineraryTitle(entity.getTripItinerary() != null ? entity.getTripItinerary().getTitle() : null)
                 .tripItineraryPicturePath(entity.getTripItinerary() != null ? entity.getTripItinerary().getPicturePath() : null)
+                .maxParticipants(entity.getTripItinerary() != null ? entity.getTripItinerary().getMaxParticipants() : 0)
                 .build();
     }
 

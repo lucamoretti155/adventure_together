@@ -68,8 +68,16 @@
 
                     <td class="text-end">
 
+                        <!--  pulsante attiva -->
+                        <a th:if="${!planner.active}"
+                           th:href="@{'/admin/activate-user' + ${planner.id}}"
+                           class="btn btn-sm btn-danger ms-1">
+                            Attiva
+                        </a>
+
                         <!--  pulsante disattiva -->
-                        <a th:href="@{'/admin/deactivate-user' + ${planner.id}}"
+                        <a th:if="${planner.active}"
+                           th:href="@{'/admin/deactivate-user' + ${planner.id}}"
                            class="btn btn-sm btn-danger ms-1">
                             Disattiva
                         </a>

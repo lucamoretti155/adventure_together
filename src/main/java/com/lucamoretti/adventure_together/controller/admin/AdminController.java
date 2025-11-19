@@ -134,16 +134,29 @@ public class AdminController {
         return "/admin/admin-list";
     }
 
-    // Disattiva un planner
+    // Disattiva un utente (planner o admin)
     // il metodo chiama il servizio UserService per disattivare l'utenza indicata
-    @PostMapping("/deactivate-planner")
-    public String deactivatePlanner(Long plannerId, RedirectAttributes redirectAttributes) {
+    @PostMapping("/deactivate-user")
+    public String deactivateUser(Long userId, RedirectAttributes redirectAttributes) {
         try {
-            UserService.deactivateUser(plannerId);
-            redirectAttributes.addFlashAttribute("successMessage", "Planner disattivato con successo.");
+            UserService.deactivateUser(userId);
+            redirectAttributes.addFlashAttribute("successMessage", "Utente disattivato con successo.");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }
-        return "redirect:/admin/planner-list";
+        return "redirect:/admin/dashboard";
+    }
+
+    // Disattiva un utente (planner o admin)
+    // il metodo chiama il servizio UserService per disattivare l'utenza indicata
+    @PostMapping("/activate-user")
+    public String activateUser(Long userId, RedirectAttributes redirectAttributes) {
+        try {
+            UserService.activateUser(userId);
+            redirectAttributes.addFlashAttribute("successMessage", "Utente disattivato con successo.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+        }
+        return "redirect:/admin/dashboard";
     }
 }

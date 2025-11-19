@@ -120,7 +120,7 @@ public class Trip {
             try {
                 total += booking.getNumParticipants();
             } catch (Exception ignored) {
-                // ingnoro booking malformate
+                // ignoro booking malformate
             }
         }
         return total;

@@ -10,6 +10,12 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+/*
+    Implementazione del servizio di gestione dei pagamenti.
+    Si occupa di avviare e confermare i pagamenti utilizzando Stripe come gateway di pagamento.
+    Gestisce la persistenza delle informazioni di pagamento nel database.
+ */
+
 @Service
 @RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentService {

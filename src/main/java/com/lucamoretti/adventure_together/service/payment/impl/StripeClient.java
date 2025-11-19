@@ -8,9 +8,13 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
-
 import java.util.HashMap;
 import java.util.Map;
+
+/*
+    Client per interagire con l'API di Stripe per la gestione dei pagamenti.
+    Si occupa di creare e confermare i Payment Intent su Stripe.
+ */
 
 @Service
 @RequiredArgsConstructor

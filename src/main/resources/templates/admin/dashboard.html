@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Dashboard Admin - AdventureTogether</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/custom.css}">
 </head>
 
 <body class="bg-light">
@@ -17,6 +18,17 @@
     <p class="text-center text-muted mb-5">
         Gestisci planner, viaggi e impostazioni della piattaforma
     </p>
+
+    <!-- MESSAGGI FLASH -->
+    <div th:if="${successMessage}"
+         class="alert alert-success"
+         th:text="${successMessage}">
+    </div>
+
+    <div th:if="${errorMessage}"
+         class="alert alert-danger"
+         th:text="${errorMessage}">
+    </div>
 
     <div class="row g-4 justify-content-center">
 
@@ -135,18 +147,6 @@
     </div>
 
 </div>
-
-<style>
-    .action-card {
-        transition: transform 0.15s ease, box-shadow 0.15s ease;
-        min-height: 160px;
-        border-radius: 10px;
-    }
-    .action-card:hover {
-        transform: translateY(-4px);
-        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
-    }
-</style>
 
 </body>
 </html>

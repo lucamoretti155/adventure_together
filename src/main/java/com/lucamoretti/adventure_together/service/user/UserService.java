@@ -17,7 +17,7 @@ public interface UserService {
     List<UserDTO> getAllUsers();
     List<PlannerDTO> getAllPlanners();
     List<AdminDTO> getAllAdmins();
-    Optional<UserDTO> getById(Long id);
+    Optional<TravelerDTO> getTravelerById(Long id);
     Optional<UserDTO> getByEmail(String email);
 
     TravelerDTO registerTraveler(TravelerDTO travelerDTO, String rawPassword);
@@ -28,6 +28,7 @@ public interface UserService {
     void resetPassword(String token, String newPassword);
 
     void deactivateUser(Long id);
+    void activateUser(Long id);
 
 
 }

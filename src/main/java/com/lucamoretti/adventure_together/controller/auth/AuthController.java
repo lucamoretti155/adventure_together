@@ -33,7 +33,7 @@ public class AuthController {
                                 @RequestParam(value = "logout", required = false) String logout,
                                 @RequestParam(value = "registered", required = false) String registered,
                                 Model model) {
-        if (error != null) model.addAttribute("error", "Credenziali non valide");
+        if (error != null) model.addAttribute("errorMessage", "Credenziali non valide");
         if (logout != null) model.addAttribute("logout", "Logout effettuato con successo");
         if (registered != null) model.addAttribute("registered", "Registrazione completata, effettua il login");
         return "auth/login";
@@ -74,7 +74,7 @@ public class AuthController {
 
         } catch (DataIntegrityException | DuplicateResourceException e) {  // per password o età non valida o email già esistente
 
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             redirectAttributes.addFlashAttribute("travelerDTO", dto);
             return "redirect:/auth/register";
         }
@@ -105,11 +105,11 @@ public class AuthController {
 
         try {
             userService.generatePasswordResetToken(email);
-            redirectAttributes.addFlashAttribute("message", "Email inviata! Controlla la tua casella di posta.");
+            redirectAttributes.addFlashAttribute("successMessage", "Email inviata! Controlla la tua casella di posta.");
         } catch (ResourceNotFoundException e) {
-            redirectAttributes.addFlashAttribute("error", "Nessun account trovato con questa email.");
+            redirectAttributes.addFlashAttribute("errorMessage", "Nessun account trovato con questa email.");
         } catch (Exception e) {
-            redirectAttributes.addFlashAttribute("error", "Si è verificato un errore inatteso.");
+            redirectAttributes.addFlashAttribute("errorMessage", "Si è verificato un errore inatteso.");
         }
         return "redirect:/auth/forgot-password";
     }
@@ -132,11 +132,11 @@ public class AuthController {
 
         try {
             userService.resetPassword(token, newPassword);
-            redirectAttributes.addFlashAttribute("message", "Password aggiornata! Ora puoi effettuare il login.");
+            redirectAttributes.addFlashAttribute("successMessage", "Password aggiornata! Ora puoi effettuare il login.");
             return "redirect:/auth/login";
 
         } catch (IllegalArgumentException e) {
-            redirectAttributes.addFlashAttribute("error", e.getMessage());
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             return "redirect:/auth/reset-password?token=" + token;
         }
     }

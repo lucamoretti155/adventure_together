@@ -9,6 +9,9 @@
 <!-- NAVBAR -->
 <div th:replace="~{fragments/navbar :: mainNavbar}"></div>
 
+<div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+<div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+
 <!-- HERO -->
 <div class="container-fluid bg-light py-5 border-bottom">
     <div class="container text-center">

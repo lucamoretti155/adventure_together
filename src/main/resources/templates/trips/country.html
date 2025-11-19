@@ -9,6 +9,9 @@
 <body>
 <div th:replace="~{fragments/navbar :: mainNavbar}"></div>
 
+<div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+<div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+
 <div class="container my-5">
 
     <h2 class="fw-bold mb-4" th:text="${country.country}"></h2>

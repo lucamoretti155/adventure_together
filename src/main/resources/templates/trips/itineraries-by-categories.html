@@ -12,6 +12,9 @@
 <div class="container my-5">
     <h2 class="fw-bold mb-4">Itinerari per categoria</h2>
 
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+
     <div class="row g-4">
         <div class="col-md-4" th:each="itin : ${tripItineraries}">
             <div class="card shadow-sm border-0">

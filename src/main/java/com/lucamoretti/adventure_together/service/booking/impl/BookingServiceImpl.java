@@ -54,7 +54,8 @@ public class BookingServiceImpl implements BookingService {
     private final Map<String, Function<IBooking, IBooking>> bookingDecoration = Map.of(
             "cancellation", CancellationInsurance::new,
             "luggage",      LuggageInsurance::new,
-            "full",         b -> new CancellationInsurance(new LuggageInsurance(b))
+            "full",         b -> new CancellationInsurance(new LuggageInsurance(b)),
+            "null",         b -> b // nessuna assicurazione aggiuntiva
     );
 
     //helper per validare la disponibilità del booking
@@ -133,6 +134,7 @@ public class BookingServiceImpl implements BookingService {
 
         // Creazione PaymentIntent su Stripe (test mode)
         var paymentIntent = stripeClient.createPaymentIntent(totalCost, "eur");
+
 
         Payment payment = new Payment();
         payment.setBooking(booking);

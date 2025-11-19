@@ -1,30 +1,24 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Pagina non trovata - Adventure Together</title>
+    <title>Errore Server - Adventure Together</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
 </head>
 
 <body class="bg-light">
-
-<!-- NAVBAR -->
 <div th:replace="~{fragments/navbar :: mainNavbar}"></div>
 
 <div class="container mt-5">
     <div class="row justify-content-center">
         <div class="col-md-6">
-
-            <div class="card shadow-sm border-0 text-center p-4">
-                <h1 class="display-4 text-danger">404</h1>
-                <h3 class="mb-3">Pagina non trovata</h3>
+            <div class="card shadow-sm p-4 text-center">
+                <h1 class="text-danger">Oops!</h1>
+                <h4>Qualcosa è andato storto.</h4>
 
                 <p th:text="${message}"></p>
 
-                <a th:href="@{/}" class="btn btn-primary mt-3">
-                    Torna alla Home
-                </a>
+                <a th:href="@{/}" class="btn btn-primary mt-3">Torna alla Home</a>
             </div>
-
         </div>
     </div>
 </div>

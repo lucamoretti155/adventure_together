@@ -7,6 +7,11 @@ import jakarta.validation.constraints.PositiveOrZero;
 import lombok.*;
 import java.time.LocalDate;
 
+/*
+    Data Transfer Object per i pagamenti associati a una prenotazione.
+    Include validazioni per i campi obbligatori e le restrizioni sui valori numerici.
+ */
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -42,6 +47,11 @@ public class PaymentDTO {
                 .amountPaid(entity.getAmountPaid())
                 .amountInsurance(entity.getAmountInsurance())
                 .bookingId(entity.getBooking() != null ? entity.getBooking().getId() : null)
+                .paymentIntentId(entity.getPaymentIntentId())
+                .clientSecret(entity.getClientSecret())
+                .status(entity.getStatus())
+                .paymentMethod(entity.getPaymentMethod())
+                .currency(entity.getCurrency())
                 .build();
     }
 }

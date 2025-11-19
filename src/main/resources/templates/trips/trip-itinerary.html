@@ -8,6 +8,9 @@
 <body>
 <div th:replace="~{fragments/navbar :: mainNavbar}"></div>
 
+<div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+<div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+
 <div class="container my-5">
 
     <!-- TITOLO -->
@@ -79,7 +82,7 @@
                     <p><strong>Prenotabile entro il:</strong>
                         <span th:text="${#temporals.format(trip.dateEndBookings, 'dd MMMM yyyy')}"></span>
                     </p>
-                    <p><strong>Posti disponibili:</strong> <span th:text="${tripItinerary.maxParticipants - trip.currentParticipantsCount}"></span></p>
+                    <p><strong>Posti disponibili:</strong> <span th:text="${trip.maxParticipants - trip.currentParticipantsCount}"></span></p>
                     <p><strong>Costo a persona:</strong>
                         <span th:text="${#numbers.formatDecimal(trip.tripIndividualCost, 1, 'POINT', 2, 'COMMA')}"></span> €
                     </p>

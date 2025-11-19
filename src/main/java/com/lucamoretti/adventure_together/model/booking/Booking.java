@@ -76,7 +76,6 @@ public class Booking implements IBooking, BookingListener {
     private List<Participant> participants = new ArrayList<>();
 
     // Ritorna il numero totale dei partecipanti inclusi nella prenotazione
-    // (comprende il Traveler stesso, che viene inserito anche come Participant)
     public int getNumParticipants() {
         return participants != null ? participants.size() : 0;
     }
@@ -85,7 +84,7 @@ public class Booking implements IBooking, BookingListener {
     // Una prenotazione ha un solo pagamento associato
     // il proprietario della relazione è Payment che contiene la foreign key
     // contine diverse informazioni sul pagamento effettuato per la prenotazione, inlcusi le componenti di costo
-    @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Payment payment;
 
     // Costo del viaggio associato alla prenotazione

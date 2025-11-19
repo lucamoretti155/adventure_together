@@ -11,7 +11,10 @@ lista TripItineary creati con relativi dettagli e filtro data da/a
 
 -->controller admin
 
-disattivazione user
+disattivazione user --DONE
+    get
+
+attivazione user --DONE
     get
 
 cancella Trip
@@ -21,6 +24,8 @@ cancella Trip
 
 creazione booking (controllo se già effettuato per quel trip) e gestione pagamento e scelta assicurazione
     get e post form
+    fatto quasi tutto, manca pagina di pagamento fallito
+
 
 lista booking con relativi dettagli e filtro data da/a e aggiunta link per creazione review se non ancora esistente (altri visualizza la review)
     get e post su stessa pagina
@@ -29,6 +34,9 @@ creazione review
     get e post form
 
 
+
+controllare registrazione pagina non mostra messaggi errore
+controllare l'aggiornamento del numero di posti disponibili nel Trip
 __________________________________________________________
 
 iniziare con testing Junit

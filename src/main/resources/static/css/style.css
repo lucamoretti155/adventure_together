@@ -4,3 +4,12 @@
     object-fit: cover; /* mantiene proporzioni e ritaglia */
     object-position: center; /* centra il ritaglio */
 }
+.action-card {
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+    min-height: 160px;
+    border-radius: 10px;
+}
+.action-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15);
+}

@@ -18,7 +18,9 @@
 
                     <h3 class="text-center mb-4">Crea un account Viaggiatore</h3>
 
-                    <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
+                    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+                    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+
 
                     <form th:action="@{/auth/register}" th:object="${travelerDTO}" method="post">
 

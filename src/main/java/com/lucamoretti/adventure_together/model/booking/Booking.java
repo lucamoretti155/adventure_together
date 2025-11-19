@@ -70,8 +70,7 @@ public class Booking implements IBooking, BookingListener {
 
     //Associazione OneToMany con Participant
     // Una prenotazione può includere molti partecipanti
-    // minimo uno (il viaggiatore stesso) che viene reinserito anche come participant alla creazione del booking
-    // il numero di partecipanti inserito in input viene usato per creare gli slot vuoti da compilare successivamente
+    // minimo uno (il viaggiatore stesso o altra persona)
     @OneToMany(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Participant> participants = new ArrayList<>();
 

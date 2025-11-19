@@ -9,10 +9,9 @@
 <!-- ATTENZIONE: serve th:inline="javascript" !! -->
 <script th:inline="javascript">
 
-    // 1️⃣ inserisci la tua PUBLIC KEY qui:
-    const stripe = Stripe([[${@environment.getProperty('STRIPE_PUBLIC_KEY')}]]);
+    //  PUBLIC KEY
+    const stripe = Stripe(/*[[${@environment.getProperty('STRIPE_PUBLIC_KEY')}]]*/);
 
-    // 2️⃣ Thymeleaf ora può leggere le variabili:
     const clientSecret = /*[[${clientSecret}]]*/ "";
     const bookingId = /*[[${bookingId}]]*/ "";
 

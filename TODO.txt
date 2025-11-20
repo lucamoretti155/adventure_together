@@ -17,14 +17,17 @@ disattivazione user --DONE
 attivazione user --DONE
     get
 
-cancella Trip
+cancella Trip . -- inserire CARD nella dashboard admin
     get
 
 -->controller traveler
 
 creazione booking (controllo se già effettuato per quel trip) e gestione pagamento e scelta assicurazione
     get e post form
-    fatto quasi tutto, manca pagina di pagamento fallito
+    rivedere logica e flusso
+    2 fasi:
+        1. raccolta dati booking e pagamento
+        2. conferma pagamento o fallimento e relativo salvataggio del booking, stato trip email etc.
 
 
 lista booking con relativi dettagli e filtro data da/a e aggiunta link per creazione review se non ancora esistente (altri visualizza la review)
@@ -35,15 +38,13 @@ creazione review
 
 
 
-controllare registrazione pagina non mostra messaggi errore
-controllare l'aggiornamento del numero di posti disponibili nel Trip
 __________________________________________________________
 
 iniziare con testing Junit
 
 __________________________________________________________
 
-inizira documentazione
+iniziare documentazione
 
 
 

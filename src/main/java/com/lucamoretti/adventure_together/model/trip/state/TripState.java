@@ -32,24 +32,21 @@ public abstract class TripState {
 
     protected String templateMailPath;
 
+    /*
     // La relazione con Trip è OneToOne bidirezionale, con Trip che possiede la relazione
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "trip_id", unique = true) // unique per garantire la relazione OneToOne
-    @Setter(AccessLevel.PROTECTED) // il setter è protected per evitare modifiche esterne
     protected Trip trip;
 
-    public abstract void handle(); // e.g. conferme/transizioni automatiche
-    public abstract void cancel();
+     */
+
+    public abstract void handle(Trip trip); // e.g. conferme/transizioni automatiche
+    public abstract void cancel(Trip trip);
 
     // Getter per il templateMailPath
     // viene sovrascritto a lombok per essere pubblico
     public String getTemplateMailPath() { return templateMailPath; }
 
-    // Metodo per collegare lo stato al Trip
-    // Usato internamente da Trip.open()
-    public void attachTo(Trip trip) {
-        this.trip = trip;
-    }
 
 
     //Indica se in questo stato è permesso accettare nuove prenotazioni.

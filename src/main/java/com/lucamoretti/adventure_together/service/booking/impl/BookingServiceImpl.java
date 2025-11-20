@@ -20,6 +20,7 @@ import com.lucamoretti.adventure_together.service.payment.impl.StripeClient;
 import com.lucamoretti.adventure_together.util.exception.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Map;
@@ -48,6 +49,8 @@ public class BookingServiceImpl implements BookingService {
     private final DepartureAirportRepository departureAirportRepository;
     private final StripeClient stripeClient;
     private final EmailService emailService;
+    @Value("${app.base-url}")
+    private String baseUrl;
 
     //  Mappa di strategie per l'applicazione dinamica dei Decorator
     //  Permette di aggiungere nuovi tipi di assicurazione senza modificare la logica principale
@@ -114,6 +117,9 @@ public class BookingServiceImpl implements BookingService {
         //altrimenti avrei dovuto creare decoratori anche a livello di DTO, complicando inutilmente il codice
         Booking booking = req.toEntity(trip, traveler, airport, participants);
 
+        // Associo la prenotazione al trip
+        trip.addBooking(booking);
+
         /*  Calcolo del costo totale con Decorator
             Se l'utente non sceglie nessuna assicurazione, viene calcolato solo il costo base
             che include l'assicurazione di base (10% del costo del viaggio)
@@ -163,6 +169,9 @@ public class BookingServiceImpl implements BookingService {
         }
 
         // Invio email di conferma al traveler
+        // uso il template standard di conferma prenotazione
+        // NB: l'attributo templateMailPath del Trip non viene usato qui ma solo per aggiornamenti di stato
+        String templateMailPath = "/mail/booking-confirmation";
         try {
             emailService.sendHtmlMessage(
                     traveler.getEmail(),
@@ -172,7 +181,8 @@ public class BookingServiceImpl implements BookingService {
                             "traveler", traveler,
                             "trip", trip,
                             "booking", booking,
-                            "totalCost", totalCost
+                            "totalCost", totalCost,
+                            "homepage", baseUrl+"/home"
                     )
             );
         } catch (Exception e) {

@@ -8,6 +8,8 @@ import com.lucamoretti.adventure_together.model.user.Traveler;
 import com.lucamoretti.adventure_together.service.mail.EmailService;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Value;
+
 import java.time.LocalDate;
 import java.util.*;
 
@@ -27,6 +29,7 @@ import java.util.*;
 public class Booking implements IBooking, BookingListener {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     // Data di prenotazione, impostata automaticamente alla data corrente
@@ -53,10 +56,7 @@ public class Booking implements IBooking, BookingListener {
     @Transient
     private static EmailService emailService;
 
-    /*
-      Metodo statico usato per "iniettare" l'EmailService all'avvio dell'applicazione.
-      Viene configurato da una classe @Configuration (vedi sotto).
-     */
+    // Metodo statico per iniettare l'EmailService
     public static void setEmailService(EmailService service) {
         emailService = service;
     }
@@ -125,7 +125,7 @@ public class Booking implements IBooking, BookingListener {
                 traveler.getEmail(),
                 "Aggiornamento sul tuo viaggio " + trip.getTripItinerary().getTitle(),
                 mailTemplatePath,
-                Map.of("traveler", traveler, "trip", trip)
+                Map.of("traveler", traveler, "trip", trip, "homepage", "${app.base-url}"+"/home")
         );
     }
 

@@ -13,6 +13,6 @@ public interface PaymentService {
 
     PaymentIntentDTO startPayment(Booking booking);
 
-    PaymentDTO confirmPayment(String paymentIntentId, Booking booking, double insuranceCost);
+    PaymentDTO confirmPayment(String paymentIntentId, Long bookingId);
 }
 

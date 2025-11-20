@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Annulla Viaggi</title>
+
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<div class="container my-5">
+
+    <h2 class="fw-bold mb-4">Annulla un Viaggio</h2>
+
+    <!-- Flash messages -->
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+    <div class="table-responsive">
+        <table class="table table-striped table-bordered align-middle">
+            <thead class="table-light">
+            <tr>
+                <th>ID</th>
+                <th>Itinerario</th>
+                <th>Partenza</th>
+                <th>Periodo Prenotazioni</th>
+                <th>Partecipanti</th>
+                <th>Costo</th>
+                <th>Stato</th>
+                <th>Azioni</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="t : ${trips}">
+                <td th:text="${t.id}"></td>
+
+                <td>
+                    <strong th:text="${t.tripItineraryTitle}"></strong>
+                </td>
+
+                <td th:text="${t.dateDeparture}"></td>
+
+                <td>
+                    <span th:text="${t.dateStartBookings}"></span> →
+                    <span th:text="${t.dateEndBookings}"></span>
+                </td>
+
+                <td>
+                    <span th:text="${t.currentParticipantsCount}"></span> /
+                    <span th:text="${t.maxParticipants}"></span>
+                </td>
+
+                <td>
+                    € <span th:text="${t.tripIndividualCost}"></span>
+                </td>
+
+                <td th:text="${t.state}"></td>
+
+                <td class="text-center">
+
+                    <form th:action="@{/admin/cancel-trip}" method="post"
+                          onsubmit="return confirm('Sei sicuro di voler annullare questo viaggio?');">
+
+                        <input type="hidden" name="tripId" th:value="${t.id}">
+                        <button type="submit" class="btn btn-danger btn-sm">
+                            Annulla
+                        </button>
+                    </form>
+
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <a th:href="@{/admin/dashboard}" class="btn btn-secondary mt-3">
+        Torna alla Dashboard
+    </a>
+
+</div>
+
+<script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+
+</body>
+</html>

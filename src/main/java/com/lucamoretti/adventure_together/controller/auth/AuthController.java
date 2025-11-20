@@ -43,8 +43,7 @@ public class AuthController {
 
     // Mostra la pagina di registrazione per i viaggiatori.
     @GetMapping("/register")
-    public String showRegisterForm(@ModelAttribute("travelerDTO") TravelerDTO dto,
-                                   Model model)  {
+    public String showRegisterForm(Model model)  {
         if (!model.containsAttribute("travelerDTO")) { // Per mantenere i dati in caso di errori di validazione
             model.addAttribute("travelerDTO", new TravelerDTO());
         }

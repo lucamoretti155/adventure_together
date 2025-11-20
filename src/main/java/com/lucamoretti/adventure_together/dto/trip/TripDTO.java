@@ -38,7 +38,6 @@ public class TripDTO {
     private double tripIndividualCost;
 
     private String state;                  // nome semplice della classe di stato
-    private int currentParticipantsCount;  // calcolato da bookings
     private String templateMailPath;
 
     // Relazioni come ID
@@ -52,6 +51,7 @@ public class TripDTO {
     private String tripItineraryTitle;
     private String tripItineraryPicturePath;
     private int maxParticipants;
+    private int currentParticipantsCount;
 
     @AssertTrue(message = "La data di fine prenotazioni deve essere prima della data di partenza")
     public boolean isBookingPeriodValid() {
@@ -74,10 +74,6 @@ public class TripDTO {
                 .tripIndividualCost(entity.getTripIndividualCost())
                 // Stato come nome semplice della classe
                 .state(entity.getState() != null ? entity.getState().getClass().getSimpleName() : null)
-                // Conteggio attuale dei partecipanti dalle bookings
-                .currentParticipantsCount(
-                        entity.getBookings() != null ? entity.getCurrentParticipantsCount() : 0
-                )
                 .templateMailPath(entity.getTemplateMailPath())
                 // Relazioni come ID
                 .tripItineraryId(entity.getTripItinerary() != null ? entity.getTripItinerary().getId() : null)
@@ -86,6 +82,7 @@ public class TripDTO {
                 .tripItineraryTitle(entity.getTripItinerary() != null ? entity.getTripItinerary().getTitle() : null)
                 .tripItineraryPicturePath(entity.getTripItinerary() != null ? entity.getTripItinerary().getPicturePath() : null)
                 .maxParticipants(entity.getTripItinerary() != null ? entity.getTripItinerary().getMaxParticipants() : 0)
+                .currentParticipantsCount(entity.getCurrentParticipantsCount())
                 .build();
     }
 

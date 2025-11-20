@@ -131,6 +131,14 @@ public class TripServiceImpl implements TripService {
                 .toList();
     }
 
+    // Recupera tutti i Trip ancora in stato ToBeConfirmed
+    @Override
+    public List<TripDTO> getToBeConfirmedTrips() {
+        return tripRepository.findByState(com.lucamoretti.adventure_together.model.trip.state.ToBeConfirmed.class).stream()
+                .map(TripDTO::fromEntity)
+                .toList();
+    }
+
     // Recupera tutti i trip ancora prenotabili (ToBeConfirmed + ConfirmedOpen) per un TripItinerary specifico
     @Override
     public List<TripDTO> getBookableTripsByItinerary(Long itineraryId) {
@@ -170,4 +178,14 @@ public class TripServiceImpl implements TripService {
                 .map(TripDTO::fromEntity)
                 .toList();
     }
+
+    // Conta il numero di partecipanti a un trip
+    @Override
+    public int countParticipants(Long tripId) {
+        Trip trip = tripRepository.findById(tripId)
+                .orElseThrow(() -> new ResourceNotFoundException("Trip", "id", tripId));
+        return trip.getCurrentParticipantsCount();
+    }
+
+
 }

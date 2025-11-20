@@ -2,13 +2,16 @@ package com.lucamoretti.adventure_together.controller.traveler;
 
 import com.lucamoretti.adventure_together.dto.booking.BookingDTO;
 import com.lucamoretti.adventure_together.dto.participant.ParticipantDTO;
+import com.lucamoretti.adventure_together.dto.payment.PaymentDTO;
 import com.lucamoretti.adventure_together.dto.trip.TripDTO;
 import com.lucamoretti.adventure_together.dto.trip.TripItineraryDTO;
 import com.lucamoretti.adventure_together.dto.user.TravelerDTO;
+import com.lucamoretti.adventure_together.model.booking.Booking;
 import com.lucamoretti.adventure_together.model.user.Traveler;
 import com.lucamoretti.adventure_together.model.user.User;
 import com.lucamoretti.adventure_together.service.booking.BookingService;
 import com.lucamoretti.adventure_together.service.details.DepartureAirportService;
+import com.lucamoretti.adventure_together.service.payment.PaymentService;
 import com.lucamoretti.adventure_together.service.trip.TripItineraryService;
 import com.lucamoretti.adventure_together.service.trip.TripService;
 import com.lucamoretti.adventure_together.service.user.UserService;
@@ -35,6 +38,7 @@ public class TravelerController {
     private final BookingService bookingService;
     private final DepartureAirportService airportService; // se lo hai
     private final UserService userService;
+    private final PaymentService paymentService;
 
     @GetMapping("/book/{tripId}")
     public String showBookingForm(@PathVariable Long tripId,
@@ -109,6 +113,19 @@ public class TravelerController {
 
         return "traveler/payment-page";
     }
+
+    @PostMapping("/payment/confirm")
+    public String confirmPayment(@RequestParam String paymentIntentId,
+                                 @RequestParam Long bookingId,
+                                 RedirectAttributes redirectAttributes) {
+
+        // Verifica su Stripe + aggiornamento DB
+        PaymentDTO updated = paymentService.confirmPayment(paymentIntentId, bookingId);
+
+        redirectAttributes.addAttribute("bookingId", bookingId);
+        return "redirect:/traveler/payment-success";
+    }
+
 
     @GetMapping("/payment-success")
     public String paymentSuccess(@RequestParam Long bookingId, Model model) {

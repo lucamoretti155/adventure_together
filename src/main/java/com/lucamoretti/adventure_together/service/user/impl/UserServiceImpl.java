@@ -142,7 +142,7 @@ public class UserServiceImpl implements UserService {
         emailService.sendHtmlMessage(
                 dto.getEmail(),  // destinatario
                 "Benvenuto in AdventureTogether!",  // oggetto
-                "mail/welcome-planner", // path al template Thymeleaf
+                "mail/welcome-planner-admin", // path al template Thymeleaf
                 Map.of("name", planner.getFirstName(),
                         "resetPassword", baseUrl+ "/auth/forgot-password", "homepage", baseUrl+"/home")  // variabili per il template inserite in una Map
         );
@@ -175,7 +175,7 @@ public class UserServiceImpl implements UserService {
         emailService.sendHtmlMessage(
                 dto.getEmail(),  // destinatario
                 "Benvenuto in AdventureTogether!",  // oggetto
-                "mail/welcome-planner", // path al template Thymeleaf
+                "mail/welcome-planner-admin", // path al template Thymeleaf
                 Map.of("name", admin.getFirstName(),
                         "resetPassword", baseUrl+ "/auth/forgot-password", "homepage", baseUrl+"/home")  // variabili per il template inserite in una Map
         );

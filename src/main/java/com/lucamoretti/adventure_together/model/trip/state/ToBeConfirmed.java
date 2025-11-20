@@ -1,5 +1,6 @@
 package com.lucamoretti.adventure_together.model.trip.state;
 
+import com.lucamoretti.adventure_together.model.trip.Trip;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.NoArgsConstructor;
@@ -15,10 +16,13 @@ import java.time.LocalDate;
 public class ToBeConfirmed extends TripState {
 
     public ToBeConfirmed() {
-        this.templateMailPath = "/mail/to-be-confirmed";
+        this.templateMailPath = ""; // percorso vuoto dato che non ci sono mail da inviare in questo stato
     }
     @Override
-    public void handle() {
+    public void handle(Trip trip) {
+        if (trip == null) {
+            throw new IllegalStateException("STATE ERROR: this.trip è null prima della transizione!");
+        }
         int participants = trip.getCurrentParticipantsCount();
         LocalDate today = LocalDate.now();
 
@@ -26,7 +30,6 @@ public class ToBeConfirmed extends TripState {
                 today.isBefore(trip.getDateEndBookings())) {
 
             TripState confirmed = new ConfirmedOpen();
-            confirmed.attachTo(trip);
             trip.setState(confirmed);
             trip.setTemplateMailPath(confirmed.getTemplateMailPath());
             // notifica i partecipanti dell'avvenuta conferma del viaggio
@@ -35,7 +38,6 @@ public class ToBeConfirmed extends TripState {
                 participants < trip.getTripItinerary().getMinParticipants()) {
 
             TripState expired = new ExpiredClosed();
-            expired.attachTo(trip);
             trip.setState(expired);
             trip.setTemplateMailPath(expired.getTemplateMailPath());
             // notifica i partecipanti dell'avvenuta chiusura del viaggio per mancato raggiungimento del numero minimo
@@ -44,9 +46,8 @@ public class ToBeConfirmed extends TripState {
     }
 
     @Override
-    public void cancel() {
+    public void cancel(Trip trip) {
         TripState cancelled = new Cancelled();
-        cancelled.attachTo(trip);
         trip.setState(cancelled);
         trip.setTemplateMailPath(cancelled.getTemplateMailPath());
         // notifica i partecipanti dell'avvenuta cancellazione del viaggio

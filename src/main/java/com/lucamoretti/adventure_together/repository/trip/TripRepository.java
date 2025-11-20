@@ -63,6 +63,16 @@ public interface TripRepository extends JpaRepository<Trip, Long> {
            """)
     List<Trip> findOpenForBooking();
 
+    // Trova tutti i viaggi che sono ancora ToBeConfirmed
+    @Query("""
+           select t from Trip t
+           where type(t.state) in (
+                         com.lucamoretti.adventure_together.model.trip.state.ToBeConfirmed
+                     )
+           order by t.dateDeparture asc
+           """)
+    List<Trip> findAllToBeConfirmed();
+
     // Trova tutti i viaggi che sono ancora aperti per le prenotazioni (stati ToBeConfirmed e ConfirmedOpen) per uno specifico itinerario di viaggio
     @Query("""
            select t from Trip t

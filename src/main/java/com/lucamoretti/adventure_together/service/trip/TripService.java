@@ -31,6 +31,9 @@ public interface TripService {
     // Recupera tutti i trip ancora prenotabili (ToBeConfirmed + ConfirmedOpen)
     List<TripDTO> getBookableTrips();
 
+    // Recupera tutti i Trip ancora in stato ToBeConfirmed
+    List<TripDTO> getToBeConfirmedTrips();
+
     // Recupera tutti i trip ancora prenotabili (ToBeConfirmed + ConfirmedOpen) per un TripItinerary specifico
     List<TripDTO> getBookableTripsByItinerary(Long itineraryId);
 
@@ -45,6 +48,9 @@ public interface TripService {
 
     // Recupera tutti i trip futuri non cancellati tra due date
     List<TripDTO> getTripsNotCancelledBetween(LocalDate from, LocalDate to);
+
+    // Conta il numero di partecipanti a un trip
+    int countParticipants(Long tripId);
 }
 
 

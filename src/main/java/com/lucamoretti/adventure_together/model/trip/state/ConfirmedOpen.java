@@ -1,5 +1,6 @@
 package com.lucamoretti.adventure_together.model.trip.state;
 
+import com.lucamoretti.adventure_together.model.trip.Trip;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,7 @@ public class ConfirmedOpen extends TripState {
     }
 
     @Override
-    public void handle() {
+    public void handle(Trip trip) {
         int participants = trip.getCurrentParticipantsCount();
         LocalDate today = LocalDate.now();
 
@@ -26,7 +27,6 @@ public class ConfirmedOpen extends TripState {
                 today.isAfter(trip.getDateEndBookings())) {
 
             TripState closed = new ConfirmedClosed();
-            closed.attachTo(trip);
             trip.setState(closed);
             trip.setTemplateMailPath(closed.getTemplateMailPath());
             // notifica i partecipanti dell'avvenuta chiusura delle iscrizioni del viaggio e che il viaggio è confermato
@@ -35,7 +35,7 @@ public class ConfirmedOpen extends TripState {
     }
 
     @Override
-    public void cancel() {
+    public void cancel(Trip trip) {
         // Trip già confermato, non si può più cancellare
     }
 

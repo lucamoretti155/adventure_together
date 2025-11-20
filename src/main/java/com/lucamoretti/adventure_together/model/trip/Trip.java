@@ -30,6 +30,7 @@ import java.util.Set;
 public class Trip {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @EqualsAndHashCode.Include
     private Long id;
 
     // Date di inizio e fine delle prenotazioni
@@ -52,8 +53,9 @@ public class Trip {
     private double tripIndividualCost;
 
     // Stato attuale (OneToOne) – State Pattern
-    // Il lato proprietario della relazione è TripState
-    @OneToOne(mappedBy = "trip", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    // Il lato proprietario della relazione è Trip
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+    @JoinColumn(name = "state_id", unique = true)   // FK in TRIPS, NON in trip_states
     private TripState state;
 
     // Itinerario (molti Trip possono condividere lo stesso Itinerary)
@@ -72,7 +74,7 @@ public class Trip {
 
     // Percorso del template email associato allo stato attuale del viaggio
     // viene aggiornata ad ogni cambio di stato
-    // viene usata per inviare email relative al viaggio
+    // non è il template per mandare la mail di conferma prenotazione ma per notificare i cambi di stato del Trip
     private String templateMailPath;
 
     //Relazione con Booking
@@ -97,18 +99,18 @@ public class Trip {
             throw new IllegalStateException("Trip è già stato aperto con uno stato iniziale.");
         }
         TripState newState = new ToBeConfirmed();
-        newState.attachTo(this);
         this.state = newState;
         this.templateMailPath = newState.getTemplateMailPath();
     }
     // metodo delegato allo State Pattern
     public void handle() {
-        if (state != null) state.handle();
+        if (state != null) state.handle(this);
     }
     // metodo delegato allo State Pattern
     public void cancel() {
-        if (state != null) state.cancel();
+        if (state != null) state.cancel(this);
     }
+
 
     // Ritorna il numero totale dei partecipanti attualmente prenotati per il viaggio
     // Somma i partecipanti di tutte le Booking associate al Trip
@@ -131,6 +133,17 @@ public class Trip {
         int current = getCurrentParticipantsCount();
         return requestedParticipants <= (max - current);
     }
+
+    // Metodi per gestire la relazione bidirezionale con Booking
+    public void addBooking(Booking b) {
+        bookings.add(b);
+        b.setTrip(this);
+    }
+    public void removeBooking(Booking b) {
+        bookings.remove(b);
+        b.setTrip(null);
+    }
+
 
 
 

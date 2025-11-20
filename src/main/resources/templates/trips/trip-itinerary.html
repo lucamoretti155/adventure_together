@@ -70,17 +70,18 @@
     <!-- TRIPS DISPONIBILI -->
     <h3 class="mt-5 fw-bold">Prossime Partenze</h3>
     <div class="row g-4 mt-2">
+        <div th:if="${!#authorization.expression('isAuthenticated()')}"><i>Effettua il login per prenotare</i></div>
         <div class="col-md-4" th:each="trip : ${trips}">
             <div class="card border-0 shadow-sm">
                 <div class="card-body">
                     <p><strong>Partenza:</strong>
-                        <span th:text="${#temporals.format(trip.dateDeparture, 'dd MMMM yyyy')}"></span>
+                        <span th:text="${#temporals.format(trip.dateDeparture, 'dd/MM/yyyy')}"></span>
                     </p>
                     <p><strong>Ritorno:</strong>
-                        <span th:text="${#temporals.format(trip.dateReturn, 'dd MMMM yyyy')}"></span>
+                        <span th:text="${#temporals.format(trip.dateReturn, 'dd/MM/yyyy')}"></span>
                     </p>
                     <p><strong>Prenotabile entro il:</strong>
-                        <span th:text="${#temporals.format(trip.dateEndBookings, 'dd MMMM yyyy')}"></span>
+                        <span th:text="${#temporals.format(trip.dateEndBookings, 'dd/MM/yyyy')}"></span>
                     </p>
                     <p><strong>Posti disponibili:</strong> <span th:text="${trip.maxParticipants - trip.currentParticipantsCount}"></span></p>
                     <p><strong>Costo a persona:</strong>
@@ -88,8 +89,9 @@
                     </p>
                     <p><strong>Stato:</strong> <span th:text="${trip.state}"></span></p>
 
-                    <a th:href="@{'/traveler/book/' + ${trip.id}}"
-                       class="btn btn-primary btn-sm">Prenota</a>
+                    <div th:if="${#authorization.expression('hasRole(''TRAVELER'')')}"><a th:href="@{'/traveler/book/' + ${trip.id}}"
+                            class="btn btn-primary btn-sm">Prenota</a></div>
+
                 </div>
             </div>
         </div>

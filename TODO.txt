@@ -17,7 +17,7 @@ disattivazione user --DONE
 attivazione user --DONE
     get
 
-cancella Trip . -- inserire CARD nella dashboard admin
+cancella Trip . -- DONE
     get
 
 -->controller traveler

@@ -29,11 +29,18 @@
          GEOAREA + COUNTRY ANNIDATE
          =========================== -->
     <h4 class="fw-semibold mb-3" id="geoareas">Aree Geografiche</h4>
+    <div class="d-flex justify-content-end mb-2">
+        <a class="btn btn-sm btn-primary"
+           th:href="@{/admin/details/create-geoarea}">
+            + Aggiungi GeoArea
+        </a>
+    </div>
 
     <div class="card shadow-sm mb-4 border-0">
         <div class="card-body">
 
             <div th:each="area : ${geoAreas}" class="mb-4 pb-3 border-bottom">
+
 
                 <!-- Titolo GeoArea -->
                 <h5 class="fw-bold" th:text="${area.geoArea}"></h5>

@@ -79,13 +79,6 @@ public class AuthController {
         }
     }
 
-    // LOGOUT
-
-    @GetMapping("/logout")
-    public String logoutSuccess(Model model) {
-        model.addAttribute("logoutMessage", "Hai effettuato il logout con successo.");
-        return "auth/logout";
-    }
 
     // RESET PASSWORD
 

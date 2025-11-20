@@ -10,9 +10,8 @@
 
         <!-- LOGO -->
         <a class="navbar-brand fw-bold fs-4 d-flex align-items-center" th:href="@{/}">
-            <img th:src="@{/images/LOGO.png}" alt="Logo"
+            <img th:src="@{/images/LOGO2.png}" alt="Logo"
                  style="height:40px; margin-right:10px;">
-            Adventure Together
         </a>
 
         <button class="navbar-toggler" type="button">
@@ -21,32 +20,35 @@
 
         <div class="collapse navbar-collapse show">
 
-            <!-- 🔎 SEARCH BAR -->
-            <form class="d-flex mx-auto" th:action="@{/search}" method="get"
-                  style="max-width: 500px; width: 100%;">
 
-                <input class="form-control me-2"
-                       list="itineraryList"
-                       type="search"
-                       name="title"
-                       placeholder="Cerca un itinerario..."
-                       aria-label="Search"
-                       autocomplete="on">
-
-                <button class="btn btn-outline-primary" type="submit">Cerca</button>
-
-                <!-- DATALIST -->
-                <datalist id="itineraryList">
-                    <option th:each="itin : ${itineraries}"
-                            th:value="${itin.title}">
-                </datalist>
-
-            </form>
 
 
             <!-- SEZIONE DI DESTRA -->
-            <ul class="navbar-nav ms-4">
 
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                <!-- 🔎 SEARCH BAR -->
+                <form class="d-flex mx-auto" th:action="@{/search}" method="get"
+                      style="max-width: 500px; width: 100%;">
+
+                    <input class="form-control me-2"
+                           list="itineraryList"
+                           type="search"
+                           name="title"
+                           placeholder="Cerca un itinerario..."
+                           aria-label="Search"
+                           autocomplete="on">
+
+                    <button class="btn btn-outline-primary" type="submit">Cerca</button>
+
+                    <!-- DATALIST -->
+                    <datalist id="itineraryList">
+                        <option th:each="itin : ${itineraries}"
+                                th:value="${itin.title}">
+                    </datalist>
+
+                </form>
+                </li>
                 <!-- 🔗 LINK PUBBLICO -->
                 <li class="nav-item">
                     <a class="nav-link fw-bold" th:href="@{/trips/dashboard}">
@@ -88,11 +90,17 @@
                 </li>
 
                 <!-- 🚪 LOGOUT (solo autenticati) -->
+
                 <li class="nav-item"
                     th:if="${#authorization.expression('isAuthenticated()')}">
-                    <a class="nav-link bg-light" th:href="@{/auth/logout}">
-                        Logout
-                    </a>
+
+                    <form th:action="@{/auth/logout}" method="post" class="d-inline">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+                        <button type="submit" class="nav-link bg-light border-0" style="background: none;">
+                            Logout
+                        </button>
+                    </form>
+
                 </li>
 
             </ul>

@@ -9,6 +9,7 @@ import com.lucamoretti.adventure_together.repository.trip.TripRepository;
 import com.lucamoretti.adventure_together.repository.user.TravelerRepository;
 import com.lucamoretti.adventure_together.service.mail.EmailService;
 import com.lucamoretti.adventure_together.service.review.ReviewService;
+import com.lucamoretti.adventure_together.util.exception.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -168,7 +169,7 @@ public class ReviewServiceImpl implements ReviewService {
     @Override
     public ReviewDTO getReviewByTripIdAndTravelerId(Long tripId, Long travelerId) {
         Review review = reviewRepository.findByTripIdAndTravelerId(tripId, travelerId)
-                .orElseThrow(() -> new IllegalArgumentException("Recensione non trovata"));
+                .orElseThrow(() -> new ResourceNotFoundException("Review", "tripId e travelerId", tripId + " e " + travelerId));
         return ReviewDTO.fromEntity(review);
     }
 }

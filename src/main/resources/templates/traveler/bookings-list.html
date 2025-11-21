@@ -3,6 +3,7 @@
 <head>
     <title>Le tue prenotazioni</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
@@ -22,7 +23,7 @@
 
                 <!-- Immagine dell’itinerario -->
                 <img th:src="@{${b.tripItineraryPicturePath}}"
-                     class="card-img-top"
+                     class="card-img-fixed"
                      alt="Immagine Itinerario">
 
                 <div class="card-body">
@@ -40,7 +41,7 @@
 
                     <p class="mb-1">
                         <strong>Totale:</strong>
-                        € <span th:text="${b.totalCost}"></span>
+                        <span th:text="${#numbers.formatDecimal(b.totalCost, 1, 'POINT', 2, 'COMMA')}"></span> €
                     </p>
 
                     <a class="btn btn-primary btn-sm mt-3 w-100"

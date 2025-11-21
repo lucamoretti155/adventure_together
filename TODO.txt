@@ -33,15 +33,15 @@ creazione booking (controllo se già effettuato per quel trip) e gestione pagame
 sistemato tutto
 ricordarsi di avviare il listener di stripe:
 stripe listen --forward-to localhost:8080/stripe/webhook
-cancellare tutti i println inutili
-provare a spostare logica del controller webhook in un service apposito
-sistemare layout pagina booking js per aggiunta partecipanti dinamici
+cancellare tutti i println inutili --done
+provare a spostare logica del controller webhook in un service apposito --done
+sistemare layout pagina booking js per aggiunta partecipanti dinamici --done
 
-manca sistemare layout pagina booking , pagina pagamento per avere il totale da pagare (booking + assicurazione) magari con js prima di procedere al pagamento
+manca sistemare layout pagina booking , pagina pagamento per avere il totale da pagare (booking + assicurazione) magari con js prima di procedere al pagamento --done
 
 
-lista booking con relativi dettagli e aggiunta link per creazione review se non ancora esistente (altri visualizza la review)
-    get e post su stessa pagina --  -rivedere la pagina con riepilogo liste bookings
+lista booking con relativi dettagli e aggiunta link per creazione review se non ancora esistente (altri visualizza la review) --done
+    get e post su stessa pagina --  -rivedere la pagina con riepilogo liste bookings --done
 
 creazione review
     get e post form

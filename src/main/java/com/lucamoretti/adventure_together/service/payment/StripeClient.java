@@ -1,4 +1,4 @@
-package com.lucamoretti.adventure_together.service.payment.impl;
+package com.lucamoretti.adventure_together.service.payment;
 
 import com.lucamoretti.adventure_together.dto.payment.PaymentIntentDTO;
 import com.stripe.Stripe;
@@ -13,6 +13,7 @@ import java.util.Map;
 
 /*
     Implementazione del client per l'integrazione con l'API di Stripe.
+    Fornisce metodi per creare, recuperare e confermare PaymentIntent.
  */
 
 @Service
@@ -27,9 +28,7 @@ public class StripeClient {
         Stripe.apiKey = stripeSecretKey;
     }
 
-    /*
-     * Crea un PaymentIntent su Stripe includendo eventuali metadata
-     */
+    // Crea un nuovo PaymentIntent su Stripe
     public PaymentIntentDTO createPaymentIntent(double amount,
                                                 String currency,
                                                 String metadataJson) {
@@ -48,7 +47,8 @@ public class StripeClient {
 
             return new PaymentIntentDTO(
                     intent.getId(),
-                    intent.getClientSecret()
+                    intent.getClientSecret(),
+                    intent.getAmount()
             );
 
         } catch (StripeException e) {
@@ -56,9 +56,7 @@ public class StripeClient {
         }
     }
 
-    /*
-     * Recupera un PaymentIntent esistente da Stripe
-     */
+    // Recupera un PaymentIntent esistente da Stripe
     public PaymentIntent retrievePaymentIntent(String paymentIntentId) {
         try {
             return PaymentIntent.retrieve(paymentIntentId);
@@ -67,9 +65,7 @@ public class StripeClient {
         }
     }
 
-    /*
-     * Conferma manualmente un PaymentIntent (in rari casi)
-     */
+    // Conferma un PaymentIntent esistente su Stripe
     public PaymentIntent confirmPaymentIntent(String paymentIntentId) {
         try {
             PaymentIntent intent = PaymentIntent.retrieve(paymentIntentId);

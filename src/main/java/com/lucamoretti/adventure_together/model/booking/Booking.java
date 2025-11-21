@@ -8,6 +8,8 @@ import com.lucamoretti.adventure_together.model.user.Traveler;
 import com.lucamoretti.adventure_together.service.mail.EmailService;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.cfg.Environment;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import java.time.LocalDate;
@@ -55,6 +57,11 @@ public class Booking implements IBooking, BookingListener {
     // Transient perché non persistiamo il service nel DB
     @Transient
     private static EmailService emailService;
+
+    // Transient perché non persistiamo la proprietà nel DB
+    @Transient
+    @Value("${app.base-url}")
+    private String baseUrl;
 
     // Metodo statico per iniettare l'EmailService
     public static void setEmailService(EmailService service) {
@@ -114,18 +121,18 @@ public class Booking implements IBooking, BookingListener {
      * Metodo invocato automaticamente quando il Trip cambia stato.
      * Invia una notifica email al traveler usando il template associato al nuovo stato del viaggio.
      */
+
     @Override
-    public void update(String mailTemplatePath) {
+    public void update(String mailTemplatePath, String baseUrl) {
         if (emailService == null) {
             System.err.println("[WARN] EmailService non configurato per Booking.update()");
             return;
         }
-
         emailService.sendHtmlMessage(
                 traveler.getEmail(),
                 "Aggiornamento sul tuo viaggio " + trip.getTripItinerary().getTitle(),
                 mailTemplatePath,
-                Map.of("traveler", traveler, "trip", trip, "homepage", "${app.base-url}"+"/home")
+                Map.of("traveler", traveler, "trip", trip, "homepage", baseUrl+"/home")
         );
     }
 

@@ -1,6 +1,7 @@
 package com.lucamoretti.adventure_together.controller.traveler;
 
 import com.lucamoretti.adventure_together.dto.booking.BookingDTO;
+import com.lucamoretti.adventure_together.dto.details.DepartureAirportDTO;
 import com.lucamoretti.adventure_together.dto.participant.ParticipantDTO;
 import com.lucamoretti.adventure_together.dto.payment.PaymentDTO;
 import com.lucamoretti.adventure_together.dto.review.ReviewDTO;
@@ -38,7 +39,6 @@ public class TravelerController {
     private final TripItineraryService tripItineraryService;
     private final BookingService bookingService;
     private final DepartureAirportService airportService; // se lo hai
-    private final UserService userService;
     private final PaymentService paymentService;
     private final ReviewService reviewService;
 
@@ -73,9 +73,17 @@ public class TravelerController {
         model.addAttribute("trip", trip);
         TripItineraryDTO itin = tripItineraryService.getById(trip.getTripItineraryId());
         model.addAttribute("itinerary", itin);
+        DepartureAirportDTO airport = airportService.getDepartureAirportById(booking.getDepartureAirportId());
+        model.addAttribute("airport", airport);
         PaymentDTO payment = paymentService.getPaymentById(booking.getPayment().getId());
         model.addAttribute("payment", payment);
-        ReviewDTO review = reviewService.getReviewByTripIdAndTravelerId(trip.getId(), user.getId());
+
+        ReviewDTO review = null;
+        try {
+            review = reviewService.getReviewByTripIdAndTravelerId(trip.getId(), user.getId());
+        } catch (ResourceNotFoundException e) {
+            // Nessuna review → review rimane null
+        }
         model.addAttribute("review", review);
         return "traveler/booking-details";
     }

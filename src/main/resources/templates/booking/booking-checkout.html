@@ -15,6 +15,42 @@
 
     <div id="payment-error" class="alert alert-danger d-none"></div>
 
+    <!-- RIEPILOGO PAGAMENTO -->
+    <div class="mb-4">
+        <h4 class="mb-3">Riepilogo pagamento</h4>
+
+        <ul class="list-group shadow-sm">
+
+            <li class="list-group-item d-flex justify-content-between">
+                <span>Partecipanti</span>
+                <strong th:text="${numParticipant}"></strong>
+            </li>
+
+            <li class="list-group-item d-flex justify-content-between">
+                <span>Totale costo base</span>
+                <strong>
+                    <span th:text="${#numbers.formatDecimal(base, 1, 'POINT', 2, 'COMMA')}"></span> €
+                </strong>
+            </li>
+
+            <li class="list-group-item d-flex justify-content-between">
+                <span>Costo assicurazione</span>
+                <strong>
+                    <span th:text="${#numbers.formatDecimal(insurance, 1, 'POINT', 2, 'COMMA')}"></span> €
+                </strong>
+            </li>
+
+            <li class="list-group-item d-flex justify-content-between list-group-item-dark">
+                <span><strong>Totale da pagare</strong></span>
+                <strong>
+                    <span th:text="${#numbers.formatDecimal(total, 1, 'POINT', 2, 'COMMA')}"></span> €
+                </strong>
+            </li>
+
+        </ul>
+    </div>
+
+
     <!-- Contenitore Stripe Elements -->
     <div class="card p-4 shadow-sm">
         <div id="card-element" class="form-control p-2 mb-3"></div>

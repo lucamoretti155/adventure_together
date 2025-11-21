@@ -1,6 +1,7 @@
 package com.lucamoretti.adventure_together.controller.advice;
 
 import com.lucamoretti.adventure_together.util.exception.*;
+import com.stripe.exception.SignatureVerificationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,7 +21,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler({
             DataIntegrityException.class,
             IllegalArgumentException.class,
-            MethodArgumentNotValidException.class
+            MethodArgumentNotValidException.class,
+            SignatureVerificationException.class
     })
     public ModelAndView handleBadRequest(Exception ex) {
         ModelAndView mav = new ModelAndView("error/400");

@@ -38,6 +38,9 @@ public class BookingDTO {
     @NotNull(message = "Trip ID è obbligatorio")
     private Long tripId;
 
+    private String tripItineraryTitle; // solo per DTO in output
+    private String tripItineraryPicturePath; // solo per DTO in output
+
     @NotNull(message = "Traveler ID è obbligatorio")
     private Long travelerId;
 
@@ -72,6 +75,8 @@ public class BookingDTO {
                 .bookingDate(booking.getBookingDate())
                 .numParticipants(booking.getNumParticipants()) // calcolato dinamicamente
                 .tripId(booking.getTrip().getId())
+                .tripItineraryTitle(booking.getTrip().getTripItinerary().getTitle())
+                .tripItineraryPicturePath(booking.getTrip().getTripItinerary().getPicturePath())
                 .travelerId(booking.getTraveler().getId())
                 .departureAirportId(booking.getDepartureAirport().getId())
                 .totalCost(booking.getPayment().getAmountPaid())

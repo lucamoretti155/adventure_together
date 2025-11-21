@@ -7,6 +7,8 @@ import com.lucamoretti.adventure_together.model.user.Planner;
 import com.lucamoretti.adventure_together.model.user.User;
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.beans.factory.annotation.Value;
+
 import java.time.LocalDate;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -87,7 +89,7 @@ public class Trip {
     // Viene chiamato ad ogni cambio di stato per notificare le prenotazioni
     public void notifyAllListeners(String mailTemplatePath) {
         for (Booking booking : bookings) {
-            booking.update(mailTemplatePath);
+            booking.update(mailTemplatePath, "${app.base-url}");
         }
     }
 

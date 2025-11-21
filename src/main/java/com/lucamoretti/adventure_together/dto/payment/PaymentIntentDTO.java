@@ -1,5 +1,6 @@
 package com.lucamoretti.adventure_together.dto.payment;
 
+import com.stripe.model.PaymentIntent;
 import lombok.*;
 
 /*
@@ -14,4 +15,5 @@ import lombok.*;
 public class PaymentIntentDTO {
     private String paymentIntentId;
     private String clientSecret;
+    private double total; // importo utile per frontend
 }

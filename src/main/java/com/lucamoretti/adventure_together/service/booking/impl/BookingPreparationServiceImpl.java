@@ -9,19 +9,24 @@ import com.lucamoretti.adventure_together.model.booking.decorator.CancellationIn
 import com.lucamoretti.adventure_together.model.booking.decorator.LuggageInsurance;
 import com.lucamoretti.adventure_together.model.details.DepartureAirport;
 import com.lucamoretti.adventure_together.model.participant.Participant;
+import com.lucamoretti.adventure_together.model.participant.TemporaryParticipant;
+import com.lucamoretti.adventure_together.model.participant.TemporaryParticipantList;
 import com.lucamoretti.adventure_together.model.trip.Trip;
 import com.lucamoretti.adventure_together.model.user.Traveler;
 import com.lucamoretti.adventure_together.repository.details.DepartureAirportRepository;
+import com.lucamoretti.adventure_together.repository.participant.TemporaryParticipantListRepository;
+import com.lucamoretti.adventure_together.repository.participant.TemporaryParticipantRepository;
 import com.lucamoretti.adventure_together.repository.trip.TripRepository;
 import com.lucamoretti.adventure_together.repository.user.TravelerRepository;
 import com.lucamoretti.adventure_together.service.booking.BookingPreparationService;
 import com.lucamoretti.adventure_together.service.booking.BookingSerializerService;
-import com.lucamoretti.adventure_together.service.payment.impl.StripeClient;
+import com.lucamoretti.adventure_together.service.payment.StripeClient;
 import com.lucamoretti.adventure_together.util.exception.ResourceNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -40,6 +45,8 @@ public class BookingPreparationServiceImpl implements BookingPreparationService 
     private final DepartureAirportRepository departureAirportRepository;
     private final StripeClient stripeClient;
     private final BookingSerializerService bookingSerializerService;
+    private final TemporaryParticipantListRepository temporaryParticipantListRepository;
+    private final TemporaryParticipantRepository temporaryParticipantRepository;
 
     // Mappa decorator
     private final Map<String, Function<IBooking, IBooking>> decorations = Map.of(
@@ -84,8 +91,39 @@ public class BookingPreparationServiceImpl implements BookingPreparationService 
 
         double totalCost = decorated.getTotalCost();
 
+        // Preparo metadata per Stripe
+
+        // Prima salvo i partecipanti temporanei
+        // in modo da poterli collegare successivamente alla booking finale
+        // passero per la serializzazione solo il riferimento alla lista temporanea
+        // che conterrà tutti i partecipanti
+        TemporaryParticipantList tempList = new TemporaryParticipantList();
+        tempList = temporaryParticipantListRepository.save(tempList);
+        for (ParticipantDTO p : req.getParticipants()) {
+            TemporaryParticipant tp = TemporaryParticipant.builder()
+                    .firstName(p.getFirstName())
+                    .lastName(p.getLastName())
+                    .dateOfBirth(p.getDateOfBirth())
+                    .list(tempList)
+                    .build();
+            temporaryParticipantRepository.save(tp);
+        }
+        // Non passo i partecipanti direttamente nei metadata (troppo grandi)
+        // ma solo l'id della lista temporanea
+
+        Map<String, Object> metadataMap = new HashMap<>();
+        metadataMap.put("tripId", req.getTripId());
+        metadataMap.put("travelerId", req.getTravelerId());
+        metadataMap.put("departureAirportId", req.getDepartureAirportId());
+        metadataMap.put("insuranceType", req.getInsuranceType());
+        metadataMap.put("numParticipants", req.getParticipants().size());
+        metadataMap.put("participantsTempListId", tempList.getId());
+        metadataMap.put("totalCost", totalCost);
+
         // Serializzo tutto per Stripe metadata
-        String metadataJson = bookingSerializerService.serializeBooking(req);
+        String metadataJson = bookingSerializerService.serializeBooking(metadataMap);
+
+
 
         // PaymentIntent
         PaymentIntentDTO intent = stripeClient.createPaymentIntent(
@@ -93,6 +131,7 @@ public class BookingPreparationServiceImpl implements BookingPreparationService 
                 "eur",
                 metadataJson  // aggiungiamo metadata
         );
+        intent.setTotal(totalCost); // aggiongo il totale al DTO per visualizzazione pre pagamento
 
         return intent;
     }

@@ -21,10 +21,10 @@
             <!-- SEZIONE PRENOTAZIONE -->
             <h4 class="fw-bold mb-3">Informazioni Prenotazione</h4>
             <p><strong>ID Prenotazione:</strong> <span th:text="${booking.id}"></span></p>
-            <p><strong>Data Prenotazione:</strong> <span th:text="${booking.bookingDate}"></span></p>
+            <p><strong>Data Prenotazione:</strong> <span th:text="${#temporals.format(booking.bookingDate, 'dd/MM/yyyy')}"></span></p>
             <p><strong>Partecipanti:</strong> <span th:text="${booking.numParticipants}"></span></p>
-            <p><strong>Aeroporto di partenza:</strong> <span th:text="${booking.departureAirportId}"></span></p>
-            <p><strong>Assicurazione:</strong> <span th:text="${booking.insuranceType != null ? booking.insuranceType : 'Nessuna'}"></span></p>
+            <p><strong>Aeroporto di partenza:</strong> <span th:text="${airport.name}"></span></p>
+            <p><strong>Assicurazione:</strong> <span th:text="${booking.insuranceType != null ? booking.insuranceType : 'Basic'}"></span></p>
 
             <hr>
 
@@ -35,8 +35,8 @@
                  class="img-fluid rounded mb-3"
                  style="max-width: 400px">
 
-            <p><strong>Partenza:</strong> <span th:text="${trip.dateDeparture}"></span></p>
-            <p><strong>Ritorno:</strong> <span th:text="${trip.dateReturn}"></span></p>
+            <p><strong>Partenza:</strong> <span th:text="${#temporals.format(trip.dateDeparture, 'dd/MM/yyyy')}"></span></p>
+            <p><strong>Ritorno:</strong> <span th:text="${#temporals.format(trip.dateReturn, 'dd/MM/yyyy')}"></span></span></p>
             <p><strong>Stato viaggio:</strong> <span th:text="${trip.state}"></span></p>
 
             <hr>
@@ -46,8 +46,9 @@
             <h4 class="fw-bold my-3">Pagamento</h4>
 
             <div th:if="${payment != null}">
-                <p><strong>Importo pagato:</strong> € <span th:text="${payment.amountPaid}"></span></p>
-                <p><strong>Assicurazione:</strong> € <span th:text="${payment.amountInsurance}"></span></p>
+                <p><strong>Importo totale pagato: </strong> <span th:text="${#numbers.formatDecimal(payment.amountPaid, 1, 'POINT', 2, 'COMMA')}"></span> €
+                </p>
+                <p><i>di cui Assicurazione: </i><span th:text="${#numbers.formatDecimal(payment.amountInsurance, 1, 'POINT', 2, 'COMMA')}"></span> €
             </div>
 
             <hr>

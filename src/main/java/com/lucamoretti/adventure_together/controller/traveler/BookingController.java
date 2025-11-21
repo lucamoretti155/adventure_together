@@ -28,7 +28,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.List;
 
-
+/*
+    Controller per la gestione delle prenotazioni (booking) da parte dei traveler.
+    Si occupa di mostrare il form di prenotazione, avviare il processo di checkout con Stripe (fase 1)
+    e mostrare la pagina di successo al completamento della prenotazione.
+    Le altre fasi del processo di prenotazione (finalizzazione post-webhook) sono gestite altrove.
+ */
 
 @Controller
 @RequestMapping("/bookings")
@@ -77,9 +82,9 @@ public class BookingController {
                                 BindingResult result,
                                 Model model,
                                 RedirectAttributes redirectAttributes) {
-
+        // ottieni l'utente autenticato
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
+        // verifica errori di validazione
         if (result.hasErrors()) {
             result.getAllErrors().forEach(err -> {
                 System.out.println("ERROR: " + err.toString());
@@ -90,7 +95,7 @@ public class BookingController {
 
             return "redirect:/bookings/new/" + dto.getTripId();
         }
-
+        // avvia preparazione booking + PaymentIntent
         try {
             PaymentIntentDTO intent = bookingPreparationService.startBookingAndPayment(dto);
 
@@ -98,7 +103,18 @@ public class BookingController {
             model.addAttribute("stripePublicKey", stripePublicKey);
             model.addAttribute("tripId", dto.getTripId());
 
-            return "booking/booking-checkout";
+            int numParticipant = dto.getParticipants().size();
+            model.addAttribute("numParticipant", numParticipant);
+            double base = numParticipant * tripService.getById(dto.getTripId()).getTripIndividualCost();
+            double total = intent.getTotal();
+            double insurance = total - base;
+
+            model.addAttribute("numParticipant", numParticipant);
+            model.addAttribute("base", base);
+            model.addAttribute("insurance", insurance);
+            model.addAttribute("total", total);
+
+            return "booking/booking-checkout"; // pagina con integrazione Stripe.js
 
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -109,13 +125,11 @@ public class BookingController {
         }
     }
 
+    // Mostra la pagina di successo dopo il completamento della prenotazione
+    // per il failed viene fatto un flash message nella pagina di pagamento
     @GetMapping("/success")
     public String bookingSuccess() {
         return "booking/booking-success";
     }
 
-    @GetMapping("/failure")
-    public String bookingFailure() {
-        return "booking/booking-failure";
-    }
 }

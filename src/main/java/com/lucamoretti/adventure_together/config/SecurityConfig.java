@@ -63,7 +63,7 @@ public class SecurityConfig {
 
                         // Disabilita CSRF solo per gli endpoint REST API
                         .csrf(csrf -> csrf
-                                .ignoringRequestMatchers("/api/**")) // disabilita solo per endpoint REST
+                                .ignoringRequestMatchers("/api/**", "/stripe/webhook")) // disabilita solo per endpoint REST
 
                         // Abilita il "ricordami" per mantenere la sessione attiva
                         .rememberMe(remember -> remember
@@ -73,6 +73,10 @@ public class SecurityConfig {
 
                         // Definisce le regole di autorizzazione per gli URL
                         .authorizeHttpRequests(auth -> auth
+
+                        // Endpoint webhook di Stripe accessibile a tutti
+                        .requestMatchers("/stripe/webhook").permitAll()
+
                         // 1. REGOLA PIÙ SPECIFICA: Accesso solo per ADMIN
                         // Richiede il ruolo ROLE_ADMIN
                         .requestMatchers("/admin/**").hasRole("ADMIN")
@@ -84,7 +88,7 @@ public class SecurityConfig {
                         // 3. REGOLA GENERICA: Accessibile a qualsiasi utente registrato
                         // (tutti i ruoli)
 
-                        .requestMatchers("/traveler/**").authenticated()
+                        .requestMatchers("/traveler/**", "/bookings/**").authenticated()
 
                         // 4. REGOLA PUBBLICA: Accesso per chiunque
                         // PAGINE PUBBLICHE

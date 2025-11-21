@@ -89,7 +89,7 @@
                     </p>
                     <p><strong>Stato:</strong> <span th:text="${trip.state}"></span></p>
 
-                    <div th:if="${#authorization.expression('hasRole(''TRAVELER'')')}"><a th:href="@{'/traveler/book/' + ${trip.id}}"
+                    <div th:if="${#authorization.expression('hasRole(''TRAVELER'')')}"><a th:href="@{'/bookings/new/' + ${trip.id}}"
                             class="btn btn-primary btn-sm">Prenota</a></div>
 
                 </div>

@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import java.util.List;
+import java.util.Optional;
 
 /*
  Interfaccia repository per l'entità Review.
@@ -26,4 +27,9 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
     @Query
             ("SELECT r FROM Review r JOIN r.trip t WHERE t.tripItinerary.id = :tripItineraryId")
     List<Review> findAllByTripItinerary_Id(Long tripItineraryId);
+
+    // Trova una recensione in base all'id del viaggio e all'id del viaggiatore
+    @Query
+            ("SELECT r FROM Review r JOIN r.trip t JOIN r.traveler u WHERE r.trip.id = :tripId AND r.traveler.id = :travelerId")
+    Optional<Review> findByTripIdAndTravelerId(Long tripId, Long travelerId);
 }

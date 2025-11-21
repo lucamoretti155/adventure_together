@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Pagamento non riuscito</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<div class="container my-5 text-center">
+    <h2 class="mb-3 text-danger">Pagamento non riuscito</h2>
+    <p>Qualcosa è andato storto con il pagamento. Puoi riprovare a completare la prenotazione.</p>
+    <a th:href="@{/home}" class="btn btn-secondary mt-3">Torna alla home</a>
+</div>
+
+</body>
+</html>

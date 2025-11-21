@@ -18,6 +18,7 @@ import com.lucamoretti.adventure_together.util.exception.DuplicateResourceExcept
 import com.lucamoretti.adventure_together.util.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.lucamoretti.adventure_together.service.mail.EmailService;
@@ -256,5 +257,17 @@ public class UserServiceImpl implements UserService {
             user.setActive(true);
             userRepository.save(user);
         });
+    }
+
+    // metodo per ottenere l'id dell'utente attualmente autenticato
+    @Override
+    public Long getCurrentUserId() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+        if (principal instanceof User user) {
+            return user.getId();
+        }
+
+        throw new DataIntegrityException("Unable to extract current user ID");
     }
 }

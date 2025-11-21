@@ -72,17 +72,17 @@
             <strong>Dettagli prenotazione:</strong><br><br>
 
             <strong>Data di partenza:</strong>
-            <span th:text="${trip.departureDate}">2025-06-10</span><br>
+            <span th:text="${trip.dateDeparture}">2025-06-10</span><br>
 
             <strong>Luogo di partenza:</strong>
-            <span th:text="${trip.departureAirport.airportCode}">MXP</span> -
-            <span th:text="${trip.departureAirport.city}">Milano</span><br><br>
+            <span th:text="${airport.code}">MXP</span> -
+            <span th:text="${airport.city}">Milano</span><br><br>
 
             <strong>Numero prenotazione:</strong>
             <span th:text="${booking.id}">12345</span><br>
 
             <strong>Totale pagato:</strong>
-            € <span th:text="${totalCost}">0.0</span><br>
+            € <span th:text="${booking.totalCost}">0.0</span><br>
 
         </p>
     </div>

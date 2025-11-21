@@ -11,4 +11,5 @@ public interface DepartureAirportService {
     DepartureAirportDTO createDepartureAirport(DepartureAirportDTO dto);
     List<DepartureAirportDTO> getAllDepartureAirports();
     List<DepartureAirportDTO> getDepartureAirportsBySetOfIds(Set<Long> ids);
+    DepartureAirportDTO getDepartureAirportById(Long id);
 }

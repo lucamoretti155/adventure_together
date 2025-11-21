@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dettagli Prenotazione</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<div class="container my-5">
+
+    <h2 class="fw-bold mb-4">Dettagli Prenotazione</h2>
+
+    <!-- CARD PRINCIPALE -->
+    <div class="card shadow-sm border-0">
+
+        <div class="card-body">
+
+            <!-- SEZIONE PRENOTAZIONE -->
+            <h4 class="fw-bold mb-3">Informazioni Prenotazione</h4>
+            <p><strong>ID Prenotazione:</strong> <span th:text="${booking.id}"></span></p>
+            <p><strong>Data Prenotazione:</strong> <span th:text="${booking.bookingDate}"></span></p>
+            <p><strong>Partecipanti:</strong> <span th:text="${booking.numParticipants}"></span></p>
+            <p><strong>Aeroporto di partenza:</strong> <span th:text="${booking.departureAirportId}"></span></p>
+            <p><strong>Assicurazione:</strong> <span th:text="${booking.insuranceType != null ? booking.insuranceType : 'Nessuna'}"></span></p>
+
+            <hr>
+
+            <!-- SEZIONE TRIP -->
+            <h4 class="fw-bold my-3">Informazioni Viaggio</h4>
+            <p><strong>Itinerario:</strong> <a th:href="@{'/trips/trip-itinerary/' + ${itinerary.id}}"><span th:text="${trip.tripItineraryTitle}"></span></a></p>
+            <img th:src="@{${trip.tripItineraryPicturePath}}"
+                 class="img-fluid rounded mb-3"
+                 style="max-width: 400px">
+
+            <p><strong>Partenza:</strong> <span th:text="${trip.dateDeparture}"></span></p>
+            <p><strong>Ritorno:</strong> <span th:text="${trip.dateReturn}"></span></p>
+            <p><strong>Stato viaggio:</strong> <span th:text="${trip.state}"></span></p>
+
+            <hr>
+
+
+            <!-- SEZIONE PAGAMENTO -->
+            <h4 class="fw-bold my-3">Pagamento</h4>
+
+            <div th:if="${payment != null}">
+                <p><strong>Importo pagato:</strong> € <span th:text="${payment.amountPaid}"></span></p>
+                <p><strong>Assicurazione:</strong> € <span th:text="${payment.amountInsurance}"></span></p>
+            </div>
+
+            <hr>
+
+            <!-- SEZIONE RECENSIONE -->
+            <h4 class="fw-bold my-3">La tua Recensione</h4>
+
+            <div th:if="${review != null}">
+                <p><strong>Punteggio:</strong>
+                    <span th:text="${review.score}"></span> / 5
+                </p>
+                <p th:text="${review.textReview}"></p>
+            </div>
+
+            <div th:if="${review == null}">
+                <a class="btn btn-outline-primary" th:href="@{'/traveler/create-review/' + ${trip.id}}">
+                    Lascia una recensione
+                </a>
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

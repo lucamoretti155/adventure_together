@@ -106,7 +106,6 @@ public class ReviewServiceImpl implements ReviewService {
                         .tripId(trip.getId())
                         .tripTitle(trip.getTripItinerary().getTitle())
                         .travelerId(travelerId)
-                        .alreadyReviewed(false)
                         .build())
                 .toList();
     }
@@ -164,5 +163,12 @@ public class ReviewServiceImpl implements ReviewService {
             // Calcola e ritorna la media
             return (float) totalScore / reviews.size();
         }
+    }
+
+    @Override
+    public ReviewDTO getReviewByTripIdAndTravelerId(Long tripId, Long travelerId) {
+        Review review = reviewRepository.findByTripIdAndTravelerId(tripId, travelerId)
+                .orElseThrow(() -> new IllegalArgumentException("Recensione non trovata"));
+        return ReviewDTO.fromEntity(review);
     }
 }

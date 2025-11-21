@@ -30,6 +30,8 @@ public interface UserService {
     void deactivateUser(Long id);
     void activateUser(Long id);
 
+    Long getCurrentUserId();
+
 
 }
 

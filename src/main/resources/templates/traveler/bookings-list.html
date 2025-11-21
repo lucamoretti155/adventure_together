@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Le tue prenotazioni</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<div class="container my-5">
+    <h2 class="fw-bold mb-4">Le tue prenotazioni</h2>
+
+    <div th:if="${#lists.isEmpty(bookings)}" class="alert alert-info">
+        Non hai ancora effettuato prenotazioni.
+    </div>
+
+    <div class="row g-4" th:if="${!#lists.isEmpty(bookings)}">
+        <div class="col-md-4" th:each="b : ${bookings}">
+            <div class="card shadow-sm border-0 h-100">
+
+                <!-- Immagine dell’itinerario -->
+                <img th:src="@{${b.tripItineraryPicturePath}}"
+                     class="card-img-top"
+                     alt="Immagine Itinerario">
+
+                <div class="card-body">
+
+                    <h5 class="fw-bold" th:text="${b.tripItineraryTitle}"></h5>
+
+                    <p class="small text-muted mb-1">
+                        Prenotazione n° <span th:text="${b.id}"></span>
+                    </p>
+
+                    <p class="mb-1">
+                        <strong>Partecipanti:</strong>
+                        <span th:text="${b.numParticipants}"></span>
+                    </p>
+
+                    <p class="mb-1">
+                        <strong>Totale:</strong>
+                        € <span th:text="${b.totalCost}"></span>
+                    </p>
+
+                    <a class="btn btn-primary btn-sm mt-3 w-100"
+                       th:href="@{'/traveler/booking/' + ${b.id}}">
+                        Dettagli prenotazione
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -17,52 +17,20 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 
 /*
-    Implementazione del servizio di gestione dei pagamenti.
-    Si occupa di avviare e confermare i pagamenti utilizzando Stripe come gateway di pagamento.
-    Gestisce la persistenza delle informazioni di pagamento nel database.
+    Implementazione del servizio di visualizzazione dei pagamenti.
  */
 
 @Service
 @RequiredArgsConstructor
 public class PaymentServiceImpl implements PaymentService {
 
-    private final StripeClient stripeClient;
     private final PaymentRepository paymentRepository;
-    private final BookingRepository bookingRepository;
 
+    // Metodo per ottenere un pagamento tramite il suo ID
     @Override
-    public PaymentIntentDTO startPayment(Booking booking) {
-        return stripeClient.createPaymentIntent(booking.getTotalCost(), "eur");
-    }
-
-    @Override
-    @Transactional
-    public PaymentDTO confirmPayment(String paymentIntentId, Long bookingId) {
-
-       // recupero PaymentIntent da Stripe
-        PaymentIntent intent;
-        try {
-            intent = PaymentIntent.retrieve(paymentIntentId);
-        } catch (StripeException e) {
-            throw new RuntimeException("Impossibile recuperare il payment intent", e);
-        }
-
-        // check stato
-        if (!"succeeded".equals(intent.getStatus())) {
-            throw new IllegalStateException("Il pagamento non è stato completato.");
-        }
-
-        // aggiorno pagamento esistente
-        Booking booking = bookingRepository.findById(bookingId)
-                .orElseThrow(() -> new ResourceNotFoundException("Booking", "id", bookingId));
-        Payment payment = booking.getPayment();
-        payment.setStatus("PAID");
-        payment.setPaymentMethod(intent.getPaymentMethod());
-        payment.setPaymentDate(LocalDate.now());
-
-        paymentRepository.save(payment);
-        booking.setPayment(payment);
-
+    public PaymentDTO getPaymentById(Long paymentId) {
+        Payment payment = paymentRepository.findById(paymentId)
+                .orElseThrow(() -> new ResourceNotFoundException("Payment", "id", paymentId));
         return PaymentDTO.fromEntity(payment);
     }
 }

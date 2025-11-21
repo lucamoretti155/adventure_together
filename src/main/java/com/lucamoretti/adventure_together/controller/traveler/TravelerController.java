@@ -3,6 +3,7 @@ package com.lucamoretti.adventure_together.controller.traveler;
 import com.lucamoretti.adventure_together.dto.booking.BookingDTO;
 import com.lucamoretti.adventure_together.dto.participant.ParticipantDTO;
 import com.lucamoretti.adventure_together.dto.payment.PaymentDTO;
+import com.lucamoretti.adventure_together.dto.review.ReviewDTO;
 import com.lucamoretti.adventure_together.dto.trip.TripDTO;
 import com.lucamoretti.adventure_together.dto.trip.TripItineraryDTO;
 import com.lucamoretti.adventure_together.dto.user.TravelerDTO;
@@ -12,6 +13,7 @@ import com.lucamoretti.adventure_together.model.user.User;
 import com.lucamoretti.adventure_together.service.booking.BookingService;
 import com.lucamoretti.adventure_together.service.details.DepartureAirportService;
 import com.lucamoretti.adventure_together.service.payment.PaymentService;
+import com.lucamoretti.adventure_together.service.review.ReviewService;
 import com.lucamoretti.adventure_together.service.trip.TripItineraryService;
 import com.lucamoretti.adventure_together.service.trip.TripService;
 import com.lucamoretti.adventure_together.service.user.UserService;
@@ -27,7 +29,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
-
 @Controller
 @RequestMapping("/traveler")
 @RequiredArgsConstructor
@@ -39,103 +40,47 @@ public class TravelerController {
     private final DepartureAirportService airportService; // se lo hai
     private final UserService userService;
     private final PaymentService paymentService;
-
-    @GetMapping("/book/{tripId}")
-    public String showBookingForm(@PathVariable Long tripId,
-                                  @AuthenticationPrincipal User user,
-                                  Model model) {
+    private final ReviewService reviewService;
 
 
-
-        TripDTO trip = tripService.getById(tripId);
-        TravelerDTO traveler = userService.getTravelerById(user.getId())
-                .orElseThrow(() -> new ResourceNotFoundException("Traveler","id", user.getId()));
-        BookingDTO form = new BookingDTO();
-        form.setTripId(tripId);
-        form.setTravelerId(user.getId());
-
-        // aggiungo un participant vuoto
-        form.getParticipants().add(new ParticipantDTO());
-
-        TripItineraryDTO itin = tripItineraryService.getById(trip.getTripItineraryId());
-
-        model.addAttribute("trip", trip);
-        model.addAttribute("booking", form);
-        model.addAttribute("airports",
-                airportService.getDepartureAirportsBySetOfIds(itin.getDepartureAirportIds()));
-
-        return "traveler/booking-form";
+    // Mostra la dashboard per Traveler
+    @GetMapping("/dashboard")
+    public String showTravelerDashboard() {
+        return "traveler/dashboard";
     }
 
-    @PostMapping("/book/{tripId}")
-    public String createBooking(@PathVariable Long tripId,
-                                @AuthenticationPrincipal User user,
-                                @Valid @ModelAttribute("booking") BookingDTO form,
-                                BindingResult bindingResult,
-                                Model model,
-                                RedirectAttributes redirectAttributes) {
-
-        if (bindingResult.hasErrors()) {
-            System.out.println(bindingResult);
-            return "redirect:traveler/booking/{tripId}";
-        }
-
-        try {
-            form.setTripId(tripId);
-            form.setTravelerId(user.getId());
-
-            BookingDTO created = bookingService.createBooking(
-                    form,
-                    form.getInsuranceType()
-            );
-
-            // Redirect verso la pagina di pagamento con il clientSecret
-            redirectAttributes.addAttribute("bookingId", created.getId());
-            redirectAttributes.addAttribute("clientSecret", created.getPayment().getClientSecret());
-
-            return "redirect:/traveler/pay";
-
-        } catch (Exception e) {
-            bindingResult.reject("booking.error", e.getMessage());
-            e.printStackTrace();
-            return "redirect:traveler/booking/{tripId}";
-        }
+    // Visualizza la lista delle prenotazioni del traveler
+    @GetMapping("/bookings-list")
+    public String viewBookings(@AuthenticationPrincipal User user,
+                               Model model) {
+        List<BookingDTO> bookings = bookingService.getBookingsByTravelerId(user.getId());
+        model.addAttribute("bookings", bookings);
+        return "traveler/bookings-list";
     }
 
 
-    @GetMapping("/pay")
-    public String showPaymentPage(@RequestParam String clientSecret,
-                                  @RequestParam Long bookingId,
-                                  Model model) {
-
-        model.addAttribute("clientSecret", clientSecret);
-        model.addAttribute("bookingId", bookingId);
-
-        return "traveler/payment-page";
-    }
-
-    @PostMapping("/payment/confirm")
-    public String confirmPayment(@RequestParam String paymentIntentId,
-                                 @RequestParam Long bookingId,
-                                 RedirectAttributes redirectAttributes) {
-
-        // Verifica su Stripe + aggiornamento DB
-        PaymentDTO updated = paymentService.confirmPayment(paymentIntentId, bookingId);
-
-        redirectAttributes.addAttribute("bookingId", bookingId);
-        return "redirect:/traveler/payment-success";
-    }
-
-
-    @GetMapping("/payment-success")
-    public String paymentSuccess(@RequestParam Long bookingId, Model model) {
-
+    // Visualizza i dettagli di una prenotazione specifica
+    @GetMapping("/booking/{bookingId}")
+    public String viewBookingDetails(@PathVariable Long bookingId,
+                                     @AuthenticationPrincipal User user,
+                                     Model model) {
         BookingDTO booking = bookingService.getBookingById(bookingId);
-
+        if (!booking.getTravelerId().equals(user.getId())) {
+            throw new ResourceNotFoundException("Booking", "id", bookingId);
+        }
         model.addAttribute("booking", booking);
-
-        return "traveler/payment-success";
+        TripDTO trip = tripService.getById(booking.getTripId());
+        model.addAttribute("trip", trip);
+        TripItineraryDTO itin = tripItineraryService.getById(trip.getTripItineraryId());
+        model.addAttribute("itinerary", itin);
+        PaymentDTO payment = paymentService.getPaymentById(booking.getPayment().getId());
+        model.addAttribute("payment", payment);
+        ReviewDTO review = reviewService.getReviewByTripIdAndTravelerId(trip.getId(), user.getId());
+        model.addAttribute("review", review);
+        return "traveler/booking-details";
     }
+
+
 }
 
 

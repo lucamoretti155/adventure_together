@@ -1,5 +1,6 @@
 package com.lucamoretti.adventure_together.dto.participant;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.lucamoretti.adventure_together.model.participant.Participant;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

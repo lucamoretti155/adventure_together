@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Prenotazione completata</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+<body>
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<div class="container my-5 text-center">
+    <h2 class="mb-3">Grazie! Il pagamento è andato a buon fine.</h2>
+    <p>Riceverai a breve un'email con i dettagli della prenotazione.</p>
+    <a th:href="@{/home}" class="btn btn-primary mt-3">Torna alla home</a>
+</div>
+
+</body>
+</html>

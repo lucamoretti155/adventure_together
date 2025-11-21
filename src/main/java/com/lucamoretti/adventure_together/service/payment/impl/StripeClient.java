@@ -12,8 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /*
-    Client per interagire con l'API di Stripe per la gestione dei pagamenti.
-    Si occupa di creare e confermare i Payment Intent su Stripe.
+    Implementazione del client per l'integrazione con l'API di Stripe.
  */
 
 @Service
@@ -28,27 +27,55 @@ public class StripeClient {
         Stripe.apiKey = stripeSecretKey;
     }
 
-    public PaymentIntentDTO createPaymentIntent(double amount, String currency) {
+    /*
+     * Crea un PaymentIntent su Stripe includendo eventuali metadata
+     */
+    public PaymentIntentDTO createPaymentIntent(double amount,
+                                                String currency,
+                                                String metadataJson) {
         try {
             Map<String, Object> params = new HashMap<>();
-            params.put("amount", (long) (amount * 100));
+            params.put("amount", (long) (amount * 100)); // amount in centesimi
             params.put("currency", currency);
             params.put("automatic_payment_methods", Map.of("enabled", true));
 
+            // aggiunta metadata booking (serializzato JSON)
+            Map<String, String> metadata = new HashMap<>();
+            metadata.put("booking", metadataJson);
+            params.put("metadata", metadata);
+
             PaymentIntent intent = PaymentIntent.create(params);
-            return new PaymentIntentDTO(intent.getId(), intent.getClientSecret());
+
+            return new PaymentIntentDTO(
+                    intent.getId(),
+                    intent.getClientSecret()
+            );
+
         } catch (StripeException e) {
-            throw new RuntimeException("Failed to create payment intent", e);
+            throw new RuntimeException("Errore nella creazione del PaymentIntent Stripe", e);
         }
     }
 
-    public void confirmPayment(String paymentIntentId) {
+    /*
+     * Recupera un PaymentIntent esistente da Stripe
+     */
+    public PaymentIntent retrievePaymentIntent(String paymentIntentId) {
+        try {
+            return PaymentIntent.retrieve(paymentIntentId);
+        } catch (StripeException e) {
+            throw new RuntimeException("Impossibile recuperare PaymentIntent " + paymentIntentId, e);
+        }
+    }
+
+    /*
+     * Conferma manualmente un PaymentIntent (in rari casi)
+     */
+    public PaymentIntent confirmPaymentIntent(String paymentIntentId) {
         try {
             PaymentIntent intent = PaymentIntent.retrieve(paymentIntentId);
-            intent.confirm();
+            return intent.confirm();
         } catch (StripeException e) {
-            throw new RuntimeException("Failed to confirm payment", e);
+            throw new RuntimeException("Errore nella conferma del pagamento", e);
         }
     }
 }
-

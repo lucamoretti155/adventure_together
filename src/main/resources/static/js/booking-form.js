@@ -3,12 +3,12 @@ const participantTemplate = `
         <div class="row">
             <div class="col-md-5 mb-2">
                 <label class="form-label">Nome</label>
-                <input type="text" class="form-control participant-firstname">
+                <input type="text" class="form-control" data-type="firstName" required>
             </div>
 
             <div class="col-md-5 mb-2">
                 <label class="form-label">Cognome</label>
-                <input type="text" class="form-control participant-lastname">
+                <input type="text" class="form-control" data-type="lastName" required>
             </div>
 
             <div class="col-md-2 d-flex align-items-end">
@@ -21,10 +21,11 @@ const participantTemplate = `
 
         <div class="mt-2">
             <label class="form-label">Data di nascita</label>
-            <input type="date" class="form-control participant-dob">
+            <input type="date" class="form-control" data-type="dateOfBirth" required>
         </div>
     </div>
 `;
+
 
 function addParticipant() {
     const container = document.getElementById("participants-container");
@@ -48,25 +49,16 @@ function renumberParticipants() {
     const rows = document.querySelectorAll("#participants-container .participant-row");
 
     rows.forEach((row, i) => {
-        const firstNameInput = row.querySelector(".participant-firstname");
-        const lastNameInput = row.querySelector(".participant-lastname");
-        const dobInput = row.querySelector(".participant-dob");
-        const removeBtn = row.querySelector(".remove-participant");
+        row.querySelectorAll("[data-type]").forEach(input => {
+            const field = input.getAttribute("data-type");
+            input.name = `participants[${i}].${field}`;
+        });
 
-        if (firstNameInput) {
-            firstNameInput.setAttribute("name", `participants[${i}].firstName`);
-        }
-        if (lastNameInput) {
-            lastNameInput.setAttribute("name", `participants[${i}].lastName`);
-        }
-        if (dobInput) {
-            dobInput.setAttribute("name", `participants[${i}].dateOfBirth`);
-        }
-        if (removeBtn) {
-            removeBtn.onclick = () => removeParticipant(removeBtn);
-        }
+        const removeBtn = row.querySelector(".remove-participant");
+        removeBtn.onclick = () => removeParticipant(removeBtn);
     });
 }
+
 
 document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".remove-participant").forEach(btn => {

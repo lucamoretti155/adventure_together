@@ -54,4 +54,12 @@ public class DepartureAirportServiceImpl implements DepartureAirportService {
                 .map(DepartureAirportDTO::fromEntity)
                 .toList();
     }
+
+    // Recupero di un aeroporto di partenza per ID
+    @Override
+    public DepartureAirportDTO getDepartureAirportById(Long id) {
+        DepartureAirport airport = departureAirportRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Aeroporto di partenza non trovato con id: " + id));
+        return DepartureAirportDTO.fromEntity(airport);
+    }
 }

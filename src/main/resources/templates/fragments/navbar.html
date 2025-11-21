@@ -49,14 +49,14 @@
 
                 </form>
                 </li>
-                <!-- 🔗 LINK PUBBLICO -->
+                <!--  LINK PUBBLICO -->
                 <li class="nav-item">
                     <a class="nav-link fw-bold" th:href="@{/trips/dashboard}">
                         Tutte le destinazioni
                     </a>
                 </li>
 
-                <!-- 👤 NON AUTENTICATI -->
+                <!--  NON AUTENTICATI -->
                 <li class="nav-item" th:if="${!#authorization.expression('isAuthenticated()')}">
                     <a class="nav-link" th:href="@{/auth/login}">Login</a>
                 </li>
@@ -64,7 +64,7 @@
                     <a class="nav-link" th:href="@{/auth/register}">Registrati</a>
                 </li>
 
-                <!-- 🌍 TRAVELER -->
+                <!--  TRAVELER -->
                 <li class="nav-item"
                     th:if="${#authorization.expression('hasRole(''TRAVELER'')')}">
                     <a class="nav-link" th:href="@{/traveler/dashboard}">
@@ -72,7 +72,7 @@
                     </a>
                 </li>
 
-                <!-- 🧭 PLANNER -->
+                <!--  PLANNER -->
                 <li class="nav-item"
                     th:if="${#authorization.expression('hasAnyRole(''PLANNER'', ''ADMIN'')')}">
                     <a class="nav-link" th:href="@{/planner/dashboard}">
@@ -80,7 +80,7 @@
                     </a>
                 </li>
 
-                <!-- 🛠 ADMIN -->
+                <!--  ADMIN -->
                 <li class="nav-item"
                     th:if="${#authorization.expression('hasRole(''ADMIN'')')}">
                     <a class="nav-link"
@@ -89,7 +89,7 @@
                     </a>
                 </li>
 
-                <!-- 🚪 LOGOUT (solo autenticati) -->
+                <!-- LOGOUT (solo autenticati) -->
 
                 <li class="nav-item"
                     th:if="${#authorization.expression('isAuthenticated()')}">

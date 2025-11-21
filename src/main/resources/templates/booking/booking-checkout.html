@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Completa il pagamento</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <script src="https://js.stripe.com/v3/"></script>
+</head>
+
+<body>
+
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<div class="container my-5">
+    <h2 class="mb-4">Pagamento prenotazione</h2>
+
+    <div id="payment-error" class="alert alert-danger d-none"></div>
+
+    <!-- Contenitore Stripe Elements -->
+    <div class="card p-4 shadow-sm">
+        <div id="card-element" class="form-control p-2 mb-3"></div>
+
+        <button id="pay-btn" class="btn btn-primary w-100">
+            Paga ora
+        </button>
+    </div>
+</div>
+
+<script th:inline="javascript">
+    /*<![CDATA[*/
+
+    const stripePublicKey = /*[[${stripePublicKey}]]*/ "";
+    const clientSecret = /*[[${clientSecret}]]*/ "";
+
+    console.log("Stripe Public Key:", stripePublicKey);
+    console.log("Client Secret:", clientSecret);
+
+    // Inizializzo Stripe
+    const stripe = Stripe(stripePublicKey);
+    const elements = stripe.elements();
+
+    const card = elements.create('card', { hidePostalCode: true });
+    card.mount('#card-element');
+
+    const errorDiv = document.getElementById('payment-error');
+    const payBtn = document.getElementById('pay-btn');
+
+    payBtn.addEventListener('click', async () => {
+
+        payBtn.disabled = true;
+        errorDiv.classList.add('d-none');
+        errorDiv.textContent = "";
+
+        const {error, paymentIntent} = await stripe.confirmCardPayment(clientSecret, {
+            payment_method: {
+                card: card
+            }
+        });
+
+        if (error) {
+            console.error("Stripe Error:", error);
+            errorDiv.textContent = error.message;
+            errorDiv.classList.remove('d-none');
+            payBtn.disabled = false;
+        }
+        else if (paymentIntent && paymentIntent.status === "succeeded") {
+            console.log("Pagamento completato, redirect...");
+            window.location.href = /*[[@{/bookings/success}]]*/ "/bookings/success";
+        }
+        else {
+            console.log("Pagamento fallito, redirect...");
+            window.location.href = /*[[@{/bookings/failure}]]*/ "/bookings/failure";
+        }
+    });
+
+    /*]]>*/
+</script>
+
+</body>
+</html>

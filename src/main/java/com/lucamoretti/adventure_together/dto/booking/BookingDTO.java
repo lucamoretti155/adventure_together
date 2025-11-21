@@ -29,13 +29,9 @@ public class BookingDTO {
     // id della booking (null in fase di creazione)
     private Long id;
 
-    // impostata dal sistema alla data corrente; non deve essere futura
-    @PastOrPresent(message = "La data di prenotazione non può essere futura")
+    // impostata dal sistema alla data corrente
     private LocalDate bookingDate;
 
-    // calcolato dinamicamente da booking.getNumParticipants()
-    // non richiesto in input, ma utile in output (solo read)
-    @Min(value = 1, message = "Il numero totale di partecipanti deve essere almeno 1")
     private Integer numParticipants;
 
     // riferimenti obbligatori per la creazione della prenotazione
@@ -56,7 +52,6 @@ public class BookingDTO {
     private PaymentDTO payment;
 
     // campo calcolato (costo totale della prenotazione)
-    @Positive(message = "Il costo totale deve essere positivo")
     private Double totalCost;
 
     // non è incluso il collegamento al pagamento (gestito separatamente)

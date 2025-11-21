@@ -39,7 +39,6 @@ public class ReviewDTO {
 
     // Campi aggiuntivi utili per la UI
     private String tripTitle;
-    private boolean alreadyReviewed; // Indica se il viaggiatore ha già recensito questo viaggio, non mappato in Entity
 
     // Conversione Entity → DTO
     public static ReviewDTO fromEntity(Review entity) {
@@ -50,7 +49,6 @@ public class ReviewDTO {
                 .tripId(entity.getTrip() != null ? entity.getTrip().getId() : null)
                 .tripTitle(entity.getTrip() != null ? entity.getTrip().getTripItinerary().getTitle() : null)
                 .travelerId(entity.getTraveler() != null ? entity.getTraveler().getId() : null)
-                .alreadyReviewed(true)
                 .build();
     }
 

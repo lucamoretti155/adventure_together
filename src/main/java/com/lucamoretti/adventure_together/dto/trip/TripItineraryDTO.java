@@ -31,7 +31,7 @@ public class TripItineraryDTO {
     @NotBlank(message = "La descrizione non può essere vuota")
     private String description;
 
-    @NotBlank(message = "Il percorso dell'immagine non può essere vuoto")
+    // path dell'immagine salvata - il percorso viene gestito nel service
     private String picturePath;
 
     // solo per upload, non obbligatorio

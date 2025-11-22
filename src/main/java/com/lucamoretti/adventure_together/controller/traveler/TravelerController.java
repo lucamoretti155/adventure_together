@@ -19,9 +19,12 @@ import com.lucamoretti.adventure_together.service.trip.TripItineraryService;
 import com.lucamoretti.adventure_together.service.trip.TripService;
 import com.lucamoretti.adventure_together.service.user.UserService;
 import com.lucamoretti.adventure_together.util.exception.ResourceNotFoundException;
+import com.lucamoretti.adventure_together.util.exception.UnauthorizedActionException;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -41,6 +44,7 @@ public class TravelerController {
     private final DepartureAirportService airportService; // se lo hai
     private final PaymentService paymentService;
     private final ReviewService reviewService;
+    private final UserService userService;
 
 
     // Mostra la dashboard per Traveler
@@ -88,6 +92,58 @@ public class TravelerController {
         return "traveler/booking-details";
     }
 
+    // Mostra il form per scrivere una recensione per un trip
+    @GetMapping("/review/{bookingId}")
+    public String showReviewForm(@PathVariable Long bookingId,
+                                 Model model) {
+        ReviewDTO dto;
+        if (model.containsAttribute("reviewDTO")) {
+            dto = (ReviewDTO) model.getAttribute("reviewDTO");
+        } else {
+            dto = new ReviewDTO();
+        }
+        BookingDTO booking = bookingService.getBookingById(bookingId);
+        Long travelerId = userService.getCurrentUserId();
+        if (!booking.getTravelerId().equals(travelerId)) {
+            throw new UnauthorizedActionException("Non sei autorizzato a recensire questa prenotazione.");
+        }
+        TripDTO trip = tripService.getById(booking.getTripId());
+
+        // precompila i campi nascosti
+        dto.setTripId(booking.getTripId());
+        dto.setTravelerId(travelerId);
+
+        model.addAttribute("trip", trip);
+        model.addAttribute("reviewDTO", dto);
+        return "traveler/review-form";
+    }
+
+    // Gestisce la creazione di una recensione per un trip
+    @PostMapping("/review/{bookingId}")
+    public String submitReview(@PathVariable Long bookingId,
+                               @Valid @ModelAttribute("reviewDTO") ReviewDTO reviewDTO,
+                               BindingResult bindingResult,
+                               RedirectAttributes redirectAttributes) {
+        BookingDTO booking = bookingService.getBookingById(bookingId);
+        Long travelerId = userService.getCurrentUserId();
+        if (!booking.getTravelerId().equals(travelerId)) {
+            throw new ResourceNotFoundException("Booking", "id", bookingId);
+        }
+        if (bindingResult.hasErrors()) {
+            redirectAttributes.addFlashAttribute("org.springframework.validation.BindingResult.reviewDTO", bindingResult);
+            redirectAttributes.addFlashAttribute("reviewDTO", reviewDTO);
+            return "redirect:/traveler/review/" + bookingId;
+        }
+        try {
+            reviewService.createReview(booking.getTripId(),travelerId, reviewDTO);
+            redirectAttributes.addFlashAttribute("successMessage", "Recensione inviata con successo!");
+            return "redirect:/traveler/booking/" + bookingId;
+        } catch (ResourceNotFoundException | IllegalStateException e) {
+            redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
+            redirectAttributes.addFlashAttribute("reviewDTO", reviewDTO);
+            return "redirect:/traveler/review/" + bookingId;
+        }
+    }
 
 }
 

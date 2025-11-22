@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>I tuoi Itinerari</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<div class="container my-5">
+
+    <h2 class="mb-4">Itinerari creati</h2>
+
+    <!-- MESSAGGI FLASH -->
+    <div th:if="${successMessage}"
+         class="alert alert-success"
+         th:text="${successMessage}">
+    </div>
+
+    <div th:if="${errorMessage}"
+         class="alert alert-danger"
+         th:text="${errorMessage}">
+    </div>
+
+    <div th:if="${itineraries.size() == 0}" class="alert alert-info">
+        Non hai ancora creato alcun itinerario.
+    </div>
+
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+        <div class="col" th:each="it : ${itineraries}">
+            <div class="card shadow-sm h-100">
+
+                <img th:src="@{${it.picturePath}}" class="card-img-top"
+                     alt="Immagine itinerario"
+                     style="height: 120px; object-fit: cover;">
+
+                <div class="card-body">
+                    <h5 class="card-title" th:text="${it.title}"></h5>
+                    <p class="card-text small text-muted"
+                       th:text="${#strings.abbreviate(it.description, 120)}"></p>
+
+                    <p class="mb-1"><strong>Durata:</strong> <span th:text="${it.durationInDays}"></span> giorni</p>
+
+                    <p class="mb-1">
+                        <strong>Partecipanti:</strong>
+                        <span th:text="${it.minParticipants}"></span> –
+                        <span th:text="${it.maxParticipants}"></span>
+                    </p>
+
+                    <a th:href="@{'/trips/trip-itinerary/' + ${it.id}}" class="btn btn-primary btn-sm mt-3">
+                        Dettagli
+                    </a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -38,6 +38,15 @@ public class DataValidationService {
             throw new DataIntegrityException("Data di fine non può essere precedente alla data di inizio");
         }
     }
+
+    // valida che le date di un viaggio siano coerenti con la durata dell'itinerario
+    public void validateTripDatesWithItineraryDuration(LocalDate departure, LocalDate returnDate, int durationInDays) {
+        Period period = Period.between(departure, returnDate);
+        if (period.getDays() + period.getMonths() * 30 + period.getYears() * 365 + 1 != durationInDays) {
+            throw new DataIntegrityException("La durata del viaggio non corrisponde alla durata dell'itinerario: " + durationInDays + " giorni");
+        }
+    }
+
     // min e max devono essere entrambi positivi e min non deve essere maggiore di max
     // usato quando viene creato un tripItinerary e viene specificato il numero minimo e massimo di partecipanti
     public void validateParticipants(int min, int max) {

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Crea nuovo Trip</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<div class="container my-5">
+
+    <h2 class="fw-bold mb-4">Crea un nuovo Viaggio</h2>
+
+    <!-- ALERT SUCCESSO -->
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+
+
+
+    <!-- FORM CREAZIONE TRIP -->
+    <form th:action="@{/planner/create-trip}" th:object="${tripDTO}" method="post" class="row g-4">
+
+        <!-- itinerario associato -->
+        <div class="col-md-6">
+            <label class="form-label">Itinerario</label>
+            <select class="form-select" th:field="*{tripItineraryId}">
+                <option value="">-- seleziona itinerario --</option>
+                <option th:each="itin : ${tripItineraries}"
+                        th:value="${itin.id}"
+                        th:text="${itin.title}"></option>
+            </select>
+            <div class="text-danger" th:if="${#fields.hasErrors('tripItineraryId')}"
+                 th:errors="*{tripItineraryId}"></div>
+        </div>
+
+        <!-- plannerId -->
+        <input type="hidden" th:field="*{plannerId}"/>
+
+        <!-- date prenotazioni -->
+        <div class="col-md-6">
+
+        </div>
+
+        <!-- date prenotazioni -->
+        <div class="col-md-6">
+            <label class="form-label">Inizio prenotazioni</label>
+            <input type="date" class="form-control" th:field="*{dateStartBookings}">
+            <div class="text-danger" th:errors="*{dateStartBookings}"></div>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Fine prenotazioni</label>
+            <input type="date" class="form-control" th:field="*{dateEndBookings}">
+            <div class="text-danger" th:errors="*{dateEndBookings}"></div>
+        </div>
+
+        <!-- date viaggio -->
+        <div class="col-md-6">
+            <label class="form-label">Data di partenza</label>
+            <input type="date" class="form-control" th:field="*{dateDeparture}">
+            <div class="text-danger" th:errors="*{dateDeparture}"></div>
+        </div>
+
+        <div class="col-md-6">
+            <label class="form-label">Data di ritorno</label>
+            <input type="date" class="form-control" th:field="*{dateReturn}">
+            <div class="text-danger" th:errors="*{dateReturn}"></div>
+        </div>
+
+        <!-- costo individuale -->
+        <div class="col-md-6">
+            <label class="form-label">Costo individuale (€)</label>
+            <input type="number" step="0.01" class="form-control" th:field="*{tripIndividualCost}">
+            <div class="text-danger" th:errors="*{tripIndividualCost}"></div>
+        </div>
+
+
+
+        <!-- VALIDAZIONI CUSTOM -->
+        <div class="col-12" th:if="${#fields.hasErrors('bookingPeriodValid')}">
+            <div class="alert alert-danger" th:errors="*{bookingPeriodValid}"></div>
+        </div>
+
+        <div class="col-12" th:if="${#fields.hasErrors('returnAfterDeparture')}">
+            <div class="alert alert-danger" th:errors="*{returnAfterDeparture}"></div>
+        </div>
+
+        <!-- ALERT ERRORE -->
+        <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+
+        <!-- SUBMIT -->
+        <div class="col-12 mt-3">
+            <button type="submit" class="btn btn-primary px-4">Crea Trip</button>
+            <a th:href="@{/planner/trip-itinerary-created-list}" class="btn btn-secondary ms-2">Annulla</a>
+        </div>
+
+    </form>
+
+</div>
+
+</body>
+</html>

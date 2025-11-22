@@ -123,7 +123,7 @@ public class Booking implements IBooking, BookingListener {
      */
 
     @Override
-    public void update(String mailTemplatePath, String baseUrl) {
+    public void update(String mailTemplatePath, String urlHomePage) {
         if (emailService == null) {
             System.err.println("[WARN] EmailService non configurato per Booking.update()");
             return;
@@ -132,7 +132,7 @@ public class Booking implements IBooking, BookingListener {
                 traveler.getEmail(),
                 "Aggiornamento sul tuo viaggio " + trip.getTripItinerary().getTitle(),
                 mailTemplatePath,
-                Map.of("traveler", traveler, "trip", trip, "homepage", baseUrl+"/home")
+                Map.of("traveler", traveler, "trip", trip, "homepage", urlHomePage)
         );
     }
 

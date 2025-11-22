@@ -15,6 +15,12 @@
     <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
     <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
 
+    <!-- SE NON CI SONO ITINERARI -->
+    <div th:unless="${tripItineraries != null and !tripItineraries.isEmpty()}"
+         class="alert alert-warning mt-4">
+        Nessun itinerario disponibile per le categorie selezionate.
+    </div>
+
     <div class="row g-4">
         <div class="col-md-4" th:each="itin : ${tripItineraries}">
             <div class="card shadow-sm border-0">

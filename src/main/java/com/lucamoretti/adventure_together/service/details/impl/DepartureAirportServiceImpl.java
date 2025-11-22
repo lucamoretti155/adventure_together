@@ -9,6 +9,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -42,6 +43,7 @@ public class DepartureAirportServiceImpl implements DepartureAirportService {
     public List<DepartureAirportDTO> getAllDepartureAirports() {
         List<DepartureAirport> airports = departureAirportRepository.findAll();
         return airports.stream()
+                .sorted(Comparator.comparing(DepartureAirport::getCode, String.CASE_INSENSITIVE_ORDER))
                 .map(DepartureAirportDTO::fromEntity)
                 .toList();
     }

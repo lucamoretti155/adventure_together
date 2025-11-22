@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
 
 // Implementazione del servizio per la gestione delle categorie.
@@ -39,6 +40,7 @@ public class CategoryServiceImpl implements CategoryService {
     public List<CategoryDTO> getAllCategories() {
         List<Category> categories = categoryRepository.findAll();
         return categories.stream()
+                .sorted(Comparator.comparing(Category::getName, String.CASE_INSENSITIVE_ORDER))
                 .map(CategoryDTO::fromEntity)
                 .toList();
     }

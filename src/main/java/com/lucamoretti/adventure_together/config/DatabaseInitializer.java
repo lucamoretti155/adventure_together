@@ -159,7 +159,7 @@ public class DatabaseInitializer implements CommandLineRunner {
         TripItinerary itin1 = new TripItinerary();
         itin1.setTitle("Giappone Classico");
         itin1.setDescription("Viaggio completo tra Tokyo, Kyoto, Nara e Osaka. Cultura, modernità e tradizione.");
-        itin1.setPicturePath("/images/upload/giappone.png");
+        itin1.setPicturePath("/images/upload/initializer/giappone.png");
         itin1.setDurationInDays(7);
         itin1.setMinParticipants(5);
         itin1.setMaxParticipants(20);
@@ -171,7 +171,7 @@ public class DatabaseInitializer implements CommandLineRunner {
         TripItinerary itin2 = new TripItinerary();
         itin2.setTitle("Avventura in Norvegia");
         itin2.setDescription("Un percorso di trekking tra fiordi, cascate e paesaggi mozzafiato.");
-        itin2.setPicturePath("/images/upload/norvegia.png");
+        itin2.setPicturePath("/images/upload/initializer/norvegia.png");
         itin2.setDurationInDays(5);
         itin2.setMinParticipants(4);
         itin2.setMaxParticipants(15);
@@ -183,7 +183,7 @@ public class DatabaseInitializer implements CommandLineRunner {
         TripItinerary itin3 = new TripItinerary();
         itin3.setTitle("Safari in Kenya");
         itin3.setDescription("Un safari completo tra Masai Mara, Amboseli e cultura Masai.");
-        itin3.setPicturePath("/images/upload/kenya.png");
+        itin3.setPicturePath("/images/upload/initializer/kenya.png");
         itin3.setDurationInDays(6);
         itin3.setMinParticipants(6);
         itin3.setMaxParticipants(12);

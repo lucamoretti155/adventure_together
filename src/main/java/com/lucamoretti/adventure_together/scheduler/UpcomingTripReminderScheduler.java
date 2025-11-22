@@ -29,6 +29,7 @@ public class UpcomingTripReminderScheduler {
     @Scheduled(cron = "0 0 9 * * *") // ogni giorno alle 9:00
     @Transactional
     public void sendUpcomingTripReminders() {
+        log.info("Avvio schedulazione upcoming Trip...");
         LocalDate targetDate = LocalDate.now().plusDays(7);
         List<Trip> trips = tripRepository.findByDateDepartureEquals(targetDate);
 

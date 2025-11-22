@@ -53,6 +53,9 @@ public interface TripItineraryRepository extends JpaRepository<TripItinerary, Lo
            """)
     List<TripItinerary> findByCategories(List<Long> categoryIds);
 
+    // Trova tutti gli itinerari di viaggio creati da uno specifico planner dato l'id del planner.
+    List<TripItinerary> findByPlannerId(Long plannerId);
+
 
 }
 

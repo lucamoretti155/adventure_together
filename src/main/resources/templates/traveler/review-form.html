@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title th:text="'Recensione - ' + ${trip.title}">Recensione</title>
+
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+</head>
+
+<body>
+
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<div class="container my-5" style="max-width: 720px;">
+
+    <!-- TITOLI -->
+    <h2 class="fw-bold mb-3">
+        Lascia una recensione
+    </h2>
+
+    <p class="text-muted mb-4">
+        Viaggio: <strong th:text="${trip.title}"></strong><br>
+        Date: <span th:text="${#temporals.format(trip.dateStart, 'dd/MM/yyyy')}"></span>
+        -
+        <span th:text="${#temporals.format(trip.dateReturn, 'dd/MM/yyyy')}"></span>
+    </p>
+
+    <!-- MESSAGGI -->
+    <div th:if="${errorMessage}" class="alert alert-danger"
+         th:text="${errorMessage}"></div>
+
+    <div th:if="${successMessage}" class="alert alert-success"
+         th:text="${successMessage}"></div>
+
+
+    <!-- FORM RECENSIONE -->
+    <form th:action="@{'/traveler/review/' + ${trip.bookingId}}"
+          th:object="${reviewDTO}" method="post">
+
+        <!-- Punteggio -->
+        <div class="mb-4">
+            <label class="form-label fw-semibold">Punteggio</label>
+            <div id="starContainer" class="star-rating">
+                <span data-value="1">&#9733;</span>
+                <span data-value="2">&#9733;</span>
+                <span data-value="3">&#9733;</span>
+                <span data-value="4">&#9733;</span>
+                <span data-value="5">&#9733;</span>
+            </div>
+
+            <!-- Campo vero che salva il punteggio -->
+            <input type="hidden" th:field="*{score}">
+
+            <!-- errore validazione -->
+            <div class="text-danger small mt-1"
+                 th:if="${#fields.hasErrors('score')}"
+                 th:errors="*{score}"></div>
+        </div>
+
+
+        <!-- Testo recensione -->
+        <div class="mb-4">
+            <label class="form-label fw-semibold">Recensione</label>
+            <textarea class="form-control" rows="6"
+                      th:field="*{textReview}"
+                      placeholder="Scrivi qui la tua recensione..."></textarea>
+
+            <!-- errore validazione -->
+            <div class="text-danger small mt-1"
+                 th:if="${#fields.hasErrors('textReview')}"
+                 th:errors="*{textReview}"></div>
+        </div>
+
+        <!-- ID nascosti necessari alla validazione -->
+        <input type="hidden" th:field="*{tripId}">
+        <input type="hidden" th:field="*{travelerId}">
+
+
+        <div class="d-flex justify-content-between mt-4">
+            <a th:href="@{/traveler/bookings}" class="btn btn-outline-secondary">
+                Annulla
+            </a>
+
+            <button type="submit" class="btn btn-primary">
+                Invia recensione
+            </button>
+        </div>
+
+    </form>
+</div>
+
+
+<!-- Script stelle -->
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const stars = document.querySelectorAll("#starContainer span");
+        const scoreInput = document.querySelector("input[name='score']");
+
+        function updateStars(value) {
+            stars.forEach(star => {
+                star.classList.toggle("filled",
+                    Number(star.dataset.value) <= value
+                );
+            });
+        }
+
+        stars.forEach(star => {
+            star.addEventListener("mouseover", () => {
+                updateStars(star.dataset.value);
+            });
+
+            star.addEventListener("mouseleave", () => {
+                updateStars(scoreInput.value || 0);
+            });
+
+            star.addEventListener("click", () => {
+                scoreInput.value = star.dataset.value;
+                updateStars(star.dataset.value);
+            });
+        });
+
+        // Carica lo stato iniziale (ad esempio dopo errore di validazione)
+        updateStars(scoreInput.value || 0);
+    });
+</script>
+
+</body>
+</html>

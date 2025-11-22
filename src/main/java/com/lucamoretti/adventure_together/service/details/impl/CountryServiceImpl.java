@@ -12,6 +12,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
 
@@ -49,7 +50,8 @@ public class CountryServiceImpl implements CountryService {
     @Override
     public List<CountryDTO> getAllCountries() {
         List<Country> countries = countryRepository.findAll();
-        return countries.stream()
+        return countryRepository.findAll().stream()
+                .sorted(Comparator.comparing(Country::getCountry, String.CASE_INSENSITIVE_ORDER))
                 .map(CountryDTO::fromEntity)
                 .toList();
     }

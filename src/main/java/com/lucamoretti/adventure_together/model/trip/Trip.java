@@ -79,6 +79,11 @@ public class Trip {
     // non è il template per mandare la mail di conferma prenotazione ma per notificare i cambi di stato del Trip
     private String templateMailPath;
 
+    // Transient perché non persistiamo la proprietà nel DB
+    @Transient
+    @Value("${app.base-url}")
+    private String baseUrl;
+
     //Relazione con Booking
     // Un Trip può avere molteplici Booking associati
     // rappresentando le prenotazioni effettuate dai travellers
@@ -89,7 +94,7 @@ public class Trip {
     // Viene chiamato ad ogni cambio di stato per notificare le prenotazioni
     public void notifyAllListeners(String mailTemplatePath) {
         for (Booking booking : bookings) {
-            booking.update(mailTemplatePath, "${app.base-url}");
+            booking.update(mailTemplatePath, baseUrl+"/home");
         }
     }
 

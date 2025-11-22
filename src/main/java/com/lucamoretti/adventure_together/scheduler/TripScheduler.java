@@ -26,6 +26,7 @@ public class TripScheduler {
     @Scheduled(cron = "0 0 2 * * *")
     @Transactional
     public void updateTripStates() {
+        log.info("Avvio schedulazione aggiornamento TripState...");
         List<Trip> trips = tripRepository.findOpenForBooking();
 
         for (Trip trip : trips) {

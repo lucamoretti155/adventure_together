@@ -3,6 +3,7 @@
 <head>
     <title th:text="${tripItinerary.title}"></title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
@@ -21,7 +22,8 @@
         <!-- IMMAGINE PRINCIPALE -->
         <div class="col-md-6">
             <img th:src="@{${tripItinerary.picturePath}}"
-                 class="img-fluid rounded shadow-sm">
+                 class="img-fluid rounded shadow-sm"
+                 style="width: 100%; height: 350px; object-fit: cover; object-position: center;">
         </div>
 
         <!-- INFO -->

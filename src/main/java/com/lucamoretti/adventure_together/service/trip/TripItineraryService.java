@@ -18,6 +18,7 @@ public interface TripItineraryService {
     TripItineraryDTO getById(Long id);
     TripItineraryDTO getByTitle(String title);
     List<TripItineraryDTO> getAll();
+    List<TripItineraryDTO> getByPlannerId(Long id);
 
     List<TripItineraryDTO> getAllByCountryId(Long countryId);
     List<TripItineraryDTO> getAllByGeoAreaId(Long geoAreaId);

@@ -50,8 +50,16 @@ public class TripItineraryServiceImpl implements TripItineraryService {
     private final DepartureAirportRepository airportRepository;
 
     // Path per l'upload delle immagini (value definito in application.properties)
+
+    // Percorso fisico dove salvare i file
     @Value("${app.upload.dir}")
     private String uploadDir;
+
+    // Percorso pubblico salvato come path nel DB
+    @Value("${app.public.url}")
+    private String publicUrl;
+
+    // Percorso dell'immagine di default per gli itinerari (se non viene caricata alcuna immagine)
     @Value("${app.default.image}")
     private String defaultImagePath;
 
@@ -65,9 +73,11 @@ public class TripItineraryServiceImpl implements TripItineraryService {
             throw new DuplicateResourceException("Il titolo dell'itinerario esiste già");
         }
         // Controllo integrità minimo/max partecipanti
-        if (dto.getMinParticipants() > dto.getMaxParticipants()) {
+        if (!dto.isValidParticipantsRange()) {
             throw new DataIntegrityException("Il minimo partecipanti non può essere maggiore del massimo partecipanti");
         }
+
+
         // Controllo integrità durata in giorni
         if (dto.getDurationInDays() <= 0) {
             throw new DataIntegrityException("Durata in giorni deve essere maggiore di zero");
@@ -99,6 +109,11 @@ public class TripItineraryServiceImpl implements TripItineraryService {
                     .peek(d -> d.setTripItinerary(entity)) // back reference
                     .collect(Collectors.toList());
             entity.setDays(dayEntities);
+        }
+
+        //check se giorni forniti corrispondono alla durata
+        if (entity.getDays().size() != entity.getDurationInDays()) {
+            throw new DataIntegrityException("Il numero di giorni inseriti non corrisponde alla durata dell'itinerario");
         }
 
         // Upload immagine se presente
@@ -148,7 +163,7 @@ public class TripItineraryServiceImpl implements TripItineraryService {
                 Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
                 // 9. Set del percorso nell'entità
-                entity.setPicturePath("/uploads/itineraries/" + fileName);
+                entity.setPicturePath(publicUrl + fileName); // e.g. "/images/upload/itineraries/iceland-ab12cd34-ef56-7890-ab12-cd34ef567890.jpg"
 
             } catch (IOException e) {
                 throw new FileStorageException("Errore durante il salvataggio dell'immagine dell'itinerario");
@@ -264,7 +279,7 @@ public class TripItineraryServiceImpl implements TripItineraryService {
                 Files.copy(image.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
 
                 // 8. Aggiorna picturePath dell’itinerario
-                itinerary.setPicturePath("/uploads/itineraries/" + fileName);
+                itinerary.setPicturePath(publicUrl + fileName);
 
             } catch (IOException e) {
                 throw new FileStorageException("Errore durante il salvataggio della nuova immagine");
@@ -309,6 +324,16 @@ public class TripItineraryServiceImpl implements TripItineraryService {
                 .map(TripItineraryDTO::fromEntity)
                 .toList();
     }
+
+    // metodo per recuperare tutti gli itinerari di viaggio creati da uno specifico planner
+    @Override
+    @Transactional(readOnly = true)
+    public List<TripItineraryDTO> getByPlannerId(Long id) {
+        return itineraryRepository.findByPlannerId(id).stream()
+                .map(TripItineraryDTO::fromEntity)
+                .toList();
+    }
+
     // metodo per cercare itinerari di viaggio in base al paese
     @Override
     @Transactional(readOnly = true)

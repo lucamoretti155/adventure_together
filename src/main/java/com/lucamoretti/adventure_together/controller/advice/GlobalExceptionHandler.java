@@ -5,7 +5,9 @@ import com.stripe.exception.SignatureVerificationException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 /*
@@ -53,6 +55,23 @@ public class GlobalExceptionHandler {
         mav.addObject("message", ex.getMessage());
         return mav;
     }
+
+    // Gestione eccezione per file upload troppo grandi
+    // Reindirizza alla pagina di creazione itinerario con messaggio di errore dato che questa eccezione è rilevante in quel contesto
+    @ExceptionHandler(MaxUploadSizeExceededException.class)
+    public String handleMaxSize(MaxUploadSizeExceededException ex,
+                                RedirectAttributes redirectAttributes) {
+
+        redirectAttributes.addFlashAttribute(
+                "errorMessage",
+                "Il file caricato è troppo grande. Dimensione massima: 10MB."
+        );
+
+        // Torno alla pagina del form di creazione itinerario
+        return "redirect:/planner/create-trip-itinerary";
+    }
+
+
 
     // 500 - Server Error
     @ExceptionHandler({

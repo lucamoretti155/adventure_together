@@ -63,10 +63,15 @@
                 <p th:text="${review.textReview}"></p>
             </div>
 
-            <div th:if="${review == null}">
-                <a class="btn btn-outline-primary" th:href="@{'/traveler/create-review/' + ${trip.id}}">
+            <div th:if="${review == null and trip.dateReturn.isBefore(T(java.time.LocalDate).now())}">
+                <a class="btn btn-outline-primary" th:href="@{'/traveler/review/' + ${trip.id}}">
                     Lascia una recensione
                 </a>
+            </div>
+            <div th:if="${review == null and !trip.dateReturn.isBefore(T(java.time.LocalDate).now())}">
+
+                    <p><i>Ricordati di lasciare una recensiona appena torni dal viaggio</i></p>
+
             </div>
 
         </div>

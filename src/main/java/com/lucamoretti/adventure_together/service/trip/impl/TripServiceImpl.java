@@ -1,10 +1,13 @@
 package com.lucamoretti.adventure_together.service.trip.impl;
 
 import com.lucamoretti.adventure_together.dto.trip.TripDTO;
+import com.lucamoretti.adventure_together.dto.trip.TripItineraryDTO;
 import com.lucamoretti.adventure_together.model.trip.Trip;
+import com.lucamoretti.adventure_together.model.trip.TripItinerary;
 import com.lucamoretti.adventure_together.repository.trip.TripRepository;
 import com.lucamoretti.adventure_together.repository.trip.TripItineraryRepository;
 import com.lucamoretti.adventure_together.repository.user.PlannerRepository;
+import com.lucamoretti.adventure_together.service.trip.TripItineraryService;
 import com.lucamoretti.adventure_together.service.trip.TripService;
 import com.lucamoretti.adventure_together.service.validation.DataValidationService;
 import com.lucamoretti.adventure_together.util.exception.DataIntegrityException;
@@ -29,6 +32,7 @@ public class TripServiceImpl implements TripService {
     private final TripItineraryRepository itineraryRepository;
     private final PlannerRepository plannerRepository;
     private final DataValidationService dataValidationService;
+    private final TripItineraryService tripItineraryService;
 
     // Creazione di un nuovo Trip (planner)
     @Override
@@ -38,6 +42,14 @@ public class TripServiceImpl implements TripService {
         //Validazione date attraverso il servizio dedicato
         dataValidationService.validateTripDates(dto.getDateStartBookings(), dto.getDateEndBookings());
         dataValidationService.validateTripDates(dto.getDateDeparture(), dto.getDateReturn());
+        TripItineraryDTO tripItineraryDTO = tripItineraryService.getById(dto.getTripItineraryId());
+        // Controllo coerenza durata viaggio con durata itinerario
+        dataValidationService.validateTripDatesWithItineraryDuration(
+                dto.getDateDeparture(),
+                dto.getDateReturn(),
+                tripItineraryDTO.getDurationInDays()
+        );
+
         // Controllo data di partenza non nel passato
         if (dto.getDateDeparture().isBefore(LocalDate.now()))
             throw new DataIntegrityException("La data di partenza non può essere nel passato");
@@ -143,7 +155,6 @@ public class TripServiceImpl implements TripService {
     @Override
     public List<TripDTO> getBookableTripsByItinerary(Long itineraryId) {
         return tripRepository.findOpenForBookingByItinerary(itineraryId).stream()
-                .filter(t -> t.getDateEndBookings().isAfter(LocalDate.now())) // sicurezza extra lato logico
                 .map(TripDTO::fromEntity)
                 .toList();
     }

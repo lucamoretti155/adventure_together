@@ -12,6 +12,12 @@
 <div class="container my-5">
     <h2 class="fw-bold mb-4" th:text="${geoArea.geoArea}"></h2>
 
+    <!-- SE NON CI SONO ITINERARI -->
+    <div th:unless="${itinerariesByGeoArea != null and !itinerariesByGeoArea.isEmpty()}"
+         class="alert alert-warning mt-4">
+        Nessun itinerario disponibile per questa Area Geografica al momento.
+    </div>
+
     <div class="row g-4">
         <div class="col-md-4" th:each="itin : ${itinerariesByGeoArea}">
             <div class="card shadow-sm border-0">

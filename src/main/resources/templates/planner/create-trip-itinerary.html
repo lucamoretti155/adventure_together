@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Crea Itinerario</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+
+</head>
+
+<body>
+
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<div class="container my-5">
+
+    <h2 class="mb-4">Crea un nuovo Itinerario</h2>
+
+    <!-- MESSAGGI FLASH -->
+    <div th:if="${successMessage}"
+         class="alert alert-success"
+         th:text="${successMessage}">
+    </div>
+
+    <div th:if="${errorMessage}"
+         class="alert alert-danger"
+         th:text="${errorMessage}">
+    </div>
+
+    <form th:action="@{/planner/create-trip-itinerary}"
+          th:object="${tripItineraryDTO}"
+          method="post"
+          enctype="multipart/form-data"
+          class="needs-validation">
+
+        <!-- TITRE -->
+        <div class="mb-3">
+            <label class="form-label">Titolo</label>
+            <input type="text" class="form-control" th:field="*{title}">
+            <div class="text-danger" th:errors="*{title}"></div>
+        </div>
+
+        <!-- DESCRIZIONE -->
+        <div class="mb-3">
+            <label class="form-label">Descrizione</label>
+            <textarea class="form-control" th:field="*{description}" rows="4"></textarea>
+            <div class="text-danger" th:errors="*{description}"></div>
+        </div>
+
+        <!-- IMMAGINE -->
+        <div class="mb-3">
+            <label class="form-label">Immagine</label>
+            <input type="file" class="form-control" th:field="*{pictureFile}">
+        </div>
+
+        <!-- DURATA -->
+        <div class="mb-3">
+            <label class="form-label">Durata (giorni)</label>
+            <input type="number" class="form-control" th:field="*{durationInDays}">
+            <div class="text-danger" th:errors="*{durationInDays}"></div>
+        </div>
+
+        <!-- PARTECIPANTI -->
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Min partecipanti</label>
+                <input type="number" class="form-control" th:field="*{minParticipants}">
+                <div class="text-danger" th:errors="*{minParticipants}"></div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Max partecipanti</label>
+                <input type="number" class="form-control" th:field="*{maxParticipants}">
+                <div class="text-danger" th:errors="*{maxParticipants}"></div>
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Paesi</label>
+            <select multiple class="form-select" th:field="*{countryIds}">
+                <option th:each="c : ${countries}"
+                        th:value="${c.id}"
+                        th:text="${c.country}">
+                </option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Aeroporti di partenza</label>
+            <select multiple class="form-select" th:field="*{departureAirportIds}">
+                <option th:each="a : ${airports}"
+                        th:value="${a.id}"
+                        th:text="${a.code + ' - ' + a.name}">
+                </option>
+            </select>
+        </div>
+        <div class="mb-3">
+            <label class="form-label">Categorie</label>
+            <select multiple class="form-select" th:field="*{categoryIds}">
+                <option th:each="cat : ${categories}"
+                        th:value="${cat.id}"
+                        th:text="${cat.name}">
+                </option>
+            </select>
+        </div>
+
+
+        <div class="text-danger mb-3" th:errors="*{validParticipantsRange}"></div>
+
+        <hr class="my-4">
+
+        <!-- 🔽 SEZIONE GIORNI ITINERARIO -->
+        <h4 class="mb-3">Giorni dell’Itinerario</h4>
+
+        <div id="days-container">
+            <!-- I giorni verranno aggiunti dinamicamente via JS -->
+        </div>
+
+        <button type="button" class="btn btn-outline-primary mt-3" onclick="addDay()">
+            + Aggiungi giorno
+        </button>
+
+        <hr class="my-4">
+
+        <input type="hidden" th:field="*{plannerId}">
+
+        <!-- SUBMIT -->
+        <button type="submit" class="btn btn-success btn-lg">Crea Itinerario</button>
+
+    </form>
+
+</div>
+<script src="/js/itinerary-days.js"></script>
+
+</body>
+</html>

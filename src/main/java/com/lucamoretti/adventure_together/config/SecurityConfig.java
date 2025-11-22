@@ -74,7 +74,8 @@ public class SecurityConfig {
                         // Definisce le regole di autorizzazione per gli URL
                         .authorizeHttpRequests(auth -> auth
 
-                        // Endpoint webhook di Stripe accessibile a tutti
+                        // 0. Endpoint webhook di Stripe accessibile a tutti
+                                // metto qui per essere sicuro che sia permesso
                         .requestMatchers("/stripe/webhook").permitAll()
 
                         // 1. REGOLA PIÙ SPECIFICA: Accesso solo per ADMIN
@@ -92,7 +93,7 @@ public class SecurityConfig {
 
                         // 4. REGOLA PUBBLICA: Accesso per chiunque
                         // PAGINE PUBBLICHE
-                        .requestMatchers("/", "/home/**", "/auth/**", "/public", "/trips/**", "/search/**", "/error/**").permitAll()
+                        .requestMatchers("/", "/home/**", "/auth/**", "/public", "/trips/**", "/search/**", "/error/**", "/uploads/**").permitAll()
 
                         // STATICI
                         .requestMatchers("/js/**", "/css/**", "/images/**").permitAll()

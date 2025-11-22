@@ -1,4 +1,4 @@
-package com.lucamoretti.adventure_together.controller.traveler;
+package com.lucamoretti.adventure_together.controller.booking;
 
 import com.lucamoretti.adventure_together.dto.booking.BookingDTO;
 import com.lucamoretti.adventure_together.dto.details.DepartureAirportDTO;
@@ -6,9 +6,6 @@ import com.lucamoretti.adventure_together.dto.participant.ParticipantDTO;
 import com.lucamoretti.adventure_together.dto.payment.PaymentIntentDTO;
 import com.lucamoretti.adventure_together.dto.trip.TripDTO;
 import com.lucamoretti.adventure_together.dto.trip.TripItineraryDTO;
-import com.lucamoretti.adventure_together.model.trip.Trip;
-import com.lucamoretti.adventure_together.repository.details.DepartureAirportRepository;
-import com.lucamoretti.adventure_together.repository.trip.TripRepository;
 import com.lucamoretti.adventure_together.service.booking.BookingPreparationService;
 import com.lucamoretti.adventure_together.service.details.DepartureAirportService;
 import com.lucamoretti.adventure_together.service.trip.TripItineraryService;
@@ -18,7 +15,6 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

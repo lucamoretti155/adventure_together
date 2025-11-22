@@ -56,7 +56,6 @@ public class ReviewDTO {
     // (richiede che Trip e Traveler siano già recuperati dai rispettivi repository)
     public Review toEntity(Trip trip, Traveler traveler) {
         Review review = new Review();
-        review.setId(this.id);
         review.setTextReview(this.textReview);
         review.setScore(this.score);
         review.setTrip(trip);

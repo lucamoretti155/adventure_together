@@ -22,7 +22,7 @@
 
 <!-- VIAGGI IN EVIDENZA -->
 <div class="container my-5" th:if="${hasTrips}">
-    <h2 class="mb-4">Viaggi in partenza entro 30 giorni</h2>
+    <h2 class="mb-4">Viaggi in partenza a breve</h2>
 
     <div class="row g-4">
         <div class="col-md-4" th:each="trip : ${trips}">
@@ -34,7 +34,11 @@
                 <div class="card-body">
                     <h5 class="card-title" th:text="${trip.tripItineraryTitle}"></h5>
                     <p class="card-text small text-muted">
-                        Partenza: <span th:text="${trip.dateDeparture}"></span>
+                        Partenze e Ritorno: <span th:text="${#temporals.format(trip.dateDeparture, 'dd/MM/yyyy')}"></span> -
+                        <span th:text="${#temporals.format(trip.dateReturn, 'dd/MM/yyyy')}"></span>
+                    </p>
+                    <p class="card-text small text-muted">
+                        Prezzo: <span th:text="${#numbers.formatDecimal(trip.tripIndividualCost, 1, 'POINT', 2, 'COMMA')}"></span> €
                     </p>
 
                     <a th:href="@{'/trips/trip-itinerary/' + ${trip.tripItineraryId}}"

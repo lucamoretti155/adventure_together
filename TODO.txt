@@ -1,12 +1,12 @@
 -->controller planner
 
-creazione TripItinerary
+creazione TripItinerary -- DONE
     get e post form
 
-creazione Trip
+creazione Trip -- DONE
     get e post form
 
-lista TripItineary creati con relativi dettagli e filtro data da/a
+lista TripItineary creati -- DONE
     get e post su stessa pagina
 
 -->controller admin
@@ -43,7 +43,7 @@ manca sistemare layout pagina booking , pagina pagamento per avere il totale da 
 lista booking con relativi dettagli e aggiunta link per creazione review se non ancora esistente (altri visualizza la review) --done
     get e post su stessa pagina --  -rivedere la pagina con riepilogo liste bookings --done
 
-creazione review
+creazione review -- da testare ma fatto
     get e post form
 
 

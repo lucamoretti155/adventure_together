@@ -37,7 +37,7 @@ public class ReviewServiceImpl implements ReviewService {
 
     // Crea una nuova recensione per un viaggio da parte di un traveler
     @Override
-    public ReviewDTO createReview(Long tripId, Long travelerId, String textReview, int score) {
+    public ReviewDTO createReview(Long tripId, Long travelerId, ReviewDTO reviewDTO) {
 
         // Recupero entità correlate
         Trip trip = tripRepository.findById(tripId)
@@ -61,14 +61,13 @@ public class ReviewServiceImpl implements ReviewService {
             throw new IllegalStateException("Hai già lasciato una recensione per questo viaggio.");
 
         // Creazione e salvataggio recensione
-        Review review = new Review();
-        review.setTrip(trip);
-        review.setTraveler(traveler);
-        review.setTextReview(textReview);
-        review.setScore(score);
-        reviewRepository.save(review);
+        reviewDTO.setTripId(trip.getId());
+        reviewDTO.setTravelerId(traveler.getId());
 
-        return ReviewDTO.fromEntity(review);
+        Review review = reviewDTO.toEntity(trip, traveler);
+        Review saved = reviewRepository.save(review);
+
+        return ReviewDTO.fromEntity(saved);
     }
 
     // Ritorna tutte le recensioni di un traveler

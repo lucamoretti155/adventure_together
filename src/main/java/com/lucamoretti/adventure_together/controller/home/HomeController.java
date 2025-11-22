@@ -12,12 +12,14 @@ import com.lucamoretti.adventure_together.service.details.CountryService;
 import com.lucamoretti.adventure_together.service.details.GeoAreaService;
 import com.lucamoretti.adventure_together.service.trip.TripItineraryService;
 import com.lucamoretti.adventure_together.service.trip.TripService;
+import com.lucamoretti.adventure_together.util.exception.ResourceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,11 +62,21 @@ public class HomeController {
 
     // ricerca itinerario per titolo e redirect alla pagina di dettaglio (per la barra di ricerca globale)
     @GetMapping("/search")
-    public String search(@RequestParam String title) {
+    public String search(@RequestParam String title, RedirectAttributes redirectAttributes) {
 
-        TripItineraryDTO iti = tripItineraryService.getByTitle(title);
+        if (title == null || title.trim().isEmpty()) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Inserisci un itinerario da cercare.");
+            return "redirect:/home";
+        }
 
-        return "redirect:/trips/trip-itinerary/" + iti.getId();
+        try {
+            TripItineraryDTO iti = tripItineraryService.getByTitle(title);
+            return "redirect:/trips/trip-itinerary/" + iti.getId();
+        } catch (ResourceNotFoundException e){
+            redirectAttributes.addFlashAttribute("errorMessage", "Itinerario cercato non presente");
+            return "redirect:/home";
+        }
+
     }
 
 }

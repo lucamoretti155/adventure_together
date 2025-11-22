@@ -53,6 +53,7 @@ public class TripDTO {
     private int maxParticipants;
     private int currentParticipantsCount;
 
+
     @AssertTrue(message = "La data di fine prenotazioni deve essere prima della data di partenza")
     public boolean isBookingPeriodValid() {
         return dateStartBookings != null && dateEndBookings != null && dateDeparture != null

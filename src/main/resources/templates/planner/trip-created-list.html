@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>I tuoi Trip creati</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<div class="container my-5">
+
+    <h2 class="fw-bold mb-4">I tuoi Trip creati</h2>
+
+    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+
+    <!-- Nessun trip -->
+    <div th:if="${#lists.isEmpty(trips)}" class="alert alert-info">
+        Non hai ancora creato alcun viaggio.
+        <a th:href="@{/planner/create-trip}" class="alert-link">Crea un nuovo Trip</a>.
+    </div>
+
+    <!-- Tabella Trip -->
+    <div th:if="${!#lists.isEmpty(trips)}" class="table-responsive">
+
+        <table class="table table-striped align-middle">
+
+            <thead class="table-light">
+            <tr>
+                <th>Itinerario</th>
+                <th>Inizio prenotazioni</th>
+                <th>Fine prenotazioni</th>
+                <th>Partenza</th>
+                <th>Ritorno</th>
+                <th>Prezzo (€)</th>
+                <th>Stato</th>
+                <th>Partecipanti</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="trip : ${trips}">
+
+                <!-- Itinerario con link -->
+                <td>
+                    <a th:href="@{'/trips/trip-itinerary/' + ${trip.tripItineraryId}}"
+                       class="fw-semibold text-decoration-none">
+                        <span th:text="${trip.tripItineraryTitle}"></span>
+                    </a>
+                </td>
+
+                <!-- Date prenotazioni (dd/MM/yyyy) -->
+                <td th:text="${#temporals.format(trip.dateStartBookings, 'dd/MM/yyyy')}"></td>
+                <td th:text="${#temporals.format(trip.dateEndBookings, 'dd/MM/yyyy')}"></td>
+
+                <!-- Date viaggio -->
+                <td th:text="${#temporals.format(trip.dateDeparture, 'dd/MM/yyyy')}"></td>
+                <td th:text="${#temporals.format(trip.dateReturn, 'dd/MM/yyyy')}"></td>
+
+                <!-- Prezzo formattato: 1.234,56 € -->
+                <td>
+                    <span th:text="${#numbers.formatDecimal(trip.tripIndividualCost, 1, 'POINT', 2, 'COMMA')}"></span>
+                    €
+                </td>
+
+                <!-- Stato -->
+                <td>
+                    <span class="badge bg-secondary" th:text="${trip.state}"></span>
+                </td>
+
+                <!-- Partecipanti -->
+                <td>
+                    <span th:text="${trip.currentParticipantsCount}"></span>
+                    /
+                    <span th:text="${trip.maxParticipants}"></span>
+                </td>
+
+            </tr>
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+</body>
+</html>

@@ -1,4 +1,4 @@
-package com.lucamoretti.adventure_together.controller.traveler;
+package com.lucamoretti.adventure_together.controller.booking;
 
 import com.lucamoretti.adventure_together.service.payment.StripeWebhookService;
 import com.stripe.exception.SignatureVerificationException;
@@ -8,7 +8,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.*;
 
 /*
     Controller per la gestione dei webhook di Stripe.

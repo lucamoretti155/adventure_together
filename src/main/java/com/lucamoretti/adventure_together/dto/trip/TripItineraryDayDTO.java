@@ -27,7 +27,7 @@ public class TripItineraryDayDTO {
     @NotBlank(message = "La descrizione del giorno non può essere vuota")
     private String description;
 
-    @NotNull(message = "L'ID dell'itinerario di viaggio non può essere nullo")
+    // gestito via service
     private Long tripItineraryId;   // riferimento al TripItinerary
 
     // Metodo statico per convertire un'entità TripItineraryDay in un DTO

@@ -1,9 +1,12 @@
 package com.lucamoretti.adventure_together.service.trip.impl;
 
+import com.lucamoretti.adventure_together.dto.participant.ParticipantDTO;
 import com.lucamoretti.adventure_together.dto.trip.TripDTO;
 import com.lucamoretti.adventure_together.dto.trip.TripItineraryDTO;
+import com.lucamoretti.adventure_together.model.participant.Participant;
 import com.lucamoretti.adventure_together.model.trip.Trip;
 import com.lucamoretti.adventure_together.model.trip.TripItinerary;
+import com.lucamoretti.adventure_together.repository.participant.ParticipantRepository;
 import com.lucamoretti.adventure_together.repository.trip.TripRepository;
 import com.lucamoretti.adventure_together.repository.trip.TripItineraryRepository;
 import com.lucamoretti.adventure_together.repository.user.PlannerRepository;
@@ -33,6 +36,7 @@ public class TripServiceImpl implements TripService {
     private final PlannerRepository plannerRepository;
     private final DataValidationService dataValidationService;
     private final TripItineraryService tripItineraryService;
+    private final ParticipantRepository participantRepository;
 
     // Creazione di un nuovo Trip (planner)
     @Override
@@ -185,6 +189,15 @@ public class TripServiceImpl implements TripService {
     // Recupera tutti i trip futuri non cancellati tra due date
     @Override
     public List<TripDTO> getTripsNotCancelledBetween(LocalDate from, LocalDate to) {
+        if (from == null) {
+            from = LocalDate.now();
+        }
+        if (to == null) {
+            to = LocalDate.now().plusYears(1);
+        }
+        if (from.isAfter(to)) {
+            throw new DataIntegrityException("La data di inizio non può essere successiva alla data di fine");
+        }
         return tripRepository.findByDateDepartureBetweenNotCancelled(from, to).stream()
                 .map(TripDTO::fromEntity)
                 .toList();
@@ -196,6 +209,49 @@ public class TripServiceImpl implements TripService {
         Trip trip = tripRepository.findById(tripId)
                 .orElseThrow(() -> new ResourceNotFoundException("Trip", "id", tripId));
         return trip.getCurrentParticipantsCount();
+    }
+
+    // Recupera tutti i trip in un range di date di partenza
+    @Override
+    public List<TripDTO> getTripsBetweenDates(LocalDate from, LocalDate to) {
+        if (from == null) {
+            from = LocalDate.now();
+        }
+        if (to == null) {
+            to = LocalDate.now().plusYears(1);
+        }
+        if (from.isAfter(to)) {
+            throw new DataIntegrityException("La data di inizio non può essere successiva alla data di fine");
+        }
+        return tripRepository.findByDateDepartureBetween(from, to).stream()
+                .map(TripDTO::fromEntity)
+                .toList();
+    }
+
+    // Recupera tutti i participanti di un trip
+    @Override
+    public List<ParticipantDTO> getParticipantsByTripId(Long tripId) {
+        List<Participant> participants = participantRepository.findByBooking_Trip_Id(tripId);
+        return  participants.stream()
+                .map(ParticipantDTO::fromEntity)
+                .toList();
+    }
+
+    // Recupera tutti i trip di un planner in un range di date di partenza
+    @Override
+    public List<TripDTO> getTripsByPlannerBetweenDates(Long plannerId, LocalDate from, LocalDate to) {
+        if (from == null) {
+            from = LocalDate.now();
+        }
+        if (to == null) {
+            to = LocalDate.now().plusYears(1);
+        }
+        if (from.isAfter(to)) {
+            throw new DataIntegrityException("La data di inizio non può essere successiva alla data di fine");
+        }
+        return tripRepository.findByPlannerIdAndDateDepartureBetween(plannerId, from, to).stream()
+                .map(TripDTO::fromEntity)
+                .toList();
     }
 
 

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Dettagli Trip</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<div class="container my-5">
+
+    <h2 class="fw-bold mb-4">Dettagli Trip</h2>
+
+    <!-- CARD TRIP -->
+    <div class="card shadow-sm mb-5">
+        <div class="card-body">
+
+            <h4 class="card-title fw-bold mb-3" th:text="${trip.tripItineraryTitle}"></h4>
+
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <p><strong>ID Trip: </strong><span th:text="${trip.id}"></span></p>
+                    <p><strong>Inizio prenotazioni: </strong>
+                        <span th:text="${#temporals.format(trip.dateStartBookings, 'dd/MM/yyyy')}"></span>
+                    </p>
+                    <p><strong>Fine prenotazioni: </strong>
+                        <span th:text="${#temporals.format(trip.dateEndBookings, 'dd/MM/yyyy')}"></span>
+                    </p>
+                    <p><strong>Partenza: </strong>
+                        <span th:text="${#temporals.format(trip.dateDeparture, 'dd/MM/yyyy')}"></span>
+                    </p>
+                    <p><strong>Ritorno: </strong>
+                        <span th:text="${#temporals.format(trip.dateReturn, 'dd/MM/yyyy')}"></span>
+                    </p>
+                </div>
+
+                <div class="col-md-6">
+                    <p><strong>Aeroporti di Partenza: </strong>
+                        <span th:each="a, i : ${airports}">
+                            <span th:text="${a.code + ' - ' + a.name}"></span>
+                            <span th:if="${!i.last}">, </span>
+                        </span>
+                    </p>
+                    <p><strong>Prezzo Individuale: </strong>
+                        <span th:text="${#numbers.formatDecimal(trip.tripIndividualCost, 1, 'POINT', 2, 'COMMA')}"></span> €
+                    </p>
+                    <p><strong>Partecipanti: </strong>
+                        <span th:text="${trip.currentParticipantsCount}"></span> /
+                        <span th:text="${trip.maxParticipants}"></span>
+                    </p>
+                    <p><strong>Stato Trip: </strong>
+                        <span class="badge bg-secondary" th:text="${trip.state}"></span>
+                    </p>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+    <!-- LISTA PARTECIPANTI -->
+    <h4 class="fw-bold mb-3">Partecipanti</h4>
+
+    <div th:if="${#lists.isEmpty(participants)}" class="alert alert-info">
+        Nessun partecipante per questo Trip.
+    </div>
+
+    <div th:if="${!#lists.isEmpty(participants)}" class="table-responsive mb-5">
+        <table class="table table-bordered align-middle">
+            <thead class="table-light">
+            <tr>
+                <th>Nome</th>
+                <th>Cognome</th>
+                <th>Data di Nascita</th>
+            </tr>
+            </thead>
+
+            <tbody>
+            <tr th:each="p : ${participants}">
+                <td th:text="${p.firstName}"></td>
+                <td th:text="${p.lastName}"></td>
+                <td th:text="${#temporals.format(p.dateOfBirth, 'dd/MM/yyyy')}"></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <!-- LISTA RECENSIONI -->
+    <h4 class="fw-bold mb-3">Recensioni</h4>
+
+    <div th:if="${#lists.isEmpty(reviews)}" class="alert alert-info">
+        Nessuna recensione per questo Trip.
+    </div>
+
+    <div th:if="${!#lists.isEmpty(reviews)}" class="row g-4">
+
+        <div class="col-md-6" th:each="rev : ${reviews}">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h5 class="fw-bold">
+                        <span th:text="${rev.travelerId}"></span>
+                        –
+                        <span th:text="${rev.score}"></span>/5
+                    </h5>
+                    <p th:text="${rev.textReview}"></p>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</div>
+
+</body>
+</html>

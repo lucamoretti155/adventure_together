@@ -13,7 +13,7 @@ public interface TripItineraryService {
 
     TripItineraryDTO createItinerary(TripItineraryDTO dto);
     TripItineraryDTO updateItinerary(Long id, TripItineraryDTO dto);
-    void deleteItinerary(Long id);
+    // void deleteItinerary(Long id);
 
     TripItineraryDTO getById(Long id);
     TripItineraryDTO getByTitle(String title);

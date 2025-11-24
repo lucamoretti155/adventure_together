@@ -1,6 +1,7 @@
 package com.lucamoretti.adventure_together.dto.trip;
 
 import com.lucamoretti.adventure_together.model.trip.Trip;
+import com.lucamoretti.adventure_together.service.review.ReviewService;
 import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -64,6 +65,7 @@ public class TripDTO {
     public boolean isReturnAfterDeparture() {
         return dateReturn != null && dateDeparture != null && dateReturn.isAfter(dateDeparture);
     }
+
 
     public static TripDTO fromEntity(Trip entity) {
         return TripDTO.builder()

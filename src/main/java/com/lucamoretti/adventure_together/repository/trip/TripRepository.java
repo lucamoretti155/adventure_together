@@ -25,7 +25,11 @@ public interface TripRepository extends JpaRepository<Trip, Long> {
     List<Trip> findByPlanner_Id(Long plannerId);
 
     // Trova tutti i viaggi con data di partenza compresa tra due date specificate.
+    @Query(" select t from Trip t where t.dateDeparture between :from and :to order by t.dateDeparture asc")
     List<Trip> findByDateDepartureBetween(LocalDate from, LocalDate to);
+
+    @Query(" select t from Trip t where t.planner.id = :plannerId and t.dateDeparture between :from and :to order by t.dateDeparture asc")
+    List<Trip> findByPlannerIdAndDateDepartureBetween(Long plannerId, LocalDate from, LocalDate to);
 
     // Trova tutti i viaggi con data di ritorno uguale a una data specificata.
     List<Trip> findByDateReturnEquals(LocalDate date);
@@ -110,11 +114,5 @@ public interface TripRepository extends JpaRepository<Trip, Long> {
            """)
     List<Trip> findUpcomingBookableTrips(@Param("today") LocalDate today, @Param("todayPlus30") LocalDate todayPlus30);
 
-    // Trova un viaggio per id e applica un lock pessimista di scrittura
-    // Utile per operazioni che modificano lo stato del viaggio in modo concorrente
-    // @Lock blocca la riga nel DB durante la transazione, impedendo ad altri thread di leggerla o modificarla fino al commit.
-    @Query("select t from Trip t where t.id = :tripId")
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
-    Optional<Trip> findByIdForUpdate(Long tripId);
 }
 

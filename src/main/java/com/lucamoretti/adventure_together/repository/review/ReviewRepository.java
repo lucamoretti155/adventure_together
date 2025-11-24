@@ -22,10 +22,8 @@ public interface ReviewRepository extends JpaRepository<Review, Long> {
 
     List<Review> findByTrip_Id(Long tripId);
 
-    // Filtro le recensioni in base all'id dell'itinerario del viaggio che è associato al Trip della recensione
-    // devo fare una join fra Review e Trip per accedere all'attributo tripItinerary di Trip
-    @Query
-            ("SELECT r FROM Review r JOIN r.trip t WHERE t.tripItinerary.id = :tripItineraryId")
+    // Trova tutte le recensioni associate a un itinerario di viaggio specifico facendo la join con Trip e TripItinerary
+    @Query("SELECT r FROM Review r JOIN r.trip t WHERE t.tripItinerary.id = :tripItineraryId")
     List<Review> findAllByTripItinerary_Id(Long tripItineraryId);
 
     // Trova una recensione in base all'id del viaggio e all'id del viaggiatore

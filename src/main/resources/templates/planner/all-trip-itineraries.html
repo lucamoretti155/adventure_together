@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>I tuoi Itinerari</title>
+    <title th:text="${pageTitle}"></title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 
 <body>
@@ -11,7 +12,7 @@
 
 <div class="container my-5">
 
-    <h2 class="mb-4">Itinerari creati</h2>
+    <h2 class="fw-bold mb-4" th:text="${pageTitle}"></h2>
 
     <!-- MESSAGGI FLASH -->
     <div th:if="${successMessage}"
@@ -24,22 +25,24 @@
          th:text="${errorMessage}">
     </div>
 
-    <div th:if="${itineraries.size() == 0}" class="alert alert-info">
-        Non hai ancora creato alcun itinerario.
+    <div th:if="${tripItineraries.size() == 0}" class="alert alert-info">
+        Nessun itinerario disponibile.
     </div>
 
     <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-        <div class="col" th:each="it : ${itineraries}">
+
+        <div class="col" th:each="it : ${tripItineraries}">
             <div class="card shadow-sm h-100">
 
                 <img th:src="@{${it.picturePath}}" class="card-img-top"
-                     alt="Immagine itinerario"
                      style="height: 120px; object-fit: cover;">
 
                 <div class="card-body">
+
                     <h5 class="card-title" th:text="${it.title}"></h5>
-                    <p class="card-text small text-muted"
-                       th:text="${#strings.abbreviate(it.description, 120)}"></p>
+
+                    <p class="card-text small text-muted description-truncated"
+                       th:text="${it.description}"></p>
 
                     <p class="mb-1"><strong>Durata:</strong> <span th:text="${it.durationInDays}"></span> giorni</p>
 
@@ -49,16 +52,28 @@
                         <span th:text="${it.maxParticipants}"></span>
                     </p>
 
-                    <a th:href="@{'/trips/trip-itinerary/' + ${it.id}}" class="btn btn-primary btn-sm mt-3">
-                        Dettagli
-                    </a>
+                    <div class="d-grid gap-2 mt-3">
+                        <!-- LINK DETTAGLI -->
+                        <a th:href="@{'/trips/trip-itinerary/' + ${it.id}}"
+                           class="btn btn-primary btn-sm">
+                            Dettagli
+                        </a>
+
+                        <!-- LINK MODIFICA -->
+                        <a th:href="@{'/planner/update-trip-itinerary/' + ${it.id}}"
+                           class="btn btn-warning btn-sm">
+                            Modifica
+                        </a>
+                    </div>
                 </div>
 
             </div>
         </div>
+
     </div>
 
 </div>
 
 </body>
 </html>
+

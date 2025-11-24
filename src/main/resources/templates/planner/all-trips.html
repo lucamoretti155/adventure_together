@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>I tuoi Trip creati</title>
+    <title th:text="${pageTitle}"></title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
 </head>
 
@@ -11,18 +11,49 @@
 
 <div class="container my-5">
 
-    <h2 class="fw-bold mb-4">I tuoi Trip creati</h2>
+    <h2 class="fw-bold mb-4" th:text="${pageTitle}"></h2>
 
-    <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
-    <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
-
-    <!-- Nessun trip -->
-    <div th:if="${#lists.isEmpty(trips)}" class="alert alert-info">
-        Non hai ancora creato alcun viaggio.
-        <a th:href="@{/planner/create-trip}" class="alert-link">Crea un nuovo Trip</a>.
+    <!-- MESSAGGI FLASH -->
+    <div th:if="${successMessage}"
+         class="alert alert-success"
+         th:text="${successMessage}">
     </div>
 
-    <!-- Tabella Trip -->
+    <div th:if="${errorMessage}"
+         class="alert alert-danger"
+         th:text="${errorMessage}">
+    </div>
+
+    <!-- FILTRO DATE -->
+    <form class="row g-3 mb-4" method="get">
+
+        <div class="col-md-5">
+            <label class="form-label fw-semibold">Data partenza da:</label>
+            <input type="date"
+                   class="form-control"
+                   name="startDate"
+                   th:value="${startDate}">
+        </div>
+
+        <div class="col-md-5">
+            <label class="form-label fw-semibold">Data partenza a:</label>
+            <input type="date"
+                   class="form-control"
+                   name="endDate"
+                   th:value="${endDate}">
+        </div>
+
+        <div class="col-md-2 d-flex align-items-end">
+            <button type="submit" class="btn btn-primary w-100">Filtra</button>
+        </div>
+
+    </form>
+
+    <!-- Nessun viaggio -->
+    <div th:if="${#lists.isEmpty(trips)}" class="alert alert-info">
+        Nessun viaggio disponibile.
+    </div>
+
     <div th:if="${!#lists.isEmpty(trips)}" class="table-responsive">
 
         <table class="table table-striped align-middle">
@@ -37,44 +68,45 @@
                 <th>Prezzo (€)</th>
                 <th>Stato</th>
                 <th>Partecipanti</th>
+                <th></th>
             </tr>
             </thead>
 
             <tbody>
             <tr th:each="trip : ${trips}">
 
-                <!-- Itinerario con link -->
                 <td>
-                    <a th:href="@{'/trips/trip-itinerary/' + ${trip.tripItineraryId}}"
-                       class="fw-semibold text-decoration-none">
-                        <span th:text="${trip.tripItineraryTitle}"></span>
-                    </a>
+                    <span th:text="${trip.tripItineraryTitle}"></span>
                 </td>
 
-                <!-- Date prenotazioni (dd/MM/yyyy) -->
                 <td th:text="${#temporals.format(trip.dateStartBookings, 'dd/MM/yyyy')}"></td>
+
                 <td th:text="${#temporals.format(trip.dateEndBookings, 'dd/MM/yyyy')}"></td>
 
-                <!-- Date viaggio -->
                 <td th:text="${#temporals.format(trip.dateDeparture, 'dd/MM/yyyy')}"></td>
+
                 <td th:text="${#temporals.format(trip.dateReturn, 'dd/MM/yyyy')}"></td>
 
-                <!-- Prezzo formattato: 1.234,56 € -->
                 <td>
-                    <span th:text="${#numbers.formatDecimal(trip.tripIndividualCost, 1, 'POINT', 2, 'COMMA')}"></span>
-                    €
+                    <span th:text="${#numbers.formatDecimal(trip.tripIndividualCost, 1, 'POINT', 2, 'COMMA')}"></span> €
                 </td>
 
-                <!-- Stato -->
                 <td>
                     <span class="badge bg-secondary" th:text="${trip.state}"></span>
                 </td>
 
-                <!-- Partecipanti -->
                 <td>
                     <span th:text="${trip.currentParticipantsCount}"></span>
                     /
                     <span th:text="${trip.maxParticipants}"></span>
+                </td>
+
+                <!-- Pulsante DETTAGLI -->
+                <td>
+                    <a th:href="@{'/planner/trip-detail/' + ${trip.id}}"
+                       class="btn btn-primary btn-sm">
+                        Dettagli
+                    </a>
                 </td>
 
             </tr>

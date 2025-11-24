@@ -29,7 +29,7 @@ public class TripItineraryDay {
     // il planner avrà a disposizione un editor WYSIWYG per creare contenuti HTML che verranno salvati qui come testo
     // e poi renderizzati nella view del viaggio
     @Lob
-    @Column(name="description", nullable=false)
+    @Column(name="description", nullable=false, columnDefinition="TEXT")
     private String description;
 
     // Associazione ManyToOne con TripItinerary

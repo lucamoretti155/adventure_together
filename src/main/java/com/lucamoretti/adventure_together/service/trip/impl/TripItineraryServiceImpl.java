@@ -6,16 +6,21 @@ import com.lucamoretti.adventure_together.model.details.Category;
 import com.lucamoretti.adventure_together.model.details.Country;
 import com.lucamoretti.adventure_together.model.details.DepartureAirport;
 import com.lucamoretti.adventure_together.model.trip.TripItinerary;
+import com.lucamoretti.adventure_together.model.trip.TripItineraryDay;
+import com.lucamoretti.adventure_together.model.user.Planner;
 import com.lucamoretti.adventure_together.repository.details.CategoryRepository;
 import com.lucamoretti.adventure_together.repository.details.CountryRepository;
 import com.lucamoretti.adventure_together.repository.details.DepartureAirportRepository;
 import com.lucamoretti.adventure_together.repository.trip.TripItineraryRepository;
 import com.lucamoretti.adventure_together.repository.user.PlannerRepository;
 import com.lucamoretti.adventure_together.service.trip.TripItineraryService;
+import com.lucamoretti.adventure_together.service.user.UserService;
 import com.lucamoretti.adventure_together.util.exception.DataIntegrityException;
 import com.lucamoretti.adventure_together.util.exception.DuplicateResourceException;
 import com.lucamoretti.adventure_together.util.exception.FileStorageException;
 import com.lucamoretti.adventure_together.util.exception.ResourceNotFoundException;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -48,6 +53,9 @@ public class TripItineraryServiceImpl implements TripItineraryService {
     private final CountryRepository countryRepository;
     private final CategoryRepository categoryRepository;
     private final DepartureAirportRepository airportRepository;
+    private final UserService userService;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     // Path per l'upload delle immagini (value definito in application.properties)
 
@@ -203,10 +211,18 @@ public class TripItineraryServiceImpl implements TripItineraryService {
         // Aggiornamento campi semplici
         itinerary.setTitle(dto.getTitle());
         itinerary.setDescription(dto.getDescription());
-        itinerary.setPicturePath(dto.getPicturePath());
+
         itinerary.setDurationInDays(dto.getDurationInDays());
         itinerary.setMinParticipants(dto.getMinParticipants());
         itinerary.setMaxParticipants(dto.getMaxParticipants());
+
+        // Associa automaticamente il planner che sta modificando l'itinerario
+        Long loggedPlannerId = userService.getCurrentUserId();
+        Planner loggedPlanner = plannerRepository.findById(loggedPlannerId)
+                .orElseThrow(() -> new ResourceNotFoundException("Planner", "id", loggedPlannerId));
+
+        //set del planner loggato - Mantiene sempre la traccia del planner responsabile della modifica più recente
+        itinerary.setPlanner(loggedPlanner);
 
         // Aggiornamento relazioni (solo se forniti nuovi ID)
         // e.g. casistica di aggiornamento solo del contenuto del viaggio senza cambiare Country, Category o DepartureAirport
@@ -217,19 +233,7 @@ public class TripItineraryServiceImpl implements TripItineraryService {
         if (dto.getDepartureAirportIds() != null)
             itinerary.setDepartureAirports(resolveAirports(dto.getDepartureAirportIds()));
 
-        // Aggiornamento giorni
-        // Se i giorni sono forniti nel DTO, sostituisci quelli esistenti
-        if (dto.getDays() != null) {
-            // 1. Svuota i giorni attuali (grazie a orphanRemoval = true verranno eliminati)
-            itinerary.getDays().clear();
 
-            // 2. Ricrea i giorni dal DTO e ristabilisci la relazione inversa
-            dto.getDays().forEach(dayDto -> {
-                var dayEntity = dayDto.toEntity();
-                dayEntity.setTripItinerary(itinerary);
-                itinerary.getDays().add(dayEntity);
-            });
-        }
 
         // Upload nuova immagine, se fornita nel DTO
         if (dto.getPictureFile() != null && !dto.getPictureFile().isEmpty()) {
@@ -286,10 +290,26 @@ public class TripItineraryServiceImpl implements TripItineraryService {
             }
         }
 
+        // Aggiornamento giorni
+        // 1 - Rimuovi tutti i giorni
+        itinerary.getDays().clear();
+
+        // 2 - Forza DELETE immediato
+        itineraryRepository.save(itinerary);
+        entityManager.flush();
+
+        // 3 - Ricrea i giorni dal DTO
+        for (TripItineraryDayDTO dayDto : dto.getDays()) {
+            TripItineraryDay day = dayDto.toEntity();
+            day.setTripItinerary(itinerary);
+            itinerary.getDays().add(day);
+        }
+
         // Salvataggio dell'entità aggiornata e ritorno del DTO corrispondente
         return TripItineraryDTO.fromEntity(itineraryRepository.save(itinerary));
     }
 
+    /*
     // metodo per eliminare un itinerario di viaggio
     @Override
     public void deleteItinerary(Long id) {
@@ -297,6 +317,7 @@ public class TripItineraryServiceImpl implements TripItineraryService {
                 .orElseThrow(() -> new ResourceNotFoundException("TripItinerary", "id", id));
         itineraryRepository.delete(entity);
     }
+    */
 
     // metodo per recuperare un itinerario di viaggio tramite id
     @Override

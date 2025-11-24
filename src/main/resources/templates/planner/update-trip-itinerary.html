@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Aggiorna Itinerario</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+</head>
+
+<body>
+
+<div th:replace="~{fragments/navbar :: mainNavbar}"></div>
+
+<div class="container my-5">
+
+    <h2 class="mb-4">Modifica Itinerario</h2>
+
+    <!-- FLASH MESSAGES -->
+    <div th:if="${successMessage}"
+         class="alert alert-success"
+         th:text="${successMessage}">
+    </div>
+
+    <div th:if="${errorMessage}"
+         class="alert alert-danger"
+         th:text="${errorMessage}">
+    </div>
+
+    <form th:action="@{'/planner/update-trip-itinerary/' + ${tripItineraryDTO.id}}"
+          th:object="${tripItineraryDTO}"
+          method="post"
+          enctype="multipart/form-data">
+
+        <!-- TITOLO -->
+        <div class="mb-3">
+            <label class="form-label">Titolo</label>
+            <input type="text" class="form-control" th:field="*{title}">
+            <div class="text-danger" th:errors="*{title}"></div>
+        </div>
+
+        <!-- DESCRIZIONE -->
+        <div class="mb-3">
+            <label class="form-label">Descrizione</label>
+            <textarea class="form-control" th:field="*{description}" rows="4"></textarea>
+            <div class="text-danger" th:errors="*{description}"></div>
+        </div>
+
+        <!-- IMMAGINE ATTUALE -->
+        <div class="mb-3" th:if="${tripItineraryDTO.picturePath}">
+            <label class="form-label">Immagine attuale</label>
+            <div>
+                <img th:src="@{${tripItineraryDTO.picturePath}}"
+                     class="img-fluid rounded shadow-sm"
+                     style="max-width: 300px;">
+            </div>
+        </div>
+
+        <!-- NUOVA IMMAGINE (opzionale) -->
+        <div class="mb-3">
+            <label class="form-label">Carica una nuova immagine (opzionale)</label>
+            <input type="file" class="form-control" th:field="*{pictureFile}">
+        </div>
+
+        <!-- DURATA -->
+        <div class="mb-3">
+            <label class="form-label">Durata (giorni)</label>
+            <input type="number" class="form-control" th:field="*{durationInDays}">
+            <div class="text-danger" th:errors="*{durationInDays}"></div>
+        </div>
+
+        <!-- PARTECIPANTI -->
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Min partecipanti</label>
+                <input type="number" class="form-control" th:field="*{minParticipants}">
+                <div class="text-danger" th:errors="*{minParticipants}"></div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">Max partecipanti</label>
+                <input type="number" class="form-control" th:field="*{maxParticipants}">
+                <div class="text-danger" th:errors="*{maxParticipants}"></div>
+            </div>
+        </div>
+
+        <!-- PAESI -->
+        <div class="mb-3">
+            <label class="form-label">Paesi</label>
+            <select multiple class="form-select" th:field="*{countryIds}">
+                <option th:each="c : ${countries}"
+                        th:value="${c.id}"
+                        th:text="${c.country}">
+                </option>
+            </select>
+        </div>
+
+        <!-- AEROPORTI -->
+        <div class="mb-3">
+            <label class="form-label">Aeroporti di partenza</label>
+            <select multiple class="form-select" th:field="*{departureAirportIds}">
+                <option th:each="a : ${airports}"
+                        th:value="${a.id}"
+                        th:text="${a.code + ' - ' + a.name}">
+                </option>
+            </select>
+        </div>
+
+        <!-- CATEGORIE -->
+        <div class="mb-3">
+            <label class="form-label">Categorie</label>
+            <select multiple class="form-select" th:field="*{categoryIds}">
+                <option th:each="cat : ${categories}"
+                        th:value="${cat.id}"
+                        th:text="${cat.name}">
+                </option>
+            </select>
+        </div>
+
+        <hr class="my-4">
+
+        <!-- 🔽 SEZIONE GIORNI (PRECARICATI + AGGIUNTA) -->
+        <h4 class="mb-3">Giorni dell’Itinerario</h4>
+
+        <div id="days-container">
+
+            <!-- POPOLAMENTO DEI GIORNI ESISTENTI -->
+            <div th:each="day, iter : *{days}" class="card mb-3 p-3 shadow-sm day-card">
+
+                <h5 class="day-title-label">Giorno <span th:text="${iter.index + 1}"></span></h5>
+
+                <div class="mb-3">
+                    <label class="form-label">Titolo</label>
+                    <input type="text"
+                           class="form-control day-title-input"
+                           th:name="${'days[' + iter.index + '].title'}"
+                           th:value="${day.title}">
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Descrizione</label>
+                    <textarea class="form-control day-description-input"
+                              th:name="${'days[' + iter.index + '].description'}"
+                              rows="3"
+                              th:text="${day.description}">
+                    </textarea>
+                </div>
+
+                <input type="hidden"
+                       class="day-number-input"
+                       th:name="${'days[' + iter.index + '].dayNumber'}"
+                       th:value="${iter.index + 1}">
+
+                <div class="text-end">
+                    <button type="button" class="btn btn-danger btn-sm" onclick="removeDay(this)">
+                        Rimuovi giorno
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <button type="button" class="btn btn-outline-primary mt-3" onclick="addDay()">
+            + Aggiungi giorno
+        </button>
+
+        <hr class="my-4">
+
+        <button type="submit" class="btn btn-success btn-lg">Aggiorna Itinerario</button>
+
+    </form>
+</div>
+
+<script src="/js/itinerary-days-update.js"></script>
+
+</body>
+</html>

@@ -1,5 +1,6 @@
 package com.lucamoretti.adventure_together.service.trip;
 
+import com.lucamoretti.adventure_together.dto.participant.ParticipantDTO;
 import com.lucamoretti.adventure_together.dto.trip.TripDTO;
 import java.time.LocalDate;
 import java.util.List;
@@ -51,6 +52,16 @@ public interface TripService {
 
     // Conta il numero di partecipanti a un trip
     int countParticipants(Long tripId);
+
+    // Recupera tutti i trip in un range di date di partenza
+    List<TripDTO> getTripsBetweenDates(LocalDate startDate, LocalDate endDate);
+
+    // Recupera tutti i participanti di un trip
+    List<ParticipantDTO> getParticipantsByTripId(Long tripId);
+
+    // Recupera tutti i trip di un planner in un range di date di partenza
+    List<TripDTO> getTripsByPlannerBetweenDates(Long plannerId, LocalDate from, LocalDate to);
+
 }
 
 

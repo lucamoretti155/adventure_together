@@ -31,7 +31,7 @@ public class TripItinerary {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable=false, unique = true) // il titolo deve essere unico per facilitare la ricerca
+    @Column(name="title", nullable = false, unique = true) // il titolo deve essere unico per facilitare la ricerca
     private String title;
 
     // Descrizione sommaria dell'itinerario del viaggio
@@ -39,7 +39,7 @@ public class TripItinerary {
     // il planner avrà a disposizione un editor WYSIWYG per creare contenuti HTML che verranno salvati qui come testo
     // e poi renderizzati nella view del viaggio
     @Lob
-    @Column(nullable=false)
+    @Column(name="description", columnDefinition = "TEXT", nullable=false)
     private String description;
 
     // Path dell'immagine rappresentativa dell'itinerario salvata nel file system
@@ -48,15 +48,15 @@ public class TripItinerary {
 
     // Durata del viaggio in giorni
     // deve essere coerente con il numero di TripItineraryDay associati
-    @Column(nullable=false)
+    @Column(name="duration_in_days", nullable=false)
     private int durationInDays;
 
     // Numero minimo e massimo di partecipanti al viaggio
     // Servono per gestire le prenotazioni e garantire che il viaggio possa partire
-    @Column(nullable=false)
+    @Column(name="min_participants", nullable=false)
     private int minParticipants;
 
-    @Column(nullable=false)
+    @Column(name="max_participants", nullable=false)
     private int maxParticipants;
 
     // Ritorna true se l'itinerario copre più di una nazione

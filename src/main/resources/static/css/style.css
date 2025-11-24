@@ -21,3 +21,13 @@
 .star-rating .filled {
     color: #ffc107;
 }
+
+.description-truncated {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;    /* Numero di righe massime */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+
+    line-height: 1.4rem;
+    min-height: 2.8rem;
+}

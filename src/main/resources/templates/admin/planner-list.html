@@ -68,19 +68,25 @@
 
                     <td class="text-end">
 
-                        <!--  pulsante attiva -->
-                        <a th:if="${!planner.active}"
-                           th:href="@{'/admin/activate-user' + ${planner.id}}"
-                           class="btn btn-sm btn-danger ms-1">
-                            Attiva
-                        </a>
+                        <!-- ATTIVA -->
+                        <form th:if="${!planner.active}"
+                              th:action="@{'/admin/activate-user/' + ${planner.id}}"
+                              method="post"
+                              class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-success ms-1">
+                                Attiva
+                            </button>
+                        </form>
 
-                        <!--  pulsante disattiva -->
-                        <a th:if="${planner.active}"
-                           th:href="@{'/admin/deactivate-user' + ${planner.id}}"
-                           class="btn btn-sm btn-danger ms-1">
-                            Disattiva
-                        </a>
+                        <!-- DISATTIVA -->
+                        <form th:if="${planner.active}"
+                              th:action="@{'/admin/deactivate-user/' + ${planner.id}}"
+                              method="post"
+                              class="d-inline">
+                            <button type="submit" class="btn btn-sm btn-danger ms-1">
+                                Disattiva
+                            </button>
+                        </form>
 
                     </td>
                 </tr>

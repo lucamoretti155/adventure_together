@@ -127,7 +127,7 @@ public class AuthController {
             redirectAttributes.addFlashAttribute("successMessage", "Password aggiornata! Ora puoi effettuare il login.");
             return "redirect:/auth/login";
 
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException | DataIntegrityException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             return "redirect:/auth/reset-password?token=" + token;
         }

@@ -129,6 +129,7 @@ public class BookingFinalizeServiceImpl implements BookingFinalizeService {
             booking.setTraveler(traveler);
             booking.setDepartureAirport(airport);
             booking.setParticipants(participants);
+            booking.setInsuranceType(insuranceType);
             participants.forEach(p -> p.setBooking(booking));
 
             // Decorator
@@ -175,7 +176,7 @@ public class BookingFinalizeServiceImpl implements BookingFinalizeService {
                     traveler.getEmail(),
                     "Prenotazione confermata",
                     "/mail/booking-confirmation",
-                    Map.of("booking", booking, "trip", trip, "traveler", traveler, "airport", airport, "homepage", baseUrl+"/home")
+                    Map.of("totalCost", totalCost, "booking", booking, "trip", trip, "traveler", traveler, "airport", airport, "homepage", baseUrl+"/home")
             );
 
         } catch (Exception e) {

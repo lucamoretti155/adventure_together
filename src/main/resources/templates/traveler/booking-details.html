@@ -24,7 +24,16 @@
             <p><strong>Data Prenotazione:</strong> <span th:text="${#temporals.format(booking.bookingDate, 'dd/MM/yyyy')}"></span></p>
             <p><strong>Partecipanti:</strong> <span th:text="${booking.numParticipants}"></span></p>
             <p><strong>Aeroporto di partenza:</strong> <span th:text="${airport.name}"></span></p>
-            <p><strong>Assicurazione:</strong> <span th:text="${booking.insuranceType != null ? booking.insuranceType : 'Basic'}"></span></p>
+            <p>
+                <strong>Assicurazione:</strong>
+                <span th:switch="${booking.insuranceType}">
+                <span th:case="'basic'">Basic</span>
+                <span th:case="'cancellation'">Basic + Cancellation</span>
+                <span th:case="'luggage'">Basic + Luggage</span>
+                <span th:case="'full'">Pacchetto completo</span>
+                <span th:case="*">Basic</span> <!-- fallback se null o sconosciuto -->
+                </span>
+            </p>
 
             <hr>
 

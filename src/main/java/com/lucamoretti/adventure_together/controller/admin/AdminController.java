@@ -10,10 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 /*
@@ -136,8 +133,8 @@ public class AdminController {
 
     // Disattiva un utente (planner o admin)
     // il metodo chiama il servizio UserService per disattivare l'utenza indicata
-    @PostMapping("/deactivate-user")
-    public String deactivateUser(Long userId, RedirectAttributes redirectAttributes) {
+    @PostMapping("/deactivate-user/{userId}")
+    public String deactivateUser(@PathVariable Long userId, RedirectAttributes redirectAttributes) {
         try {
             UserService.deactivateUser(userId);
             redirectAttributes.addFlashAttribute("successMessage", "Utente disattivato con successo.");
@@ -149,11 +146,11 @@ public class AdminController {
 
     // Disattiva un utente (planner o admin)
     // il metodo chiama il servizio UserService per disattivare l'utenza indicata
-    @PostMapping("/activate-user")
-    public String activateUser(Long userId, RedirectAttributes redirectAttributes) {
+    @PostMapping("/activate-user/{userId}")
+    public String activateUser(@PathVariable Long userId, RedirectAttributes redirectAttributes) {
         try {
             UserService.activateUser(userId);
-            redirectAttributes.addFlashAttribute("successMessage", "Utente disattivato con successo.");
+            redirectAttributes.addFlashAttribute("successMessage", "Utente attivato con successo.");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
         }

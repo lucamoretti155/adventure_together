@@ -145,7 +145,7 @@ public class UserServiceImpl implements UserService {
                 "Benvenuto in AdventureTogether!",  // oggetto
                 "mail/welcome-planner-admin", // path al template Thymeleaf
                 Map.of("name", planner.getFirstName(),
-                        "resetPassword", baseUrl+ "/auth/forgot-password", "homepage", baseUrl+"/home")  // variabili per il template inserite in una Map
+                        "resetPassword", baseUrl+"/auth/forgot-password", "homepage", baseUrl+"/home")  // variabili per il template inserite in una Map
         );
 
 
@@ -178,7 +178,7 @@ public class UserServiceImpl implements UserService {
                 "Benvenuto in AdventureTogether!",  // oggetto
                 "mail/welcome-planner-admin", // path al template Thymeleaf
                 Map.of("name", admin.getFirstName(),
-                        "resetPassword", baseUrl+ "/auth/forgot-password", "homepage", baseUrl+"/home")  // variabili per il template inserite in una Map
+                        "resetPassword", baseUrl+"/auth/forgot-password", "homepage", baseUrl+"/home")  // variabili per il template inserite in una Map
         );
 
         return AdminDTO.fromEntity(admin);
@@ -205,7 +205,7 @@ public class UserServiceImpl implements UserService {
         passwordResetTokenRepository.save(resetToken); // salva il token nel repository
 
         // Genera link con il token
-        String resetLink = baseUrl + "auth/reset-password?token=" + token;
+        String resetLink = baseUrl + "/auth/reset-password?token=" + token;
 
         // Invia email tramite il emailService
         emailService.sendHtmlMessage(

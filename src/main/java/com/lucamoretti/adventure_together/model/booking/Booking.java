@@ -93,6 +93,10 @@ public class Booking implements IBooking, BookingListener {
     @OneToOne(mappedBy = "booking", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private Payment payment;
 
+    // Tipo di assicurazione selezionata per la prenotazione - definita in fase di creazione della prenotazione
+    @Column(nullable=false)
+    private String insuranceType;
+
     // Costo del viaggio associato alla prenotazione
     // Il calcolo del TripCost è basato sul costo individuale del viaggio moltiplicato per il numero di partecipanti
     @Override

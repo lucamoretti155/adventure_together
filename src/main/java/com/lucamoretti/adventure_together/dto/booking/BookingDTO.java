@@ -47,7 +47,7 @@ public class BookingDTO {
     @NotNull(message = "L'aeroporto di partenza è obbligatorio")
     private Long departureAirportId;
 
-    private String insuranceType; // solo per DTO in input - puo essere null, luggage, cancellation, full
+    private String insuranceType;
 
     // il pagamento passa per 2 fasi: prima la creazione della booking (senza pagamento)
     // poi il pagamento vero e proprio (collegato successivamente alla booking)
@@ -88,6 +88,7 @@ public class BookingDTO {
                 .payment(booking.getPayment() != null
                         ? PaymentDTO.fromEntity(booking.getPayment())
                         : null)
+                .insuranceType(booking.getInsuranceType())
                 .build();
     }
 
@@ -117,7 +118,7 @@ public class BookingDTO {
 
         booking.setParticipants(finalParticipants);
 
-
+        booking.setInsuranceType(this.insuranceType);
 
         return booking;
     }

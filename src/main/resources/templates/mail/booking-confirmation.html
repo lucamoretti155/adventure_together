@@ -82,7 +82,7 @@
             <span th:text="${booking.id}">12345</span><br>
 
             <strong>Totale pagato:</strong>
-            € <span th:text="${booking.totalCost}">0.0</span><br>
+            € <span th:text="${#numbers.formatDecimal(totalCost, 1, 'POINT', 2, 'COMMA')}">0.0</span><br>
 
         </p>
     </div>

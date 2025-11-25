@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title th:text="'Recensione - ' + ${trip.title}">Recensione</title>
+    <title th:text="'Recensione - ' + ${trip.tripItineraryTitle}">Recensione</title>
 
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/css/style.css}">
@@ -20,8 +20,8 @@
     </h2>
 
     <p class="text-muted mb-4">
-        Viaggio: <strong th:text="${trip.title}"></strong><br>
-        Date: <span th:text="${#temporals.format(trip.dateStart, 'dd/MM/yyyy')}"></span>
+        Viaggio: <strong th:text="${trip.tripItineraryTitle}"></strong><br>
+        Date: <span th:text="${#temporals.format(trip.dateDeparture, 'dd/MM/yyyy')}"></span>
         -
         <span th:text="${#temporals.format(trip.dateReturn, 'dd/MM/yyyy')}"></span>
     </p>
@@ -35,7 +35,7 @@
 
 
     <!-- FORM RECENSIONE -->
-    <form th:action="@{'/traveler/review/' + ${trip.bookingId}}"
+    <form th:action="@{'/traveler/review/' + ${booking.id}}"
           th:object="${reviewDTO}" method="post">
 
         <!-- Punteggio -->
@@ -78,7 +78,7 @@
 
 
         <div class="d-flex justify-content-between mt-4">
-            <a th:href="@{/traveler/bookings}" class="btn btn-outline-secondary">
+            <a th:href="@{/traveler/bookings-list}" class="btn btn-outline-secondary">
                 Annulla
             </a>
 

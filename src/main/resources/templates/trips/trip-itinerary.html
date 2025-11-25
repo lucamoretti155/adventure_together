@@ -123,7 +123,7 @@
         <div class="border rounded p-3 mb-3"
              th:each="rev : ${reviews}">
             <p class="fw-bold">Voto: <span th:text="${rev.score}"></span>/5</p>
-            <p th:text="${rev.comment}"></p>
+            <p th:text="${rev.textReview}"></p>
         </div>
     </div>
 

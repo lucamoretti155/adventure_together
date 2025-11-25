@@ -112,7 +112,7 @@ public class TravelerController {
         // precompila i campi nascosti
         dto.setTripId(booking.getTripId());
         dto.setTravelerId(travelerId);
-
+        model.addAttribute("booking", booking);
         model.addAttribute("trip", trip);
         model.addAttribute("reviewDTO", dto);
         return "traveler/review-form";
@@ -137,7 +137,7 @@ public class TravelerController {
         try {
             reviewService.createReview(booking.getTripId(),travelerId, reviewDTO);
             redirectAttributes.addFlashAttribute("successMessage", "Recensione inviata con successo!");
-            return "redirect:/traveler/booking/" + bookingId;
+            return "redirect:/traveler/booking-details/" + bookingId;
         } catch (ResourceNotFoundException | IllegalStateException e) {
             redirectAttributes.addFlashAttribute("errorMessage", e.getMessage());
             redirectAttributes.addFlashAttribute("reviewDTO", reviewDTO);

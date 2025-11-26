@@ -10,13 +10,18 @@ import lombok.*;
  La descrizione dell'itinerario del giorno è memorizzata come LOB per gestire contenuti HTML estesi
 */
 
-@Data @NoArgsConstructor @AllArgsConstructor
+
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Entity @Table(name = "trip_itinerary_days",
+@Entity
+@Table(name = "trip_itinerary_days",
         uniqueConstraints = @UniqueConstraint(columnNames = {"trip_itinerary_id","day_number"}))
 // vincolo di unicità, evita duplicati del numero del giorno per lo stesso itinerario
 public class TripItineraryDay {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name="day_number", nullable=false)

@@ -1,9 +1,10 @@
 package com.lucamoretti.adventure_together.service.trip.impl;
 
+import com.lucamoretti.adventure_together.model.trip.TripItineraryDay;
 import com.lucamoretti.adventure_together.util.exception.ResourceNotFoundException;
 import com.lucamoretti.adventure_together.dto.trip.TripItineraryDayDTO;
 import com.lucamoretti.adventure_together.model.trip.TripItinerary;
-import com.lucamoretti.adventure_together.model.trip.TripItineraryDay;
+
 import com.lucamoretti.adventure_together.repository.trip.TripItineraryDayRepository;
 import com.lucamoretti.adventure_together.repository.trip.TripItineraryRepository;
 import org.junit.jupiter.api.Test;

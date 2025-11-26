@@ -139,15 +139,7 @@
                         <configuration>
                             <excludes>
                                 <!-- ESCLUSIONI -->
-                                <exclude>**/entity/**</exclude>
-                                <exclude>**/model/**</exclude>
-                                <exclude>**/dto/**</exclude>
-                                <exclude>**/config/**</exclude>
-                                <exclude>**/exception/**</exclude>
-                                <exclude>**/repository/**</exclude>
-                                <exclude>**/controller/**</exclude>
-                                <exclude>**/security/**</exclude>
-                                <exclude>**/*Application*</exclude>
+                                <exclude>**/*DatabaseInitializer*</exclude>
                             </excludes>
                         </configuration>
                     </execution>

@@ -1,7 +1,5 @@
 package com.lucamoretti.adventure_together.service.booking.impl;
 
-import com.lucamoretti.adventure_together.dto.booking.BookingDTO;
-import com.lucamoretti.adventure_together.dto.participant.ParticipantDTO;
 import com.lucamoretti.adventure_together.model.booking.Booking;
 import com.lucamoretti.adventure_together.model.booking.IBooking;
 import com.lucamoretti.adventure_together.model.booking.decorator.CancellationInsurance;

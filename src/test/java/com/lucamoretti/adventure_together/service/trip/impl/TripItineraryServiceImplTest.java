@@ -6,6 +6,7 @@ import com.lucamoretti.adventure_together.model.details.Category;
 import com.lucamoretti.adventure_together.model.details.Country;
 import com.lucamoretti.adventure_together.model.details.DepartureAirport;
 import com.lucamoretti.adventure_together.model.trip.TripItinerary;
+import com.lucamoretti.adventure_together.model.trip.TripItineraryDay;
 import com.lucamoretti.adventure_together.model.user.Planner;
 import com.lucamoretti.adventure_together.repository.details.CategoryRepository;
 import com.lucamoretti.adventure_together.repository.details.CountryRepository;
@@ -15,6 +16,7 @@ import com.lucamoretti.adventure_together.repository.user.PlannerRepository;
 import com.lucamoretti.adventure_together.service.user.UserService;
 import com.lucamoretti.adventure_together.util.exception.DuplicateResourceException;
 import com.lucamoretti.adventure_together.util.exception.DataIntegrityException;
+import com.lucamoretti.adventure_together.util.exception.FileStorageException;
 import com.lucamoretti.adventure_together.util.exception.ResourceNotFoundException;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,7 +29,7 @@ import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.util.ReflectionTestUtils;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.nio.charset.StandardCharsets;
+import java.io.IOException;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -36,8 +38,7 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 class TripItineraryServiceImplTest {
 
-    @Mock
-    private TripItineraryRepository itineraryRepository;
+    @Mock private TripItineraryRepository itineraryRepository;
     @Mock private PlannerRepository plannerRepository;
     @Mock private CountryRepository countryRepository;
     @Mock private CategoryRepository categoryRepository;
@@ -50,65 +51,59 @@ class TripItineraryServiceImplTest {
 
     @BeforeEach
     void setup() {
-        ReflectionTestUtils.setField(
-                service,
-                "uploadDir", "/tmp/uploads/"
-        );
-        ReflectionTestUtils.setField(
-                service,
-                "publicUrl", "/public/"
-        );
-        ReflectionTestUtils.setField(
-                service,
-                "defaultImagePath", "/images/default.jpg"
-        );
+        ReflectionTestUtils.setField(service, "uploadDir", "/tmp/uploads/");
+        ReflectionTestUtils.setField(service, "publicUrl", "/public/");
+        ReflectionTestUtils.setField(service, "defaultImagePath", "/images/default.jpg");
+        ReflectionTestUtils.setField(service, "entityManager", entityManager);
     }
 
+    // ---------------------------------------------------------------------
+    //  UTILITY
+    // ---------------------------------------------------------------------
 
-    // ------------------------------------------------------
-    //                 CREATE ITINERARY
-    // ------------------------------------------------------
-
-    @Test
-    void createItinerary_success() {
+    /** Crea un DTO valido di base */
+    private TripItineraryDTO baseValidDto() {
         TripItineraryDTO dto = new TripItineraryDTO();
-        dto.setTitle("Iceland Adventure");
+        dto.setTitle("Test Trip");
         dto.setDurationInDays(2);
         dto.setMinParticipants(1);
-        dto.setMaxParticipants(10);
+        dto.setMaxParticipants(5);
         dto.setPlannerId(1L);
         dto.setCountryIds(Set.of(10L));
         dto.setCategoryIds(Set.of(20L));
         dto.setDepartureAirportIds(Set.of(30L));
-
         dto.setDays(List.of(
-                TripItineraryDayDTO.builder().dayNumber(1).title("Giorno 1").description("Descrizione 1").build(),
-                TripItineraryDayDTO.builder().dayNumber(2).title("Giorno 2").description("Descrizione 2").build()
+                TripItineraryDayDTO.builder().dayNumber(1).title("A").description("B").build(),
+                TripItineraryDayDTO.builder().dayNumber(2).title("C").description("D").build()
         ));
+        return dto;
+    }
 
-        Planner planner = new Planner();
-        planner.setId(1L);
-
-        Country c = new Country();
-        c.setId(10L);
-
-        Category cat = new Category();
-        cat.setId(20L);
-
-        DepartureAirport ap = new DepartureAirport();
-        ap.setId(30L);
-
-        when(itineraryRepository.existsByTitle("Iceland Adventure")).thenReturn(false);
-        when(plannerRepository.findById(1L)).thenReturn(Optional.of(planner));
+    private void mockValidRelations() {
+        when(plannerRepository.findById(1L)).thenReturn(Optional.of(new Planner()));
+        Country c = new Country(); c.setId(10L);
         when(countryRepository.findById(10L)).thenReturn(Optional.of(c));
+        Category cat = new Category(); cat.setId(20L);
         when(categoryRepository.findById(20L)).thenReturn(Optional.of(cat));
+        DepartureAirport ap = new DepartureAirport(); ap.setId(30L);
         when(airportRepository.findById(30L)).thenReturn(Optional.of(ap));
+    }
 
-        TripItinerary saved = new TripItinerary();
-        saved.setId(99L);
-        saved.setTitle("Iceland Adventure");
+    // ---------------------------------------------------------------------
+    //  CREATE
+    // ---------------------------------------------------------------------
 
-        when(itineraryRepository.save(any())).thenReturn(saved);
+    @Test
+    void createItinerary_success() {
+        TripItineraryDTO dto = baseValidDto();
+        mockValidRelations();
+
+        when(itineraryRepository.existsByTitle("Test Trip")).thenReturn(false);
+        when(itineraryRepository.save(any())).thenAnswer(i -> {
+            TripItinerary t = i.getArgument(0);
+            t.setId(99L);
+            return t;
+        });
 
         TripItineraryDTO result = service.createItinerary(dto);
 
@@ -118,103 +113,114 @@ class TripItineraryServiceImplTest {
     }
 
     @Test
-    void createItinerary_duplicateTitle_throwsException() {
-        TripItineraryDTO dto = new TripItineraryDTO();
-        dto.setTitle("Duplicate Trip");
-        dto.setDurationInDays(1);
-        dto.setMinParticipants(1);
-        dto.setMaxParticipants(2);
-        dto.setPlannerId(1L);
-
-        when(itineraryRepository.existsByTitle("Duplicate Trip")).thenReturn(true);
+    void createItinerary_duplicateTitle_throws() {
+        TripItineraryDTO dto = baseValidDto();
+        when(itineraryRepository.existsByTitle(dto.getTitle())).thenReturn(true);
 
         assertThrows(DuplicateResourceException.class,
                 () -> service.createItinerary(dto));
     }
 
     @Test
-    void createItinerary_invalidDuration_throwsException() {
-        TripItineraryDTO dto = new TripItineraryDTO();
-        dto.setTitle("Test");
+    void createItinerary_invalidMinMax_throws() {
+        TripItineraryDTO dto = baseValidDto();
+        dto.setMinParticipants(10);
+        dto.setMaxParticipants(5);
+
+        assertThrows(DataIntegrityException.class,
+                () -> service.createItinerary(dto));
+    }
+
+    @Test
+    void createItinerary_invalidDuration_throws() {
+        TripItineraryDTO dto = baseValidDto();
         dto.setDurationInDays(0);
-        dto.setMinParticipants(1);
-        dto.setMaxParticipants(2);
-        dto.setPlannerId(1L);
 
         assertThrows(DataIntegrityException.class,
                 () -> service.createItinerary(dto));
     }
 
     @Test
-    void createItinerary_daysMismatch_throwsException() {
-        TripItineraryDTO dto = new TripItineraryDTO();
-        dto.setTitle("Test");
-        dto.setDurationInDays(2);
-        dto.setMinParticipants(1);
-        dto.setMaxParticipants(2);
-        dto.setPlannerId(1L);
+    void createItinerary_daysMismatch_throws() {
+        TripItineraryDTO dto = baseValidDto();
+        dto.setDurationInDays(3); // mismatch
 
-        dto.setDays(List.of(TripItineraryDayDTO.builder().dayNumber(1).title("A").description("B").build()));
-
-        Planner p = new Planner();
-        p.setId(1L);
-
-        when(itineraryRepository.existsByTitle("Test")).thenReturn(false);
-        when(plannerRepository.findById(1L)).thenReturn(Optional.of(p));
+        mockValidRelations();
+        when(itineraryRepository.existsByTitle(dto.getTitle())).thenReturn(false);
 
         assertThrows(DataIntegrityException.class,
                 () -> service.createItinerary(dto));
     }
 
     @Test
-    void createItinerary_saveImage_success() throws Exception {
-        TripItineraryDTO dto = new TripItineraryDTO();
-        dto.setTitle("Iceland");
-        dto.setDurationInDays(1);
-        dto.setMinParticipants(1);
-        dto.setMaxParticipants(2);
-        dto.setPlannerId(1L);
+    void createItinerary_missingCountry_throws() {
+        TripItineraryDTO dto = baseValidDto();
+        when(plannerRepository.findById(1L)).thenReturn(Optional.of(new Planner()));
+        when(countryRepository.findById(10L)).thenReturn(Optional.empty());
 
-        dto.setDays(List.of(TripItineraryDayDTO.builder().dayNumber(1).title("A").description("B").build()));
+        assertThrows(ResourceNotFoundException.class,
+                () -> service.createItinerary(dto));
+    }
 
-        MultipartFile image = new MockMultipartFile(
-                "file",
-                "photo.jpg",
-                "image/jpeg",
-                "test data".getBytes(StandardCharsets.UTF_8));
+    @Test
+    void createItinerary_invalidImageFormat_throws() {
+        TripItineraryDTO dto = baseValidDto();
+        mockValidRelations();
+
+        MultipartFile gif = new MockMultipartFile("f", "a.gif", "image/gif", "xxx".getBytes());
+        dto.setPictureFile(gif);
+
+        when(itineraryRepository.existsByTitle("Test Trip")).thenReturn(false);
+
+        assertThrows(DataIntegrityException.class,
+                () -> service.createItinerary(dto));
+    }
+
+    @Test
+    void createItinerary_imageTooLarge_throws() {
+        TripItineraryDTO dto = baseValidDto();
+        mockValidRelations();
+
+        byte[] big = new byte[11 * 1024 * 1024];
+        dto.setPictureFile(new MockMultipartFile("f","x.jpg","image/jpeg",big));
+
+        when(itineraryRepository.existsByTitle("Test Trip")).thenReturn(false);
+
+        assertThrows(DataIntegrityException.class,
+                () -> service.createItinerary(dto));
+    }
+
+    @Test
+    void createItinerary_imageIOException_throws() throws Exception {
+        TripItineraryDTO dto = baseValidDto();
+        mockValidRelations();
+
+        MultipartFile image = mock(MultipartFile.class);
+        when(image.isEmpty()).thenReturn(false);
+        when(image.getContentType()).thenReturn("image/jpeg");
+        when(image.getSize()).thenReturn(1000L);
+        when(image.getInputStream()).thenThrow(new IOException());
 
         dto.setPictureFile(image);
 
-        Planner p = new Planner();
-        p.setId(1L);
+        when(itineraryRepository.existsByTitle("Test Trip")).thenReturn(false);
 
-        when(itineraryRepository.existsByTitle("Iceland")).thenReturn(false);
-        when(plannerRepository.findById(1L)).thenReturn(Optional.of(p));
-
-        when(itineraryRepository.save(any())).thenAnswer(i -> i.getArgument(0));
-
-        TripItineraryDTO result = service.createItinerary(dto);
-
-        assertNotNull(result);
-        verify(itineraryRepository).save(any());
+        assertThrows(FileStorageException.class,
+                () -> service.createItinerary(dto));
     }
 
-    // ------------------------------------------------------
-    //                        UPDATE
-    // ------------------------------------------------------
+    // ---------------------------------------------------------------------
+    //  UPDATE
+    // ---------------------------------------------------------------------
 
     @Test
-    void updateItinerary_titleAlreadyExists_throwsException() {
+    void updateItinerary_titleAlreadyExists_throws() {
         TripItinerary existing = new TripItinerary();
         existing.setId(10L);
-        existing.setTitle("Old Title");
+        existing.setTitle("Old");
 
-        TripItineraryDTO dto = new TripItineraryDTO();
+        TripItineraryDTO dto = baseValidDto();
         dto.setTitle("New Title");
-        dto.setMinParticipants(1);
-        dto.setMaxParticipants(2);
-        dto.setDurationInDays(1);
-        dto.setDays(List.of(TripItineraryDayDTO.builder().dayNumber(1).title("A").description("B").build()));
 
         when(itineraryRepository.findById(10L)).thenReturn(Optional.of(existing));
         when(itineraryRepository.existsByTitle("New Title")).thenReturn(true);
@@ -224,39 +230,82 @@ class TripItineraryServiceImplTest {
     }
 
     @Test
-    void updateItinerary_invalidMinMax_throwsException() {
+    void updateItinerary_success_rebuildsDays() {
         TripItinerary existing = new TripItinerary();
         existing.setId(10L);
-        existing.setTitle("Trip");
+        existing.setTitle("Old");
+        existing.setDays(new ArrayList<>(List.of(new TripItineraryDay())));
 
-        TripItineraryDTO dto = new TripItineraryDTO();
-        dto.setTitle("Trip");
-        dto.setMinParticipants(10);
-        dto.setMaxParticipants(5);
-        dto.setDurationInDays(1);
-        dto.setDays(List.of(TripItineraryDayDTO.builder().dayNumber(1).title("A").description("B").build()));
+        TripItineraryDTO dto = baseValidDto();
+        dto.setTitle("Old");
+
+        mockValidRelations();
 
         when(itineraryRepository.findById(10L)).thenReturn(Optional.of(existing));
+        when(userService.getCurrentUserId()).thenReturn(1L);
+        when(plannerRepository.findById(1L)).thenReturn(Optional.of(new Planner()));
+        when(itineraryRepository.save(any())).thenAnswer(i -> i.getArgument(0));
 
-        assertThrows(DataIntegrityException.class,
-                () -> service.updateItinerary(10L, dto));
+        TripItineraryDTO result = service.updateItinerary(10L, dto);
+
+        assertNotNull(result);
+        verify(entityManager).flush();
+        assertEquals(2, existing.getDays().size());
     }
 
-    // ------------------------------------------------------
-    //                 GET BY ID / TITLE
-    // ------------------------------------------------------
+
+    // ---------------------------------------------------------------------
+    //  GET METHODS
+    // ---------------------------------------------------------------------
 
     @Test
-    void getById_notFound() {
+    void getById_notFound_throws() {
         when(itineraryRepository.findById(1L)).thenReturn(Optional.empty());
         assertThrows(ResourceNotFoundException.class,
                 () -> service.getById(1L));
     }
 
     @Test
-    void getByTitle_notFound() {
-        when(itineraryRepository.findByTitle("x")).thenReturn(Optional.empty());
+    void getByTitle_notFound_throws() {
+        when(itineraryRepository.findByTitle("X")).thenReturn(Optional.empty());
         assertThrows(ResourceNotFoundException.class,
-                () -> service.getByTitle("x"));
+                () -> service.getByTitle("X"));
+    }
+
+    @Test
+    void getAll_ok() {
+        when(itineraryRepository.findAll()).thenReturn(List.of(new TripItinerary()));
+        assertEquals(1, service.getAll().size());
+    }
+
+    @Test
+    void getByPlannerId_ok() {
+        when(itineraryRepository.findByPlannerId(1L)).thenReturn(List.of(new TripItinerary()));
+        assertEquals(1, service.getByPlannerId(1L).size());
+    }
+
+    @Test
+    void getAllByCountry_ok() {
+        when(itineraryRepository.findByCountry(10L)).thenReturn(List.of(new TripItinerary()));
+        assertEquals(1, service.getAllByCountryId(10L).size());
+    }
+
+    @Test
+    void getAllByGeoArea_ok() {
+        when(itineraryRepository.findByGeoArea(5L)).thenReturn(List.of(new TripItinerary()));
+        assertEquals(1, service.getAllByGeoAreaId(5L).size());
+    }
+
+    @Test
+    void getAllByCategory_ok() {
+        when(itineraryRepository.findByCategory(20L)).thenReturn(List.of(new TripItinerary()));
+        assertEquals(1, service.getAllByCategoryId(20L).size());
+    }
+
+    @Test
+    void getAllByCategoryIds_ok() {
+        when(itineraryRepository.findByCategories(List.of(1L,2L)))
+                .thenReturn(List.of(new TripItinerary()));
+        assertEquals(1, service.getAllByCategoryIds(List.of(1L,2L)).size());
     }
 }

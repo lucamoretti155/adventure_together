@@ -151,9 +151,4 @@ public class Trip {
         b.setTrip(null);
     }
 
-
-
-
-
-
 }

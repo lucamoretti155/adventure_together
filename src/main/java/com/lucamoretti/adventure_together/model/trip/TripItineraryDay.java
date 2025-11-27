@@ -7,7 +7,7 @@ import lombok.*;
  Contiene il numero del giorno e la descrizione dettagliata delle attività previste per quel giorno
  Ogni TripItineraryDay è associato a un TripItinerary specifico
  La combinazione di trip_itinerary_id e day_number è unica per evitare duplicati
- La descrizione dell'itinerario del giorno è memorizzata come LOB per gestire contenuti HTML estesi
+ La descrizione dell'itinerario del giorno è memorizzata come LOB per gestire contenuti estesi
 */
 
 

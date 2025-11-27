@@ -5,8 +5,6 @@ package com.lucamoretti.adventure_together.model.booking;
    ad esempio per l'invio di email di Conferma del Trip.
 */
 
-import org.springframework.beans.factory.annotation.Value;
-
 public interface BookingListener {
     void update(String mailTemplatePath, String baseUrl);
 }

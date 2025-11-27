@@ -7,6 +7,12 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 
 import java.util.List;
 
+/*
+ Controller advice per popolare il modello con attributi globali.
+ In questo caso, aggiunge una lista di itinerari di viaggio a tutti i modelli delle viste per consetire
+ alla barra di ricerca di accedere agli itinerari disponibili.
+ */
+
 @ControllerAdvice
 public class GlobalModelAttributes {
 

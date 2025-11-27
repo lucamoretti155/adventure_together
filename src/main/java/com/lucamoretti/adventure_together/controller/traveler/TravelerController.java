@@ -33,6 +33,12 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+  Controller per le funzionalità riservate ai Traveler.
+  Gestisce la visualizzazione della dashboard, delle prenotazioni,
+  dei dettagli delle prenotazioni e la creazione di recensioni.
+ */
+
 @Controller
 @RequestMapping("/traveler")
 @RequiredArgsConstructor

@@ -1,6 +1,5 @@
 package com.lucamoretti.adventure_together.dto.payment;
 
-import com.stripe.model.PaymentIntent;
 import lombok.*;
 
 /*

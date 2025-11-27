@@ -1,0 +1,133 @@
+@startuml
+autonumber
+
+actor Traveler
+participant BookingController
+participant BookingPreparationService
+participant TripService
+participant TripRepository
+participant TravelerRepository
+participant DepartureAirportRepository
+participant TripItineraryService
+participant DepartureAirportService
+participant BookingSerializerService
+participant StripeClient
+participant "Stripe API" as StripeAPI
+participant StripeWebhookController
+participant StripeWebhookService
+participant BookingFinalizeService
+participant BookingRepository
+participant TemporaryParticipantListRepository
+participant TemporaryParticipantRepository
+participant TripRepository as TripRepo2
+participant TravelerRepository as TravelerRepo2
+participant DepartureAirportRepository as AirportRepo2
+participant BookingSerializerService as BookingSerializer2
+participant EmailService
+
+== Show Booking Form ==
+
+Traveler -> BookingController : GET /bookings/new/{tripId}\nshowBookingForm()
+BookingController -> TripService : getById(tripId)
+TripService --> BookingController : TripDTO
+BookingController -> TripItineraryService : getById(itineraryId)
+TripItineraryService --> BookingController : TripItineraryDTO
+BookingController -> DepartureAirportService : getDepartureAirportsBySetOfIds()
+DepartureAirportService --> BookingController : List<DepartureAirportDTO>
+BookingController --> Traveler : booking-form.html
+
+== Checkout Phase (FASE 1) ==
+
+Traveler -> BookingController : POST /bookings/checkout\nBookingDTO
+BookingController -> BookingPreparationService : startBookingAndPayment(dto)
+
+BookingPreparationService -> TripRepository : findById(tripId)
+TripRepository --> BookingPreparationService : Trip
+
+BookingPreparationService -> TravelerRepository : findById(travelerId)
+TravelerRepository --> BookingPreparationService : Traveler
+
+BookingPreparationService -> DepartureAirportRepository : findById(airportId)
+DepartureAirportRepository --> BookingPreparationService : DepartureAirport
+
+BookingPreparationService -> Trip : getState().canAcceptBooking()
+BookingPreparationService -> Trip : hasAvailableSpots(numParticipants)
+
+BookingPreparationService -> BookingDTO : toEntity(...)
+BookingDTO --> BookingPreparationService : Booking (temp)
+
+' Decorator application (logica, non serve un lifeline reale)
+BookingPreparationService -> BookingPreparationService : apply decorator\n(in base a insuranceType)\n=> IBooking decorated
+
+' Temporary participants
+BookingPreparationService -> TemporaryParticipantListRepository : save(tempList)
+TemporaryParticipantListRepository --> BookingPreparationService : tempList
+
+BookingPreparationService -> TemporaryParticipantRepository : save(TemporaryParticipant) *
+TemporaryParticipantRepository --> BookingPreparationService
+
+BookingPreparationService -> BookingSerializerService : serializeBooking(metadataMap)
+BookingSerializerService --> BookingPreparationService : metadataJson
+
+== Stripe PaymentIntent ==
+
+BookingPreparationService -> StripeClient : createPaymentIntent(total, "eur", metadataJson)
+StripeClient -> StripeAPI : POST /v1/payment_intents
+StripeAPI --> StripeClient : PaymentIntent
+StripeClient --> BookingPreparationService : PaymentIntentDTO
+
+BookingPreparationService --> BookingController : PaymentIntentDTO
+BookingController --> Traveler : booking-checkout.html\n(Stripe.js con clientSecret)
+
+== STRIPE WEBHOOK (FASE 2) ==
+
+StripeAPI -> StripeWebhookController : POST /stripe/webhook\npayment_intent.succeeded
+StripeWebhookController -> StripeWebhookService : processEvent(event)
+
+StripeWebhookService -> BookingFinalizeService : finalizeBooking(intent)
+
+== Finalizzazione Booking ==
+
+BookingFinalizeService -> BookingSerializer2 : deserializeBookingAsMap(metadataJson)
+BookingSerializer2 --> BookingFinalizeService : Map metadata
+
+BookingFinalizeService -> TripRepo2 : findById(tripId)
+TripRepo2 --> BookingFinalizeService : Trip
+
+BookingFinalizeService -> TravelerRepo2 : findById(travelerId)
+TravelerRepo2 --> BookingFinalizeService : Traveler
+
+BookingFinalizeService -> AirportRepo2 : findById(departureAirportId)
+AirportRepo2 --> BookingFinalizeService : DepartureAirport
+
+BookingFinalizeService -> TemporaryParticipantListRepository : findById(tempListId)
+TemporaryParticipantListRepository --> BookingFinalizeService : TemporaryParticipantList
+
+BookingFinalizeService -> BookingFinalizeService : ricostruzione Participants\n+ creazione Booking
+
+' Decorator di nuovo per calcolo costi
+BookingFinalizeService -> BookingFinalizeService : apply decorator\n(insuranceType)\n=> decorated Booking\n(totalCost, insuranceCost)
+
+' Payment entity
+BookingFinalizeService -> BookingFinalizeService : create Payment entity\nassocia a Booking
+
+BookingFinalizeService -> BookingRepository : save(booking)
+BookingRepository --> BookingFinalizeService
+
+BookingFinalizeService -> TemporaryParticipantListRepository : delete(tempList)
+
+== State Pattern Update ==
+
+BookingFinalizeService -> Trip : handle()
+Trip --> BookingFinalizeService : stato aggiornato (se cambia)
+BookingFinalizeService -> TripRepo2 : save(trip)\n(se lo stato è cambiato)
+
+== Email Conferma ==
+
+BookingFinalizeService -> EmailService : sendHtmlMessage(... booking-confirmation ...)
+EmailService --> BookingFinalizeService
+
+StripeWebhookService --> StripeWebhookController : ok
+StripeWebhookController --> StripeAPI : "received"
+
+@enduml

@@ -3,7 +3,7 @@ package com.lucamoretti.adventure_together.util.exception;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
-/**
+/*
  Eccezione lanciata quando un'azione non è autorizzata per il ruolo dell'utente.
  Restituisce uno status HTTP 403 Forbidden.
  Esempio di utilizzo:

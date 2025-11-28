@@ -10,4 +10,4 @@ Il progetto include test unitari sviluppati con JUnit 5 e Mockito. La copertura 
 L’organizzazione segue le convenzioni Spring Boot: `src/main/java` contiene il codice sorgente, `src/main/resources` template e configurazioni, `src/test/java` i test unitari e `target/` i file compilati e il JAR eseguibile.
 
 **Documentazione:**  
-La documentazione completa del progetto è fornita nel file **Documentazione.pdf**, incluso nella consegna.
+La documentazione completa del progetto è fornita nel file **Documentazione_AdventureTogether_Luca_Moretti.pdf**, incluso nella consegna.

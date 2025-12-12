@@ -23,7 +23,7 @@ public class TripScheduler {
 
     private final TripRepository tripRepository;
 
-    @Scheduled(cron = "0 0 2 * * *")
+    @Scheduled(cron = "0 0  2 * * *")
     @Transactional
     public void updateTripStates() {
         log.info("Avvio schedulazione aggiornamento TripState...");

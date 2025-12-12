@@ -3,6 +3,7 @@
 <head>
     <title>Adventure Together - Home</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
 
@@ -29,7 +30,7 @@
             <div class="card shadow-sm border-0">
 
                 <img th:src="@{${trip.tripItineraryPicturePath}}"
-                     class="card-img-top" alt="Immagine itinerario">
+                     class="card-img-top card-img-fixed" alt="Immagine itinerario">
 
                 <div class="card-body">
                     <h5 class="card-title" th:text="${trip.tripItineraryTitle}"></h5>

@@ -43,14 +43,13 @@ public class SecurityConfig {
         this.userDetailsService = userDetailsService;
     }
 
-    // PasswordEncoder - Necessario per l'hashing delle password
+    // Uso BCrypt per l'hashing delle password
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     // AuthenticationManager - Necessario per l'autenticazione degli utenti
-    // Usato da Spring Security internamente per gestire l'autenticazione
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
             throws Exception {

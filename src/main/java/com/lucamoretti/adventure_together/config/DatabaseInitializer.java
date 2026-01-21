@@ -25,10 +25,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-/*
-    * Classe che inizializza il database con dati di riferimento all'avvio dell'applicazione
-    * Se le tabelle sono vuote, vengono inseriti dati predefiniti per GeoArea, Country, Category e DepartureAirport
- */
+// Inizializza dati di base se il database è vuoto
 
 @Order(2)
 @Component
@@ -131,15 +128,15 @@ public class DatabaseInitializer implements CommandLineRunner {
             return;
         }
 
-        // ================================
+
         //  1) Recupero Planner (Admin inizializzato con mail)
-        // ================================
+
         Planner planner = plannerRepository.findByEmail("demo.mail.app.java.project@gmail.com")
                 .orElseThrow(() -> new IllegalStateException("Admin non trovato: assicurarsi che AdminInitializer sia attivo"));
 
-        // ================================
+
         //  Recupero dati già popolati
-        // ================================
+
         Country giappone = countryRepository.findByCountry("Giappone").orElseThrow();
         Country norvegia = countryRepository.findByCountry("Norvegia").orElseThrow();
         Country kenya = countryRepository.findByCountry("Kenya").orElseThrow();
@@ -152,9 +149,9 @@ public class DatabaseInitializer implements CommandLineRunner {
         DepartureAirport fco = departureAirportRepository.findByCode("FCO").orElseThrow();
         DepartureAirport bgy = departureAirportRepository.findByCode("BGY").orElseThrow();
 
-        // ================================
+
         //  2) CREAZIONE ITINERARI
-        // ================================
+
 
         TripItinerary itin1 = new TripItinerary();
         itin1.setTitle("Giappone Classico");
@@ -194,9 +191,9 @@ public class DatabaseInitializer implements CommandLineRunner {
 
         itineraryRepository.saveAll(List.of(itin1, itin2, itin3));
 
-        // ================================
+
         //  3) GIORNI ITINERARIO REALISTICI
-        // ================================
+
 
         // Giappone 7 giorni
         itin1.setDays(List.of(
@@ -230,9 +227,9 @@ public class DatabaseInitializer implements CommandLineRunner {
 
         itineraryRepository.saveAll(List.of(itin1, itin2, itin3));
 
-        // ================================
-        // 📌 4) CREAZIONE TRIP RANDOM
-        // ================================
+
+        // 4) CREAZIONE TRIP RANDOM
+
         Trip trip1a = createRandomTrip(itin1, planner, 1890);
         Trip trip1b = createRandomTrip(itin1, planner, 1990);
 
@@ -248,9 +245,9 @@ public class DatabaseInitializer implements CommandLineRunner {
     }
 
 
-    // ==============================================================================================
+
     //  FUNZIONE PER GENERARE TRIP RANDOM CON DATE REALISTICHE
-    // ==============================================================================================
+
     private Trip createRandomTrip(TripItinerary itinerary, Planner planner, double price) {
 
         int daysAhead = 30 + random.nextInt(540); // 1–18 mesi

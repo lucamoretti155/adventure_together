@@ -10,7 +10,8 @@ import org.springframework.core.annotation.Order;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
-// Classe che inizializza un admin di default all'avvio dell'applicazione
+
+// Inizializza un admin di default solo se il database è vuoto (ambiente demo)
 // Se non sono presenti utenti nel database, viene creato un admin con email "demo.mail.app.java.project@gmail.com" e password "admin123"
 
 @Order(1)

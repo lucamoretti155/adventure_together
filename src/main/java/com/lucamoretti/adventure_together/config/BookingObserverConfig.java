@@ -6,11 +6,8 @@ import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 
-/*
-   Configurazione per l'Observer delle prenotazioni.
-   Inizializza il servizio email per la classe Booking, permettendo l'invio di notifiche via email
-   quando lo stato del Trip associato a una prenotazione cambia.
-*/
+// Collega il servizio email alle prenotazioni all'avvio dell'app
+// Configurazione per l'Observer delle prenotazioni.
 
 @Configuration
 @RequiredArgsConstructor

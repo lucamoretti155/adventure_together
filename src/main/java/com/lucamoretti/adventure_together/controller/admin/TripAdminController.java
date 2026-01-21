@@ -50,7 +50,7 @@ public class TripAdminController {
     public String cancelTrip(Long tripId, RedirectAttributes redirectAttributes) {
         try {
             tripService.cancelTrip(tripId);
-            redirectAttributes.addFlashAttribute("successMessage", "Viaggio cancellato con successo.");
+            redirectAttributes.addFlashAttribute("successMessage", "Viaggio cancellato con successo!");
         } catch (DataIntegrityException e) {
             redirectAttributes.addFlashAttribute("errorMessage", "Errore durante l'annullamento del viaggio: " + e.getMessage());
         }

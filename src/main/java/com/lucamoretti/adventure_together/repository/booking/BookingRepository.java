@@ -8,7 +8,7 @@ import java.util.List;
 
 /*
  Interfaccia di BookingRepository che estende JpaRepository per la gestione delle operazioni sulle entità Booking.
- Fornisce metodi per trovare le prenotazioni in base all'
+ Fornisce metodi per trovare le prenotazioni in base all'id del Traveler e dell'id del Trip.
  */
 
 @Repository

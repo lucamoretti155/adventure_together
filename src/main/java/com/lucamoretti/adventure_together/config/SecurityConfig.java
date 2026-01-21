@@ -43,20 +43,22 @@ public class SecurityConfig {
         this.userDetailsService = userDetailsService;
     }
 
-    // 1. BEAN: PasswordEncoder (Necessario per l'hashing)
+    // PasswordEncoder - Necessario per l'hashing delle password
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // 2. BEAN: AuthenticationManager (Necessario da iniettare nell'AuthController)
+    // AuthenticationManager - Necessario per l'autenticazione degli utenti
+    // Usato da Spring Security internamente per gestire l'autenticazione
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration)
             throws Exception {
         return authenticationConfiguration.getAuthenticationManager();
     }
 
-    // 3. CONFIGURAZIONE PRINCIPALE: Definisce le regole di accesso agli URL
+    // Configurazione con FilterChain per i path
+    // Definisce le regole di accesso agli URL
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
                         http
@@ -78,20 +80,20 @@ public class SecurityConfig {
                                 // metto qui per essere sicuro che sia permesso
                         .requestMatchers("/stripe/webhook").permitAll()
 
-                        // 1. REGOLA PIÙ SPECIFICA: Accesso solo per ADMIN
+                        // Primo livello: Accesso solo per ADMIN
                         // Richiede il ruolo ROLE_ADMIN
                         .requestMatchers("/admin/**").hasRole("ADMIN")
 
-                        // 2. REGOLA MEDIA: Accesso per ADMIN o PLANNER
+                        // Secondo livello: Accesso per ADMIN o PLANNER
                         // Richiede il ruolo ROLE_ADMIN oppure ROLE_PLANNER
                         .requestMatchers("/planner/**").hasAnyRole("ADMIN", "PLANNER")
 
-                        // 3. REGOLA GENERICA: Accessibile a qualsiasi utente registrato
+                        // Livello generico per utenti autenticati
                         // (tutti i ruoli)
 
                         .requestMatchers("/traveler/**", "/bookings/**").authenticated()
 
-                        // 4. REGOLA PUBBLICA: Accesso per chiunque
+                        // Path pubblici: accesso per chiunque
                         // PAGINE PUBBLICHE
                         .requestMatchers("/", "/home/**", "/auth/**", "/public", "/trips/**", "/search/**", "/error/**", "/uploads/**").permitAll()
 
@@ -101,7 +103,7 @@ public class SecurityConfig {
                         //TO DO: aggiungere endpoint ajax pubblici se necessari
 
 
-                        // 5. CATCH-ALL: Qualsiasi altra richiesta che non è stata mappata, è necessaria almeno l'autenticazione
+                        // Qualsiasi altra richiesta che non è stata mappata, è necessaria almeno l'autenticazione
                         .anyRequest().authenticated()
 
 

@@ -37,6 +37,8 @@ class EmailServiceImplTest {
         ReflectionTestUtils.setField(emailService, "from", "noreply@test.com");
     }
 
+    // test invio mail con successo
+
     @Test
     void sendHtmlMessage_success() throws Exception {
         MimeMessage mimeMessage = new MimeMessage((Session) null);
@@ -57,6 +59,8 @@ class EmailServiceImplTest {
         verify(mailSender).send(mimeMessage);
     }
 
+    // test del throw per errore template
+
     @Test
     void sendHtmlMessage_templateError_throws() {
         when(templateEngine.process(anyString(), any(Context.class)))
@@ -72,6 +76,7 @@ class EmailServiceImplTest {
         );
     }
 
+    // test del metodo per invio mail di test
     @Test
     void sendTestMail_success() {
         assertDoesNotThrow(() -> emailService.sendTestMail("user@test.com"));

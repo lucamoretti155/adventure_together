@@ -22,6 +22,10 @@ class GlobalModelAttributesTest {
     @InjectMocks
     private GlobalModelAttributes globalModelAttributes;
 
+    // --------------------------------------------------------------
+    // Ritorna una list degli itinerari
+    // --------------------------------------------------------------
+
     @Test
     void populateItineraries_returnsList() {
 

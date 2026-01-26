@@ -3,6 +3,7 @@ target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
+Documentazione_AdventureTogether_Luca_Moretti.pdf
 
 ### STS ###
 .apt_generated

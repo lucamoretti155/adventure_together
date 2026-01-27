@@ -3,7 +3,7 @@ package com.lucamoretti.adventure_together.model.booking.decorator;
 import com.lucamoretti.adventure_together.model.booking.IBooking;
 
 // Questo decorator si occupa della gestione dell'assicurazione bagaglio
-// aggiunta costo fisso per bagaglio e per partecipante
+// aggiungendo un costo fisso per partecipante
 // andando a modificare il costo dell'assicurazione della prenotazione
 // usa un metodo protetto getExtraCost() per calcolare il costo extra specifico
 // che viene sommato al costo dell'assicurazione di base definita nella classe Booking

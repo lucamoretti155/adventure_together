@@ -79,7 +79,7 @@ public class Trip {
     // non è il template per mandare la mail di conferma prenotazione ma per notificare i cambi di stato del Trip
     private String templateMailPath;
 
-    // Transient perché non persistiamo la proprietà nel DB
+    // Transient perché non viene salvata  nel DB
     @Transient
     @Value("${app.base-url}")
     private String baseUrl;

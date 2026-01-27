@@ -70,7 +70,7 @@ public class StripeWebhookService {
             return intent;
 
         } catch (Exception e) {
-            throw new RuntimeException("Failed to manually parse PaymentIntent", e);
+            throw new RuntimeException("Errore nel parsing manuale del PaymentIntent", e);
         }
     }
 
@@ -87,7 +87,7 @@ public class StripeWebhookService {
             intent = parseRawPaymentIntent(deserializer.getRawJson());
         }
 
-        System.out.println("❌ PAYMENT INTENT FAILED: " + intent.getId());
+        System.out.println("PAYMENT INTENT fallito: " + intent.getId());
 
     }
 }

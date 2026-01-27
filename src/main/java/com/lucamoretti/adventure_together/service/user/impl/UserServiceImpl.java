@@ -219,16 +219,16 @@ public class UserServiceImpl implements UserService {
 
     // Resetta la password utilizzando il token fornito
     // Verifica che il token sia valido e non scaduto
-    // Aggiorna la password dell'utente e attiva l'account (nel caso di Planner/Admin creati e non ancora attivi)
+    // Aggiorna la password dell'utente
     // Elimina il token dopo l'uso
     @Override
     public void resetPassword(String token, String newPassword) {
         PasswordResetToken resetToken = passwordResetTokenRepository.findByToken(token) // trova il token nel repository
-                .orElseThrow(() -> new IllegalArgumentException("Invalid or expired token"));
+                .orElseThrow(() -> new IllegalArgumentException("Token invalido o scaduto"));
 
         if (resetToken.isExpired()) {   // verifica se il token è scaduto
             passwordResetTokenRepository.delete(resetToken);  // elimina il token scaduto
-            throw new IllegalArgumentException("Reset token expired");  // lancia eccezione
+            throw new IllegalArgumentException("Reset token scaduto");  // lancia eccezione
         }
 
         dataValidationService.validatePassword(newPassword); // valida la nuova password altrimenti lancia eccezione
@@ -268,6 +268,6 @@ public class UserServiceImpl implements UserService {
             return user.getId();
         }
 
-        throw new DataIntegrityException("Unable to extract current user ID");
+        throw new DataIntegrityException("Errore nel recupero dello user autenticato");
     }
 }

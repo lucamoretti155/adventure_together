@@ -18,15 +18,13 @@ public class CustomUserDetailsServiceImpl implements UserDetailsService {
     @Autowired
     private UserRepository userRepository;
 
-    /*
-     * Metodo richiesto da Spring Security durante il processo di login.
-     */
 
+     //Metodo richiesto da Spring Security durante il processo di login.
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        // Cerca l'utente nel database.
+        // Cerca l'utente tramite la mail
         return userRepository.findByEmail(email)
                 .orElseThrow(() ->
                         new UsernameNotFoundException("Utente non trovato con username: " + email)

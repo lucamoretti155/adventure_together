@@ -65,20 +65,18 @@ public class BookingFinalizeServiceImpl implements BookingFinalizeService {
     public void finalizeBooking(PaymentIntent intent) {
 
 
-        //System.out.println("=== FINALIZE BOOKING TRIGGERED ===");
-        //System.out.println("INTENT ID: " + intent.getId());
-        //System.out.println("INTENT METADATA: " + intent.getMetadata());
+
 
         // estrazione metadata booking
         if (intent.getMetadata() == null || !intent.getMetadata().containsKey("booking")) {
-            System.out.println("❌ PaymentIntent metadata assente o incompleta — impossibile finalizzare");
+            System.out.println("PaymentIntent metadata assente o incompleta — impossibile finalizzare");
             return;
         }
         try {
             String metadataJson = intent.getMetadata().get("booking"); // JSON serializzato
 
             if (metadataJson == null) {
-                System.out.println("❌ metadataJson == NULL — Booking NON ricostruibile");
+                System.out.println("metadataJson == NULL — Booking NON ricostruibile");
                 return;
             }
 
@@ -179,7 +177,7 @@ public class BookingFinalizeServiceImpl implements BookingFinalizeService {
 
         } catch (Exception e) {
 
-            System.out.println("❌ ERRORE NELLA FINALIZZAZIONE DEL BOOKING:");
+            System.out.println("ERRORE NELLA FINALIZZAZIONE DEL BOOKING:");
             e.printStackTrace();
         }
 

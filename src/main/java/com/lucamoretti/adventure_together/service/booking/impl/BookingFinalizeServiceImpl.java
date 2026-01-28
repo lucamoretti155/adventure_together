@@ -84,7 +84,7 @@ public class BookingFinalizeServiceImpl implements BookingFinalizeService {
 
             // deserializzazione BookingDTO
             //BookingDTO dto = bookingSerializerService.deserializeBooking(metadataJson);
-            //devo ricostruire manualmente il booking per via delle entità correlate partendo da una Map
+            //devo ricostruire manualmente il booking partendo da una Map
             Map<String, Object> data = bookingSerializerService.deserializeBookingAsMap(metadataJson);
 
             Long tripId = Long.valueOf(data.get("tripId").toString());

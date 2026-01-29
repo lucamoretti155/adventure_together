@@ -28,10 +28,7 @@ class TripItineraryDayServiceImplTest {
     @InjectMocks
     private TripItineraryDayServiceImpl service;
 
-    // --------------------------------------------------------------
-    //                            CREATE
-    // --------------------------------------------------------------
-
+    // CREATE
     @Test
     void createDay_success() {
         Long itineraryId = 100L;
@@ -99,10 +96,7 @@ class TripItineraryDayServiceImplTest {
     }
 
 
-    // --------------------------------------------------------------
-    //                            UPDATE
-    // --------------------------------------------------------------
-
+    // UPDATE
     @Test
     void updateDay_success() {
         TripItineraryDay existing = new TripItineraryDay();
@@ -143,10 +137,7 @@ class TripItineraryDayServiceImplTest {
     }
 
 
-    // --------------------------------------------------------------
-    //                            DELETE
-    // --------------------------------------------------------------
-
+    // DELETE
     @Test
     void deleteDay_success() {
         TripItineraryDay existing = new TripItineraryDay();
@@ -168,10 +159,7 @@ class TripItineraryDayServiceImplTest {
     }
 
 
-    // --------------------------------------------------------------
-    //                      GET DAYS BY ITINERARY
-    // --------------------------------------------------------------
-
+    //GET DAYS BY ITINERARY
     @Test
     void getDaysByItinerary_success() {
 

@@ -48,9 +48,8 @@ class AuthControllerTest {
                 .build();
     }
 
-    /* -------------------------------------------------------
-     * GET /auth/login
-     * ------------------------------------------------------- */
+
+     // GET /auth/login
     @Test
     void login_noParams_ok() {
         Model model = new ExtendedModelMap();
@@ -75,9 +74,8 @@ class AuthControllerTest {
         assertEquals("Registrazione completata, effettua il login", model.getAttribute("registered"));
     }
 
-    /* -------------------------------------------------------
-     * GET /auth/register
-     * ------------------------------------------------------- */
+
+     // GET /auth/register
     @Test
     void showRegisterForm_freshModel_ok() {
         Model model = new ExtendedModelMap();
@@ -99,9 +97,7 @@ class AuthControllerTest {
         assertEquals(travelerDTO, model.getAttribute("travelerDTO"));
     }
 
-    /* -------------------------------------------------------
-     * POST /auth/register
-     * ------------------------------------------------------- */
+     // POST /auth/register
     @Test
     void registerTraveler_validationErrors_redirectsBack() {
         when(bindingResult.hasErrors()).thenReturn(true);
@@ -168,9 +164,7 @@ class AuthControllerTest {
         verify(redirectAttributes).addFlashAttribute("errorMessage", "Età non valida");
     }
 
-    /* -------------------------------------------------------
-     * GET /auth/forgot-password
-     * ------------------------------------------------------- */
+     // GET /auth/forgot-password
     @Test
     void showForgotPasswordForm_ok() {
         Model model = new ExtendedModelMap();
@@ -181,9 +175,7 @@ class AuthControllerTest {
         assertEquals("", model.getAttribute("email"));
     }
 
-    /* -------------------------------------------------------
-     * POST /auth/forgot-password
-     * ------------------------------------------------------- */
+     // POST /auth/forgot-password
     @Test
     void processForgotPassword_ok() {
         String view = controller.processForgotPassword("mail@test.com", redirectAttributes);
@@ -207,9 +199,7 @@ class AuthControllerTest {
         );
     }
 
-    /* -------------------------------------------------------
-     * GET /auth/reset-password
-     * ------------------------------------------------------- */
+     // GET /auth/reset-password
     @Test
     void showResetPasswordForm_ok() {
         Model model = new ExtendedModelMap();
@@ -220,9 +210,7 @@ class AuthControllerTest {
         assertEquals("TOKEN123", model.getAttribute("token"));
     }
 
-    /* -------------------------------------------------------
-     * POST /auth/reset-password
-     * ------------------------------------------------------- */
+     // POST /auth/reset-password
     @Test
     void processResetPassword_ok() {
         String view = controller.processResetPassword(

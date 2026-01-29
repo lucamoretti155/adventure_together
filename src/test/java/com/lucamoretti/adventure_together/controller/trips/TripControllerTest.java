@@ -75,9 +75,7 @@ class TripControllerTest {
         day = TripItineraryDayDTO.builder().id(99L).dayNumber(1).title("Arrivo a Reykjavik").build();
     }
 
-    /* -------------------------------------------------------
-     *  GET /trips/dashboard
-     * ------------------------------------------------------- */
+     //  GET /trips/dashboard
     @Test
     void dashboard_ok() {
         Model model = new ExtendedModelMap();
@@ -94,9 +92,7 @@ class TripControllerTest {
         assertTrue(model.containsAttribute("countries"));
     }
 
-    /* -------------------------------------------------------
-     *  GET /trips/categories
-     * ------------------------------------------------------- */
+     //  GET /trips/categories
     @Test
     void itinerariesByCategories_empty_getAll() {
         Model model = new ExtendedModelMap();
@@ -121,9 +117,7 @@ class TripControllerTest {
         assertEquals(List.of(7L), model.getAttribute("selectedCategories"));
     }
 
-    /* -------------------------------------------------------
-     *  GET /trips/geo-area/{id}
-     * ------------------------------------------------------- */
+     //  GET /trips/geo-area/{id}
     @Test
     void dashboardGeoArea_ok() {
         Model model = new ExtendedModelMap();
@@ -140,9 +134,7 @@ class TripControllerTest {
         assertEquals(List.of(itinerary), model.getAttribute("itinerariesByGeoArea"));
     }
 
-    /* -------------------------------------------------------
-     *  GET /trips/country/{id}
-     * ------------------------------------------------------- */
+     //  GET /trips/country/{id}
     @Test
     void dashboardCountry_ok() {
         Model model = new ExtendedModelMap();
@@ -159,9 +151,7 @@ class TripControllerTest {
         assertEquals(List.of(itinerary), model.getAttribute("itinerariesByCountry"));
     }
 
-    /* -------------------------------------------------------
-     *  GET /trips/trip-itinerary/{id}
-     * ------------------------------------------------------- */
+     //  GET /trips/trip-itinerary/{id}
     @Test
     void dashboardTripItinerary_ok() {
         Model model = new ExtendedModelMap();

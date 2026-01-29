@@ -27,10 +27,7 @@ class GeoAreaServiceImplTest {
     private GeoAreaServiceImpl service;
 
 
-    // ------------------------------------------------------------
-    //                        CREATE
-    // ------------------------------------------------------------
-
+    // CREATE
     @Test
     void createGeoArea_success() {
 
@@ -72,10 +69,7 @@ class GeoAreaServiceImplTest {
     }
 
 
-    // ------------------------------------------------------------
-    //                     GET ALL GEO AREAS
-    // ------------------------------------------------------------
-
+    // GET ALL GEO AREAS
     @Test
     void getAllGeoAreas_success() {
 
@@ -93,10 +87,7 @@ class GeoAreaServiceImplTest {
     }
 
 
-    // ------------------------------------------------------------
-    //                       GET BY ID
-    // ------------------------------------------------------------
-
+    // GET BY ID
     @Test
     void getGeoAreaById_success() {
 

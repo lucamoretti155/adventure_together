@@ -72,9 +72,7 @@ class BookingControllerTest {
                 .build();
     }
 
-    /* -------------------------------------------------------
-     *  GET /bookings/new/{tripId}
-     * ------------------------------------------------------- */
+     //  GET /bookings/new/{tripId}
 
     @Test
     void showBookingForm_ok() {
@@ -99,10 +97,7 @@ class BookingControllerTest {
         assertEquals(1, dto.getParticipants().size());
     }
 
-    /* -------------------------------------------------------
-     *  POST /bookings/checkout – invalid DTO
-     * ------------------------------------------------------- */
-
+     //  POST /bookings/checkout – invalid DTO
     @Test
     void startCheckout_invalidForm_redirectsBack() {
         BookingDTO dto = BookingDTO.builder()
@@ -124,9 +119,7 @@ class BookingControllerTest {
                 .containsKey("org.springframework.validation.BindingResult.bookingDTO"));
     }
 
-    /* -------------------------------------------------------
-     *  POST /bookings/checkout – success
-     * ------------------------------------------------------- */
+     //  POST /bookings/checkout – success
 
     @Test
     void startCheckout_ok() {
@@ -161,9 +154,7 @@ class BookingControllerTest {
         verify(bookingPreparationService).startBookingAndPayment(dto);
     }
 
-    /* -------------------------------------------------------
-     *  GET /bookings/success
-     * ------------------------------------------------------- */
+     //  GET /bookings/success
 
     @Test
     void bookingSuccess_returnsView() {

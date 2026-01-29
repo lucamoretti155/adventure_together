@@ -37,9 +37,7 @@ class BookingTest {
         Booking.setEmailService(emailService);
     }
 
-    // ----------------------------------------------------------
     // getNumParticipants()
-    // ----------------------------------------------------------
 
     @Test
     void getNumParticipants_returnsCorrectSize() {
@@ -58,9 +56,7 @@ class BookingTest {
         assertEquals(0, booking.getNumParticipants());
     }
 
-    // ----------------------------------------------------------
     // getTripCost()
-    // ----------------------------------------------------------
 
     @Test
     void getTripCost_calculatesCorrectly() {
@@ -82,9 +78,7 @@ class BookingTest {
         assertThrows(IllegalStateException.class, () -> booking.getTripCost());
     }
 
-    // ----------------------------------------------------------
     // getInsuranceCost()
-    // ----------------------------------------------------------
 
     @Test
     void getInsuranceCost_isTenPercentOfTripCost() {
@@ -94,9 +88,7 @@ class BookingTest {
         assertEquals(100.0, booking.getInsuranceCost());
     }
 
-    // ----------------------------------------------------------
     // getTotalCost()
-    // ----------------------------------------------------------
 
     @Test
     void getTotalCost_sumsTripCostAndInsurance() {
@@ -107,9 +99,7 @@ class BookingTest {
         assertEquals(1100.0, booking.getTotalCost());
     }
 
-    // ----------------------------------------------------------
     // update() → invia email
-    // ----------------------------------------------------------
 
     @Test
     void update_sendsEmailCorrectly() {

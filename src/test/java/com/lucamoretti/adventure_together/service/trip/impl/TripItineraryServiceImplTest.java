@@ -57,11 +57,9 @@ class TripItineraryServiceImplTest {
         ReflectionTestUtils.setField(service, "entityManager", entityManager);
     }
 
-    // ---------------------------------------------------------------------
     //  UTILITY
-    // ---------------------------------------------------------------------
 
-    /** Crea un DTO valido di base */
+    /* Crea un DTO valido di base */
     private TripItineraryDTO baseValidDto() {
         TripItineraryDTO dto = new TripItineraryDTO();
         dto.setTitle("Test Trip");
@@ -89,10 +87,7 @@ class TripItineraryServiceImplTest {
         when(airportRepository.findById(30L)).thenReturn(Optional.of(ap));
     }
 
-    // ---------------------------------------------------------------------
     //  CREATE
-    // ---------------------------------------------------------------------
-
     @Test
     void createItinerary_success() {
         TripItineraryDTO dto = baseValidDto();
@@ -209,10 +204,7 @@ class TripItineraryServiceImplTest {
                 () -> service.createItinerary(dto));
     }
 
-    // ---------------------------------------------------------------------
     //  UPDATE
-    // ---------------------------------------------------------------------
-
     @Test
     void updateItinerary_titleAlreadyExists_throws() {
         TripItinerary existing = new TripItinerary();
@@ -254,10 +246,7 @@ class TripItineraryServiceImplTest {
     }
 
 
-    // ---------------------------------------------------------------------
     //  GET METHODS
-    // ---------------------------------------------------------------------
-
     @Test
     void getById_notFound_throws() {
         when(itineraryRepository.findById(1L)).thenReturn(Optional.empty());

@@ -35,9 +35,7 @@ class AdminControllerTest {
     @InjectMocks
     private AdminController controller;
 
-    // --------------------------------------------------------------
     // GET /create-planner
-    // --------------------------------------------------------------
     @Test
     void showCreatePlannerForm_addsEmptyDtoAndReturnsView() {
         Model model = new ConcurrentModel();
@@ -48,9 +46,7 @@ class AdminControllerTest {
         assertTrue(model.containsAttribute("plannerDTO"));
     }
 
-    // --------------------------------------------------------------
-    // POST /create-planner (validation errors)
-    // --------------------------------------------------------------
+    // POST /create-planner (validazione errori)
     @Test
     void createPlanner_whenValidationErrors_returnForm() {
         PlannerDTO dto = new PlannerDTO();
@@ -64,9 +60,7 @@ class AdminControllerTest {
         assertTrue(attrs.getFlashAttributes().containsKey("plannerDTO"));
     }
 
-    // --------------------------------------------------------------
-    // POST /create-planner (success)
-    // --------------------------------------------------------------
+    // POST /create-planner (ok)
     @Test
     void createPlanner_success_redirectsToList() {
         PlannerDTO dto = new PlannerDTO();
@@ -83,9 +77,7 @@ class AdminControllerTest {
         assertTrue(attrs.getFlashAttributes().containsKey("successMessage"));
     }
 
-    // --------------------------------------------------------------
-    // POST /create-planner (duplicate)
-    // --------------------------------------------------------------
+    // POST /create-planner (duplicati)
     @Test
     void createPlanner_duplicate_redirectsBack() {
         PlannerDTO dto = new PlannerDTO();
@@ -102,9 +94,7 @@ class AdminControllerTest {
         assertTrue(attrs.getFlashAttributes().containsKey("errorMessage"));
     }
 
-    // --------------------------------------------------------------
     // GET /create-admin
-    // --------------------------------------------------------------
     @Test
     void showCreateAdminForm_addsEmptyDtoAndReturnsView() {
         Model model = new ConcurrentModel();
@@ -115,9 +105,7 @@ class AdminControllerTest {
         assertTrue(model.containsAttribute("adminDTO"));
     }
 
-    // --------------------------------------------------------------
-    // POST /create-admin (validation errors)
-    // --------------------------------------------------------------
+    // POST /create-admin (validazione errori)
     @Test
     void createAdmin_whenValidationErrors_returnForm() {
         AdminDTO dto = new AdminDTO();
@@ -131,9 +119,7 @@ class AdminControllerTest {
         assertTrue(attrs.getFlashAttributes().containsKey("adminDTO"));
     }
 
-    // --------------------------------------------------------------
-    // POST /create-admin (success)
-    // --------------------------------------------------------------
+    // POST /create-admin (OK)
     @Test
     void createAdmin_success_redirectsToList() {
         AdminDTO dto = new AdminDTO();
@@ -150,9 +136,7 @@ class AdminControllerTest {
         assertTrue(attrs.getFlashAttributes().containsKey("successMessage"));
     }
 
-    // --------------------------------------------------------------
-    // POST /create-admin (duplicate)
-    // --------------------------------------------------------------
+    // POST /create-admin (duplicati)
     @Test
     void createAdmin_duplicate_redirectsBack() {
         AdminDTO dto = new AdminDTO();
@@ -169,9 +153,7 @@ class AdminControllerTest {
         assertTrue(attrs.getFlashAttributes().containsKey("errorMessage"));
     }
 
-    // --------------------------------------------------------------
     // GET /planner-list
-    // --------------------------------------------------------------
     @Test
     void listPlanners_addsListToModel() {
         Model model = new ConcurrentModel();
@@ -184,9 +166,7 @@ class AdminControllerTest {
         assertTrue(model.containsAttribute("planners"));
     }
 
-    // --------------------------------------------------------------
     // GET /admin-list
-    // --------------------------------------------------------------
     @Test
     void listAdmins_addsListToModel() {
         Model model = new ConcurrentModel();
@@ -199,9 +179,7 @@ class AdminControllerTest {
         assertTrue(model.containsAttribute("admins"));
     }
 
-    // --------------------------------------------------------------
     // POST /deactivate-user
-    // --------------------------------------------------------------
     @Test
     void deactivateUser_success() {
         RedirectAttributes attrs = new RedirectAttributesModelMap();
@@ -225,9 +203,7 @@ class AdminControllerTest {
         assertTrue(attrs.getFlashAttributes().containsKey("errorMessage"));
     }
 
-    // --------------------------------------------------------------
     // POST /activate-user
-    // --------------------------------------------------------------
     @Test
     void activateUser_success() {
         RedirectAttributes attrs = new RedirectAttributesModelMap();

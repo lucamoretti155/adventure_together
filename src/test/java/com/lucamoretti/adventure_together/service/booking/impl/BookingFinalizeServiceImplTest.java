@@ -62,7 +62,7 @@ class BookingFinalizeServiceImplTest {
     void setUp() {
         MockitoAnnotations.openMocks(this);
 
-        // baseUrl usato in baseUrl + "/home" → se null fa NPE
+        // baseUrl usato in baseUrl + "/home"
         ReflectionTestUtils.setField(service, "baseUrl", "http://localhost:8080");
 
         // Traveler
@@ -74,7 +74,7 @@ class BookingFinalizeServiceImplTest {
         airport = new DepartureAirport();
         airport.setId(3L);
 
-        // Trip (mock, non ci interessa lo stato qui)
+        // Trip
         trip = mock(Trip.class);
 
         // Temporary participants list
@@ -92,9 +92,7 @@ class BookingFinalizeServiceImplTest {
     }
 
 
-    // ----------------------------------------------------------
     // SUCCESS FLOW
-    // ----------------------------------------------------------
 
     @Test
     void finalizeBooking_success() {
@@ -140,9 +138,7 @@ class BookingFinalizeServiceImplTest {
         );
     }
 
-    // ----------------------------------------------------------
     // METADATA MANCANTE → NON FA NULLA
-    // ----------------------------------------------------------
 
     @Test
     void finalizeBooking_metadataMissing_noCrash() {
@@ -155,9 +151,7 @@ class BookingFinalizeServiceImplTest {
         verifyNoInteractions(emailService);
     }
 
-    // ----------------------------------------------------------
     // METADATA booking == null → NON FA NULLA
-    // ----------------------------------------------------------
 
     @Test
     void finalizeBooking_metadataBookingNull_noCrash() {
@@ -172,9 +166,7 @@ class BookingFinalizeServiceImplTest {
         verifyNoInteractions(emailService);
     }
 
-    // ----------------------------------------------------------
     // TRIP NON TROVATO → ECCEZIONE CATTURATA, NESSUN SAVE
-    // ----------------------------------------------------------
 
     @Test
     void finalizeBooking_tripNotFound_handled() {

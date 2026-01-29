@@ -18,7 +18,7 @@ class BookingSerializerServiceImplTest {
         service = new BookingSerializerServiceImpl(new ObjectMapper());
     }
 
-    // ---------- serializeBooking ----------
+    //  serializeBooking
 
     @Test
     void serializeBooking_success() {
@@ -46,7 +46,7 @@ class BookingSerializerServiceImplTest {
                 () -> service.serializeBooking(badData));
     }
 
-    // ---------- deserializeBooking ----------
+    //  deserializeBooking
 
     @Test
     void deserializeBooking_success() {
@@ -72,7 +72,7 @@ class BookingSerializerServiceImplTest {
                 () -> service.deserializeBooking(invalidJson));
     }
 
-    // ---------- deserializeBookingAsMap ----------
+    //  deserializeBooking come Map
 
     @Test
     void deserializeBookingAsMap_success() {

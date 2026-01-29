@@ -122,9 +122,7 @@ class TravelerControllerTest {
         booking.setPayment(payment);
     }
 
-    /* -------------------------------------------------------
-     *  DASHBOARD
-     * ------------------------------------------------------- */
+     //  DASHBOARD
 
     @Test
     void dashboard_returnsView() {
@@ -132,9 +130,7 @@ class TravelerControllerTest {
         assertEquals("traveler/dashboard", viewName);
     }
 
-    /* -------------------------------------------------------
-     *  BOOKINGS LIST
-     * ------------------------------------------------------- */
+     //  BOOKINGS LIST
 
     @Test
     void viewBookings_returnsBookingsList() {
@@ -150,9 +146,7 @@ class TravelerControllerTest {
         verify(bookingService).getBookingsByTravelerId(999L);
     }
 
-    /* -------------------------------------------------------
-     *  BOOKING DETAILS
-     * ------------------------------------------------------- */
+     //  BOOKING DETAILS
 
     @Test
     void viewBookingDetails_ok() {
@@ -194,9 +188,7 @@ class TravelerControllerTest {
         verify(bookingService).getBookingById(44L);
     }
 
-    /* -------------------------------------------------------
-     *  SHOW REVIEW FORM
-     * ------------------------------------------------------- */
+     //  SHOW REVIEW FORM
 
     @Test
     void showReviewForm_ok() {
@@ -231,9 +223,7 @@ class TravelerControllerTest {
                 () -> controller.showReviewForm(44L, model));
     }
 
-    /* -------------------------------------------------------
-     *  SUBMIT REVIEW
-     * ------------------------------------------------------- */
+     //  SUBMIT REVIEW
 
     @Test
     void submitReview_invalidForm_redirectsBack() {

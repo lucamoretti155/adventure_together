@@ -66,10 +66,7 @@ class TripServiceImplTest {
         return d;
     }
 
-    // -------------------------------------------------------
     // CREATE TRIP
-    // -------------------------------------------------------
-
     @Test
     void createTrip_success() {
 
@@ -139,10 +136,7 @@ class TripServiceImplTest {
                 () -> tripService.createTrip(dto));
     }
 
-    // -------------------------------------------------------
     // HANDLE TRIP
-    // -------------------------------------------------------
-
     @Test
     void handleTrip_success() {
         Trip trip = new Trip();
@@ -164,10 +158,7 @@ class TripServiceImplTest {
                 () -> tripService.handleTrip(1L));
     }
 
-    // -------------------------------------------------------
     // CANCEL TRIP
-    // -------------------------------------------------------
-
     @Test
     void cancelTrip_success() {
         Trip trip = new Trip();
@@ -194,10 +185,7 @@ class TripServiceImplTest {
                 () -> tripService.cancelTrip(1L));
     }
 
-    // -------------------------------------------------------
     // GENERIC GETTERS
-    // -------------------------------------------------------
-
     @Test
     void getAll_success() {
         Trip t = new Trip();
@@ -239,10 +227,7 @@ class TripServiceImplTest {
         assertEquals(1, result.size());
     }
 
-    // -------------------------------------------------------
     // BOOKING QUERIES
-    // -------------------------------------------------------
-
     @Test
     void getBookableTrips_success() {
         Trip t = new Trip();
@@ -311,10 +296,7 @@ class TripServiceImplTest {
         assertEquals(1, result.size());
     }
 
-    // -------------------------------------------------------
-    // DATE RANGE QUERIES
-    // -------------------------------------------------------
-
+    // QUERIES Tra range di date
     @Test
     void getTripsNotCancelledBetween_success() {
         Trip t = new Trip();
@@ -357,10 +339,7 @@ class TripServiceImplTest {
                         LocalDate.now().plusDays(5), LocalDate.now()));
     }
 
-    // -------------------------------------------------------
     // PARTICIPANTS
-    // -------------------------------------------------------
-
     @Test
     void getParticipantsByTripId_success() {
         Participant p = new Participant();

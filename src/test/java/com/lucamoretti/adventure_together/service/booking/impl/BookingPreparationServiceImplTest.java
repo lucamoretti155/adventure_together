@@ -48,7 +48,7 @@ class BookingPreparationServiceImplTest {
     void setup() {
         MockitoAnnotations.openMocks(this);
 
-        // ----- Request DTO -----
+        //  Request DTO
         req = new BookingDTO();
         req.setTripId(1L);
         req.setTravelerId(2L);
@@ -67,7 +67,7 @@ class BookingPreparationServiceImplTest {
                 .build();
         req.setParticipants(List.of(p1, p2));
 
-        // ----- Trip -----
+        //  Trip
         trip = mock(Trip.class);
         TripState state = mock(TripState.class);
 
@@ -75,19 +75,17 @@ class BookingPreparationServiceImplTest {
         when(state.canAcceptBooking()).thenReturn(true);
         when(trip.hasAvailableSpots(2)).thenReturn(true);
 
-        // ----- Traveler -----
+        //  Traveler
         traveler = new Traveler();
         traveler.setId(2L);
 
-        // ----- Airport -----
+        //  Airport
         airport = new DepartureAirport();
         airport.setId(3L);
     }
 
 
-    // ------------------------------------------------------
     // SUCCESS FLOW
-    // ------------------------------------------------------
 
     @Test
     void startBookingAndPayment_success() {
@@ -127,9 +125,7 @@ class BookingPreparationServiceImplTest {
     }
 
 
-    // ------------------------------------------------------
-    // ERROR CASES
-    // ------------------------------------------------------
+    // Casi di errore
 
     @Test
     void startBookingAndPayment_tripNotFound() {

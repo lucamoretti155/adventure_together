@@ -49,18 +49,14 @@ class HomeControllerTest {
                 .build();
     }
 
-    /* -------------------------------------------------------
-     * GET /
-     * ------------------------------------------------------- */
+     // GET /
     @Test
     void redirectHome_ok() {
         String view = controller.redirectHome();
         assertEquals("redirect:/home", view);
     }
 
-    /* -------------------------------------------------------
-     * GET /home
-     * ------------------------------------------------------- */
+     // GET /home
     @Test
     void home_ok() {
         Model model = new ExtendedModelMap();
@@ -89,9 +85,7 @@ class HomeControllerTest {
         assertEquals(false, model.getAttribute("hasTrips"));
     }
 
-    /* -------------------------------------------------------
-     * GET /search?title=
-     * ------------------------------------------------------- */
+     // GET /search?title=
     @Test
     void search_emptyTitle_redirectsHome() {
         String view = controller.search("   ", redirectAttributes);

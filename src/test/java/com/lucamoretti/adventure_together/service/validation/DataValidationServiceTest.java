@@ -22,9 +22,7 @@ class DataValidationServiceTest {
         service = new DataValidationService();
     }
 
-    // ------------------------------------------------------
     // validateTraveler
-    // ------------------------------------------------------
 
     @Test
     void validateTraveler_success() {
@@ -52,9 +50,8 @@ class DataValidationServiceTest {
                 () -> service.validateTraveler(dto, "weak"));
     }
 
-    // ------------------------------------------------------
     // validateAdultAge
-    // ------------------------------------------------------
+
 
     @Test
     void validateAdultAge_success() {
@@ -68,9 +65,10 @@ class DataValidationServiceTest {
                 () -> service.validateAdultAge(LocalDate.now().minusYears(10)));
     }
 
-    // ------------------------------------------------------
+
+
+
     // validatePassword
-    // ------------------------------------------------------
 
     @Test
     void validatePassword_success() {
@@ -83,9 +81,7 @@ class DataValidationServiceTest {
                 () -> service.validatePassword("abc"));
     }
 
-    // ------------------------------------------------------
     // validateTripDates
-    // ------------------------------------------------------
 
     @Test
     void validateTripDates_success() {
@@ -101,9 +97,8 @@ class DataValidationServiceTest {
                         LocalDate.of(2025,1,1)));
     }
 
-    // ------------------------------------------------------
+
     // validateTripDatesWithItineraryDuration
-    // ------------------------------------------------------
 
     @Test
     void validateTripDatesWithItineraryDuration_success() {
@@ -123,9 +118,7 @@ class DataValidationServiceTest {
                 () -> service.validateTripDatesWithItineraryDuration(start, end, 3));
     }
 
-    // ------------------------------------------------------
     // validateParticipants
-    // ------------------------------------------------------
 
     @Test
     void validateParticipants_success() {

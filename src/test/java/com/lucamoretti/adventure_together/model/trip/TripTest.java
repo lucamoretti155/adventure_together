@@ -22,12 +22,11 @@ class TripTest {
 
     @BeforeEach
     void setup() {
-        // oggetto reale, niente mock → niente stubbing inutile
+
         itinerary = new TripItinerary();
         itinerary.setMinParticipants(3);
         itinerary.setMaxParticipants(10);
 
-        // anche il planner può essere un semplice POJO
         planner = new Planner();
 
         trip = new Trip();
@@ -41,9 +40,7 @@ class TripTest {
         trip.setPlanner(planner);
     }
 
-    // -------------------------------------------------------------------------
     // OPEN()
-    // -------------------------------------------------------------------------
 
     @Test
     void open_setsInitialState() {
@@ -59,9 +56,7 @@ class TripTest {
         assertThrows(IllegalStateException.class, () -> trip.open());
     }
 
-    // -------------------------------------------------------------------------
     // HANDLE (delegato allo state)
-    // -------------------------------------------------------------------------
 
     @Test
     void handle_callsStateHandle() {
@@ -73,9 +68,7 @@ class TripTest {
         verify(state).handle(trip);
     }
 
-    // -------------------------------------------------------------------------
     // CANCEL (delegato allo state)
-    // -------------------------------------------------------------------------
 
     @Test
     void cancel_callsStateCancel() {
@@ -87,9 +80,7 @@ class TripTest {
         verify(state).cancel(trip);
     }
 
-    // -------------------------------------------------------------------------
     // addBooking / removeBooking
-    // -------------------------------------------------------------------------
 
     @Test
     void addBooking_setsRelationOnBothSides() {
@@ -112,9 +103,7 @@ class TripTest {
         verify(b).setTrip(null);
     }
 
-    // -------------------------------------------------------------------------
     // getCurrentParticipantsCount
-    // -------------------------------------------------------------------------
 
     @Test
     void getCurrentParticipantsCount_sumsParticipants() {
@@ -145,9 +134,7 @@ class TripTest {
         assertEquals(0, trip.getCurrentParticipantsCount());
     }
 
-    // -------------------------------------------------------------------------
     // hasAvailableSpots
-    // -------------------------------------------------------------------------
 
     @Test
     void hasAvailableSpots_trueWhenSpaceAvailable() {
@@ -168,9 +155,7 @@ class TripTest {
         assertFalse(trip.hasAvailableSpots(5)); // rimangono 2 posti
     }
 
-    // -------------------------------------------------------------------------
     // notifyAllListeners
-    // -------------------------------------------------------------------------
 
     @Test
     void notifyAllListeners_callsUpdateOnEachBooking() {

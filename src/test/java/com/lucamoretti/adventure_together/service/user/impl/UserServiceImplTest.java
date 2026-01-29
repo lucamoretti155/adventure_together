@@ -64,10 +64,7 @@ class UserServiceImplTest {
     }
 
 
-    // ------------------------------------------------------------
     // GETTERS BASE
-    // ------------------------------------------------------------
-
     @Test
     void getAllUsers_success() {
         User u = new Traveler();
@@ -125,10 +122,7 @@ class UserServiceImplTest {
         assertEquals(9L, result.get().getId());
     }
 
-    // ------------------------------------------------------------
     // REGISTER TRAVELER
-    // ------------------------------------------------------------
-
     @Test
     void registerTraveler_success() {
 
@@ -167,10 +161,7 @@ class UserServiceImplTest {
                 () -> userService.registerTraveler(dto, "pwd"));
     }
 
-    // ------------------------------------------------------------
     // REGISTER PLANNER
-    // ------------------------------------------------------------
-
     @Test
     void registerPlanner_success() {
         PlannerDTO dto = PlannerDTO.plannerBuilder()
@@ -205,10 +196,7 @@ class UserServiceImplTest {
                 () -> userService.registerPlanner(dto, "pwd"));
     }
 
-    // ------------------------------------------------------------
     // REGISTER ADMIN
-    // ------------------------------------------------------------
-
     @Test
     void registerAdmin_success() {
         AdminDTO dto = AdminDTO.adminBuilder()
@@ -242,10 +230,7 @@ class UserServiceImplTest {
                 () -> userService.registerAdmin(dto, "pwd"));
     }
 
-    // ------------------------------------------------------------
     // GENERATE PASSWORD RESET TOKEN
-    // ------------------------------------------------------------
-
     @Test
     void generatePasswordResetToken_success() {
         User u = new Traveler();
@@ -269,10 +254,7 @@ class UserServiceImplTest {
                 () -> userService.generatePasswordResetToken("mail@test.com"));
     }
 
-    // ------------------------------------------------------------
     // RESET PASSWORD
-    // ------------------------------------------------------------
-
     @Test
     void resetPassword_success() {
         User u = new Traveler();
@@ -319,9 +301,7 @@ class UserServiceImplTest {
                 () -> userService.resetPassword("abc", "pwd"));
     }
 
-    // ------------------------------------------------------------
     // ACTIVATE / DEACTIVATE
-    // ------------------------------------------------------------
 
     @Test
     void deactivateUser_success() {
@@ -349,9 +329,9 @@ class UserServiceImplTest {
         verify(userRepository).save(u);
     }
 
-    // ------------------------------------------------------------
+
+
     // GET CURRENT USER ID
-    // ------------------------------------------------------------
 
     @Test
     void getCurrentUserId_success() {

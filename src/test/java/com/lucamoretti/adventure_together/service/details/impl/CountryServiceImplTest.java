@@ -28,10 +28,7 @@ class CountryServiceImplTest {
     @InjectMocks
     private CountryServiceImpl service;
 
-    // ----------------------------------------------------------------------
-    //                              CREATE
-    // ----------------------------------------------------------------------
-
+    // CREATE
     @Test
     void createCountry_success() {
 
@@ -103,10 +100,7 @@ class CountryServiceImplTest {
     }
 
 
-    // ----------------------------------------------------------------------
-    //                          GET ALL COUNTRIES
-    // ----------------------------------------------------------------------
-
+    // GET ALL COUNTRIES
     @Test
     void getAllCountries_sortedAlphabetically() {
 
@@ -129,9 +123,7 @@ class CountryServiceImplTest {
     }
 
 
-    // ----------------------------------------------------------------------
-    //                  GET ALL BY GEOAREA
-    // ----------------------------------------------------------------------
+    //  GET ALL BY GEOAREA
 
     @Test
     void getAllCountriesByGeoAreaId_success() {
@@ -152,10 +144,7 @@ class CountryServiceImplTest {
     }
 
 
-    // ----------------------------------------------------------------------
-    //                          GET BY ID
-    // ----------------------------------------------------------------------
-
+    // GET BY ID
     @Test
     void getCountryById_success() {
         GeoArea g = new GeoArea(1L, "Europa");
@@ -180,10 +169,7 @@ class CountryServiceImplTest {
     }
 
 
-    // ----------------------------------------------------------------------
-    //                         GET BY SET OF IDS
-    // ----------------------------------------------------------------------
-
+    // GET BY SET OF IDS
     @Test
     void getCountryBySetOfId_success() {
         GeoArea g = new GeoArea(1L, "Europa");

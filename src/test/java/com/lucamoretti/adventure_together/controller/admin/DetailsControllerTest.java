@@ -36,10 +36,7 @@ class DetailsControllerTest {
     @InjectMocks
     private DetailsController controller;
 
-    /* -------------------------------------------------------
-     * GEOAREA
-     * ------------------------------------------------------- */
-
+     // GEOAREA
     @Test
     void showCreateGeoAreaForm_addsDto() {
         Model model = new ConcurrentModel();
@@ -94,9 +91,7 @@ class DetailsControllerTest {
         assertTrue(model.containsAttribute("errorMessage"));
     }
 
-    /* -------------------------------------------------------
-     * COUNTRY
-     * ------------------------------------------------------- */
+     // COUNTRY
 
     @Test
     void showCreateCountryForm_addsDtoAndGeoAreas() {
@@ -156,9 +151,7 @@ class DetailsControllerTest {
         assertTrue(model.containsAttribute("errorMessage"));
     }
 
-    /* -------------------------------------------------------
-     * CATEGORY
-     * ------------------------------------------------------- */
+     // CATEGORY
 
     @Test
     void showCreateCategoryForm_addsDto() {
@@ -213,9 +206,7 @@ class DetailsControllerTest {
         assertTrue(model.containsAttribute("errorMessage"));
     }
 
-    /* -------------------------------------------------------
-     * DEPARTURE AIRPORT
-     * ------------------------------------------------------- */
+     //DEPARTURE AIRPORT
 
     @Test
     void showCreateAirportForm_addsDto() {
@@ -270,9 +261,7 @@ class DetailsControllerTest {
         assertTrue(model.containsAttribute("errorMessage"));
     }
 
-    /* -------------------------------------------------------
-     * LIST ALL
-     * ------------------------------------------------------- */
+     // LIST ALL
 
     @Test
     void listAllDetails_addsAllAttributes() {

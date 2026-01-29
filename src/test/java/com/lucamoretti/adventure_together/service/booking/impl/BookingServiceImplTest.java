@@ -82,7 +82,7 @@ class BookingServiceImplTest {
         MockitoAnnotations.openMocks(this);
     }
 
-    // ---------- TEST getBookingById ----------
+    //  TEST getBookingById
 
     @Test
     void getBookingById_returnsBookingDTO_whenExists() {
@@ -112,7 +112,7 @@ class BookingServiceImplTest {
         verify(bookingRepository).findById(1L);
     }
 
-    // ---------- TEST getBookingsByTravelerId ----------
+    //  TEST getBookingsByTravelerId
 
     @Test
     void getBookingsByTravelerId_returnsList() {

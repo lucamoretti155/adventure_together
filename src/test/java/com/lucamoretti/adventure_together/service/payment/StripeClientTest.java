@@ -33,9 +33,7 @@ class StripeClientTest {
         stripeClient.init();
     }
 
-    // ---------------------------------------------------
-    // CREATE PAYMENT INTENT
-    // ---------------------------------------------------
+    // CREA PAYMENT INTENT
 
     @Test
     void createPaymentIntent_success() throws Exception {
@@ -72,9 +70,7 @@ class StripeClientTest {
         staticMock.close();
     }
 
-    // ---------------------------------------------------
-    // RETRIEVE PAYMENT INTENT
-    // ---------------------------------------------------
+    // RECUPERA PAYMENT INTENT
 
     @Test
     void retrievePaymentIntent_success() throws Exception {
@@ -106,10 +102,7 @@ class StripeClientTest {
         staticMock.close();
     }
 
-    // ---------------------------------------------------
-    // CONFIRM PAYMENT INTENT
-    // ---------------------------------------------------
-
+    // CONFERMA PAYMENT INTENT
     @Test
     void confirmPaymentIntent_success() throws Exception {
 

@@ -25,10 +25,7 @@ class DepartureAirportServiceImplTest {
     @InjectMocks
     private DepartureAirportServiceImpl service;
 
-    // --------------------------------------------------------------------
-    //                           CREATE
-    // --------------------------------------------------------------------
-
+    // CREATE
     @Test
     void createDepartureAirport_success() {
         DepartureAirportDTO dto = DepartureAirportDTO.builder()
@@ -78,9 +75,7 @@ class DepartureAirportServiceImplTest {
     }
 
 
-    // --------------------------------------------------------------------
-    //                GET ALL AIRPORTS (sorted)
-    // --------------------------------------------------------------------
+    // GET ALL AIRPORTS (sorted)
 
     @Test
     void getAllDepartureAirports_sortedAlphabetically() {
@@ -100,10 +95,7 @@ class DepartureAirportServiceImplTest {
     }
 
 
-    // --------------------------------------------------------------------
-    //         GET AIRPORTS BY SET OF IDS
-    // --------------------------------------------------------------------
-
+    // GET AIRPORTS BY SET OF IDS
     @Test
     void getDepartureAirportsBySetOfIds_success() {
 
@@ -122,10 +114,7 @@ class DepartureAirportServiceImplTest {
     }
 
 
-    // --------------------------------------------------------------------
-    //                     GET BY ID
-    // --------------------------------------------------------------------
-
+    //  GET BY ID
     @Test
     void getDepartureAirportById_success() {
         DepartureAirport a = new DepartureAirport(50L, "FCO", "Fiumicino", "Roma");

@@ -49,17 +49,13 @@ class PlannerControllerTest {
     @InjectMocks
     private PlannerController controller;
 
-    /* -------------------------------------------------------
-     * DASHBOARD
-     * ------------------------------------------------------- */
+     // DASHBOARD
     @Test
     void dashboard_returnsCorrectView() {
         assertEquals("planner/dashboard", controller.showAdminDashboard());
     }
 
-    /* -------------------------------------------------------
-     * CREATE TRIP ITINERARY (GET)
-     * ------------------------------------------------------- */
+     // CREATE TRIP ITINERARY (GET)
     @Test
     void showCreateTripItineraryForm_loadsData() {
         Model model = new ConcurrentModel();
@@ -89,9 +85,7 @@ class PlannerControllerTest {
         assertEquals(plannerId, ((TripItineraryDTO) model.getAttribute("tripItineraryDTO")).getPlannerId());
     }
 
-    /* -------------------------------------------------------
-     * CREATE TRIP ITINERARY (POST)
-     * ------------------------------------------------------- */
+     // CREATE TRIP ITINERARY (POST)
     @Test
     void createTripItinerary_validationErrors() {
         when(bindingResult.hasErrors()).thenReturn(true);
@@ -134,9 +128,7 @@ class PlannerControllerTest {
         assertTrue(attrs.getFlashAttributes().containsKey("errorMessage"));
     }
 
-    /* -------------------------------------------------------
-     * CREATE TRIP (GET)
-     * ------------------------------------------------------- */
+     // CREATE TRIP (GET)
     @Test
     void showCreateTripForm_loadsData() {
         Model model = new ConcurrentModel();
@@ -152,9 +144,7 @@ class PlannerControllerTest {
         assertEquals(plannerId, ((TripDTO) model.getAttribute("tripDTO")).getPlannerId());
     }
 
-    /* -------------------------------------------------------
-     * CREATE TRIP (POST)
-     * ------------------------------------------------------- */
+     // CREATE TRIP (POST)
     @Test
     void createTrip_validationErrors() {
         when(bindingResult.hasErrors()).thenReturn(true);
@@ -194,9 +184,7 @@ class PlannerControllerTest {
         assertTrue(attrs.getFlashAttributes().containsKey("errorMessage"));
     }
 
-    /* -------------------------------------------------------
-     * LIST CREATED ITINERARIES
-     * ------------------------------------------------------- */
+     // LIST CREATED ITINERARIES
     @Test
     void showTripItineraryCreatedList_loadsData() {
         Model model = new ConcurrentModel();
@@ -209,9 +197,7 @@ class PlannerControllerTest {
         assertTrue(model.containsAttribute("tripItineraries"));
     }
 
-    /* -------------------------------------------------------
-     * LIST CREATED TRIPS
-     * ------------------------------------------------------- */
+     // LIST CREATED TRIPS
     @Test
     void showTripCreatedList_success() {
         Model model = new ConcurrentModel();
@@ -238,9 +224,7 @@ class PlannerControllerTest {
         assertTrue(model.containsAttribute("errorMessage"));
     }
 
-    /* -------------------------------------------------------
-     * UPDATE TRIP ITINERARY
-     * ------------------------------------------------------- */
+     // UPDATE TRIP ITINERARY
     @Test
     void showUpdateTripItineraryForm_loadsData() {
         Model model = new ConcurrentModel();
@@ -295,9 +279,7 @@ class PlannerControllerTest {
         assertEquals("redirect:/planner/update-trip-itinerary/10", result);
     }
 
-    /* -------------------------------------------------------
-     * LIST ALL ITINERARIES
-     * ------------------------------------------------------- */
+     // LIST ALL ITINERARIES
     @Test
     void showAllTripItineraries_loadsList() {
         Model model = new ConcurrentModel();
@@ -309,9 +291,7 @@ class PlannerControllerTest {
         assertTrue(model.containsAttribute("tripItineraries"));
     }
 
-    /* -------------------------------------------------------
-     * LIST ALL TRIPS
-     * ------------------------------------------------------- */
+     // LIST ALL TRIPS
     @Test
     void showAllTrips_success() {
         Model model = new ConcurrentModel();
@@ -335,9 +315,7 @@ class PlannerControllerTest {
         assertTrue(model.containsAttribute("errorMessage"));
     }
 
-    /* -------------------------------------------------------
-     * TRIP DETAIL
-     * ------------------------------------------------------- */
+     // TRIP DETAIL
     @Test
     void showTripDetail_loadsAllData() {
         Model model = new ConcurrentModel();

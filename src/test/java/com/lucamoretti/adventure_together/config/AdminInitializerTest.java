@@ -27,9 +27,7 @@ class AdminInitializerTest {
     private AdminInitializer adminInitializer;
 
 
-    // -------------------------------------------------------------------------
     // TEST 1 - CREA L'ADMIN DI DEFAULT QUANDO IL DATABASE È VUOTO
-    // -------------------------------------------------------------------------
     @Test
     void run_createsDefaultAdmin_whenNoAdminsInDatabase() {
         // Arrange
@@ -57,9 +55,7 @@ class AdminInitializerTest {
     }
 
 
-    // -------------------------------------------------------------------------
     // TEST 2 - NON CREA NESSUN ADMIN SE IL DATABASE NON È VUOTO
-    // -------------------------------------------------------------------------
     @Test
     void run_doesNotCreateAdmin_whenAdminsExist() {
         // Arrange

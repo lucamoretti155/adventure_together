@@ -26,9 +26,7 @@ class StripeWebhookServiceTest {
     @InjectMocks
     private StripeWebhookService service;
 
-    // ----------------------------------------------------------------------
-    //  UTILITIES PER MOCKARE DESERIALIZZATORE STRIPE
-    // ----------------------------------------------------------------------
+    //  UTILITIES PER MOCKARE IL DESERIALIZZATORE STRIPE
 
     private Event mockEvent(
             String type,
@@ -44,7 +42,7 @@ class StripeWebhookServiceTest {
         if (!type.equals("payment_intent.succeeded")
                 && !type.equals("payment_intent.payment_failed")) {
 
-            // Evento NON gestito → nessuno stubbing
+            // Evento NON gestito
             return event;
         }
 
@@ -65,10 +63,7 @@ class StripeWebhookServiceTest {
     }
 
 
-    // ----------------------------------------------------------------------
     //  PROCESS EVENT
-    // ----------------------------------------------------------------------
-
     @Test
     void processEvent_success_callsFinalizeBooking() {
 
@@ -105,10 +100,7 @@ class StripeWebhookServiceTest {
         verifyNoInteractions(bookingFinalizeService);
     }
 
-    // ----------------------------------------------------------------------
-    //  HANDLE SUCCESS - RAW JSON
-    // ----------------------------------------------------------------------
-
+    //  SUCCESS - RAW JSON
     @Test
     void handlePaymentIntentSucceeded_rawJson_parsedAndDelegated() {
 
@@ -128,10 +120,7 @@ class StripeWebhookServiceTest {
         verify(bookingFinalizeService).finalizeBooking(any(PaymentIntent.class));
     }
 
-    // ----------------------------------------------------------------------
     //  PARSE RAW PAYMENT INTENT
-    // ----------------------------------------------------------------------
-
     @Test
     void parseRawPaymentIntent_validJson_parsedCorrectly() {
 
@@ -181,10 +170,7 @@ class StripeWebhookServiceTest {
         );
     }
 
-    // ----------------------------------------------------------------------
     //  HANDLE FAILED
-    // ----------------------------------------------------------------------
-
     @Test
     void handlePaymentIntentFailed_deserialized_noException() {
 

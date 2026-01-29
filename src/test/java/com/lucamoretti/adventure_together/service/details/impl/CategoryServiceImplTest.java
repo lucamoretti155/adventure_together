@@ -25,9 +25,7 @@ class CategoryServiceImplTest {
     @InjectMocks
     private CategoryServiceImpl service;
 
-    // ------------------------------------------------------------
-    //                      CREATE CATEGORY
-    // ------------------------------------------------------------
+    // CREATE CATEGORY
 
     @Test
     void createCategory_success() {
@@ -66,10 +64,7 @@ class CategoryServiceImplTest {
         verify(categoryRepository, never()).save(any());
     }
 
-    // ------------------------------------------------------------
-    //                      GET ALL CATEGORIES
-    // ------------------------------------------------------------
-
+    // GET ALL CATEGORIES
     @Test
     void getAllCategories_sortedAlphabeticallyIgnoreCase() {
 

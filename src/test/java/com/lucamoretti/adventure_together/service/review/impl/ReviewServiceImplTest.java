@@ -32,10 +32,7 @@ class ReviewServiceImplTest {
 
     @InjectMocks private ReviewServiceImpl reviewService;
 
-    // ---------------------------------------------------------------------
     // CREATE REVIEW
-    // ---------------------------------------------------------------------
-
     @Test
     void createReview_successful() {
 
@@ -145,9 +142,7 @@ class ReviewServiceImplTest {
                 () -> reviewService.createReview(1L, 10L, new ReviewDTO()));
     }
 
-    // ---------------------------------------------------------------------
     // GET TRAVELER REVIEWS
-    // ---------------------------------------------------------------------
     @Test
     void getTravelerReviews_success() {
         Review r = new Review();
@@ -161,9 +156,7 @@ class ReviewServiceImplTest {
         assertEquals(10L, result.get(0).getId());
     }
 
-    // ---------------------------------------------------------------------
     // GET TRIP REVIEWS
-    // ---------------------------------------------------------------------
     @Test
     void getTripReviews_success() {
         Review r = new Review();
@@ -176,9 +169,7 @@ class ReviewServiceImplTest {
         assertEquals(1, result.size());
     }
 
-    // ---------------------------------------------------------------------
     // GET PENDING REVIEWS
-    // ---------------------------------------------------------------------
     @Test
     void getPendingReviews_success() {
 
@@ -206,9 +197,7 @@ class ReviewServiceImplTest {
         assertEquals("Titolo", result.get(0).getTripTitle());
     }
 
-    // ---------------------------------------------------------------------
     // SEND REMINDERS
-    // ---------------------------------------------------------------------
     @Test
     void sendReviewReminderEmails_success() {
 
@@ -231,9 +220,7 @@ class ReviewServiceImplTest {
         verify(emailService, times(1)).sendHtmlMessage(any(), any(), any(), any());
     }
 
-    // ---------------------------------------------------------------------
     // GET ALL REVIEWS BY TRIP ITINERARY
-    // ---------------------------------------------------------------------
     @Test
     void getAllReviewsByTripItineraryId_success() {
         Review r = new Review();
@@ -248,9 +235,7 @@ class ReviewServiceImplTest {
         assertEquals(1L, result.get(0).getId());
     }
 
-    // ---------------------------------------------------------------------
     // AVERAGE SCORE
-    // ---------------------------------------------------------------------
     @Test
     void getAverageScore_success() {
         Review r1 = new Review();
@@ -274,9 +259,7 @@ class ReviewServiceImplTest {
         assertNull(reviewService.getAverageScoreForTripItinerary(3L));
     }
 
-    // ---------------------------------------------------------------------
     // GET REVIEW BY TRIP + TRAVELER
-    // ---------------------------------------------------------------------
     @Test
     void getReviewByTripIdAndTravelerId_success() {
         Review r = new Review();
